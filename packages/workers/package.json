@@ -9,7 +9,8 @@
     "start": "bun run dist/index.js",
     "typecheck": "tsc --noEmit",
     "test:collect": "bun --env-file=../../.env run src/scripts/test-collect.ts",
-    "analyze:pending": "bun --env-file=../../.env run src/scripts/analyze-pending.ts"
+    "analyze:pending": "bun --env-file=../../.env run src/scripts/analyze-pending.ts",
+    "report:snapshot": "bun --env-file=../../.env run src/scripts/report-snapshot.ts"
   },
   "dependencies": {
     "@mentivue/shared": "workspace:*",

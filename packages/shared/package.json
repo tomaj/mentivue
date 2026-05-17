@@ -8,6 +8,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./db": "./src/db/index.ts",
+    "./db/queries": "./src/db/queries.ts",
     "./db/schema": "./src/db/schema.ts",
     "./llm": "./src/llm/index.ts",
     "./types": "./src/types/index.ts",
