@@ -2,9 +2,10 @@
 .DS_Store
 Thumbs.db
 
-# Node / Bun
+# Node / Bun / pnpm
 node_modules/
 bun.lockb
+.pnpm-store/
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -14,6 +15,7 @@ yarn-error.log*
 .env
 .env.local
 .env.*.local
+!.env.example
 
 # Build outputs
 dist/

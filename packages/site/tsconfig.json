@@ -1,0 +1,11 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@mentivue/shared": ["../shared/src/index.ts"],
+      "@mentivue/shared/*": ["../shared/src/*"],
+      "~/*": ["./src/*"]
+    }
+  }
+}
