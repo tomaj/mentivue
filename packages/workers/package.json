@@ -8,7 +8,8 @@
     "build": "bun build src/index.ts --target=bun --outdir=dist",
     "start": "bun run dist/index.js",
     "typecheck": "tsc --noEmit",
-    "test:collect": "bun --env-file=../../.env run src/scripts/test-collect.ts"
+    "test:collect": "bun --env-file=../../.env run src/scripts/test-collect.ts",
+    "analyze:pending": "bun --env-file=../../.env run src/scripts/analyze-pending.ts"
   },
   "dependencies": {
     "@mentivue/shared": "workspace:*",
