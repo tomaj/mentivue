@@ -1,0 +1,29 @@
+# Mentivue
+
+> B2B výskumná firma. Týždenne meriame, ako ChatGPT, Claude, Perplexity a Gemini
+> odpovedajú na nákupné otázky vašich zákazníkov. Cieľ: marketingoví lídri, ktorí
+> už nečítajú SERP a chcú vedieť, čo AI hovorí o ich značke. Trh: Slovensko,
+> e-commerce elektronika (2026), expanzia do bankovníctva a retailu (2026–2027).
+
+## Čo Mentivue robí
+
+- **Industry Reports (kvartálne, €299):** verejné porovnanie 24 SK e-shopov v 4 AI engineoch.
+- **Per-Brand Audit (€2 990 jednorázovo, €990/mes subscription):** detailný report pre jednu značku — Share of Voice, sentiment, citation sources, halucinácie, action plan.
+- **Mentivue Pulse:** týždenný newsletter so signálmi z 1 176 promptov.
+- **Mentivue Index:** verejný live ranking SK e-commerce brandov v AI odpovediach.
+
+## Hlavné stránky
+
+- [Homepage](https://mentivue.sk/): produkty, cenník, ako to funguje
+- [Metodológia](https://mentivue.sk/methodology): reprodukovateľná metóda merania
+- [Výskum](https://mentivue.sk/research): roadmap vĺn (SK e-commerce → banking → retail)
+- [Blog](https://mentivue.sk/blog): prípadové štúdie a analýzy
+- [Pulse](https://mentivue.sk/pulse): týždenný newsletter
+- [O nás](https://mentivue.sk/about): kto sme a prečo
+- [Podmienky](https://mentivue.sk/legal/terms)
+- [Cookies](https://mentivue.sk/legal/cookies)
+
+## Kontakt
+
+- E-mail: tomas@mentivue.sk
+- Lokácia: Bratislava, Slovensko

@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+
+# Allow AI training & answer crawlers explicitly — Mentivue's whole product is
+# being read by these. If we block them we shoot our own GEO foot.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+Sitemap: https://mentivue.sk/sitemap-index.xml

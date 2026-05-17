@@ -1,18 +1,15 @@
 ---
-import BaseLayout from './BaseLayout.astro';
+import BaseLayout, { type Props as BaseProps } from './BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
-interface Props {
-  title: string;
-  description?: string;
-  bodyClass?: string;
+interface Props extends BaseProps {
   hideHeader?: boolean;
   hideFooter?: boolean;
 }
-const { title, description, bodyClass, hideHeader, hideFooter } = Astro.props;
+const { hideHeader, hideFooter, ...baseProps } = Astro.props;
 ---
-<BaseLayout title={title} description={description} bodyClass={bodyClass}>
+<BaseLayout {...baseProps}>
   <slot name="head" slot="head" />
   {!hideHeader && <Header />}
   <slot />

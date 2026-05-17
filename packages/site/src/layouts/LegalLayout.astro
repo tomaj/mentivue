@@ -1,17 +1,13 @@
 ---
-import BaseLayout from './BaseLayout.astro';
+import BaseLayout, { type Props as BaseProps } from './BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/legal-template.css';
 
-interface Props {
-  title: string;
-  description?: string;
-  bodyClass?: string;
-}
-const { title, description, bodyClass } = Astro.props;
+type Props = BaseProps;
+const props = Astro.props;
 ---
-<BaseLayout title={title} description={description} bodyClass={bodyClass}>
+<BaseLayout {...props}>
   <slot name="head" slot="head" />
   <Header />
   <slot />

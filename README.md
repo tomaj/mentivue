@@ -62,8 +62,73 @@ Read [`CLAUDE.md`](./CLAUDE.md) and [`docs/PRD.md`](./docs/PRD.md) before any ta
 
 See [`docs/STACK_COMPARISON.md`](./docs/STACK_COMPARISON.md) for stack rationale.
 
+## Deploy
+
+### Marketing site (`packages/site`) — static, deploys anywhere
+
+The site is **9 static HTML pages**, ~1 MB total, zero server requirements.
+
+**Recommended: Cloudflare Pages** (free, global CDN, auto-deploys on git push)
+
+1. Sign in to [dash.cloudflare.com](https://dash.cloudflare.com) → Workers & Pages → Create → Connect to Git
+2. Select `tomaj/mentivue`, configure build:
+   - **Framework preset:** Astro
+   - **Build command:** `pnpm --filter @mentivue/site build`
+   - **Build output:** `packages/site/dist`
+   - **Root directory:** `/` (monorepo root)
+   - **Node version env var:** `NODE_VERSION = 22`
+3. Add custom domain: `mentivue.sk` (DNS pointed at Cloudflare auto-configures SSL)
+
+Alternative one-shot CLI deploy from local machine:
+
+```bash
+pnpm --filter @mentivue/site build
+npx wrangler pages deploy packages/site/dist --project-name=mentivue
+```
+
+**Other targets** — `dist/` is plain static; works on Vercel, Netlify, GitHub
+Pages, S3+CloudFront, any nginx host.
+
+### App + workers (`packages/app`, `packages/workers`) — Hetzner CX22
+
+Stub `infra/deploy.sh` is checked in for SSH-based deploys. Wire up once the
+production VM is provisioned. See
+[`docs/STACK_COMPARISON.md`](./docs/STACK_COMPARISON.md) for full topology.
+
+## SEO + GEO checklist
+
+The site head ships:
+
+- Per-page `<title>`, `<meta description>`, `<link canonical>`
+- Open Graph (`og:title`/`description`/`url`/`image` 1200×630 with width/height/alt, `og:type=website|article`, `og:locale=sk_SK`, `og:site_name`)
+- Twitter Card (`summary_large_image`, `@mentivue` site + creator)
+- Article OG extras on blog posts (`article:published_time`, `article:modified_time`, `article:author`)
+- JSON-LD: site-wide `Organization` + `WebSite`, per-article `Article` + `BreadcrumbList`
+- Robots: `index,follow,max-image-preview:large,max-snippet:-1`
+- Generator hint, theme-color, color-scheme, apple-touch-icon
+- Auto sitemap at `/sitemap-index.xml` (excludes internal `/og-card` render page)
+- `public/robots.txt` — explicitly allows GPTBot, ClaudeBot, PerplexityBot, Google-Extended, CCBot, anthropic-ai (Mentivue's whole thesis is being read by these — we don't block)
+- `public/llms.txt` — concise crawl map for AI engines, lists every public page
+
+The OG card lives at `packages/site/src/pages/og-card.astro` (1200×630 branded
+template). Regenerate the PNG by booting the dev server and screenshotting that
+URL, e.g.:
+
+```bash
+pnpm dev:site
+# in another terminal, headless:
+npx playwright cli screenshot --viewport-size=1200,630 http://localhost:4321/og-card packages/site/public/og-default.png
+```
+
 ## Status
 
-Skeleton scaffolded. Week 1 build kicks off with DB schema + first LLM client +
-seed data — see [`docs/PRD.md`](./docs/PRD.md) §9 and
-[`docs/AUTOMATION.md`](./docs/AUTOMATION.md) for the implementation roadmap.
+End-to-end pipeline live: 24 brands × 1 176 prompts × 4 LLMs (Anthropic /
+OpenAI / Perplexity / Gemini) → brand_mentions + sentiment + citations →
+aggregation queries. BullMQ scheduler wired with auto-chained collection →
+analysis workers. 9 marketing pages ported from claude.ai/design, build clean,
+SEO/OG/GEO meta in place.
+
+Next: cron registration for daily tier, first paid batch (~$8.60), Astro
+homepage live Index widget reading from DB. See
+[`docs/PRD.md`](./docs/PRD.md) §9 and
+[`docs/AUTOMATION.md`](./docs/AUTOMATION.md) for roadmap.
