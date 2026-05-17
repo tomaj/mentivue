@@ -4,10 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "bun run --watch src/index.ts",
+    "dev": "bun --env-file=../../.env run --watch src/index.ts",
     "build": "bun build src/index.ts --target=bun --outdir=dist",
     "start": "bun run dist/index.js",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:collect": "bun --env-file=../../.env run src/scripts/test-collect.ts"
   },
   "dependencies": {
     "@mentivue/shared": "workspace:*",

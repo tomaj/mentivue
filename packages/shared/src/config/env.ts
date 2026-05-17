@@ -7,7 +7,7 @@ const envSchema = z.object({
   DATABASE_URL: z.string().url(),
   DATABASE_POOL_SIZE: z.coerce.number().default(10),
 
-  REDIS_URL: z.string().url(),
+  REDIS_URL: z.string().url().default('redis://localhost:6379'),
 
   ANTHROPIC_API_KEY: z.string().min(1).optional(),
   OPENAI_API_KEY: z.string().min(1).optional(),
@@ -25,11 +25,30 @@ const envSchema = z.object({
   APP_PORT: z.coerce.number().default(3000),
   SITE_URL: z.string().url().default('http://localhost:4321'),
 
-  AUTH_SECRET: z.string().min(32),
+  AUTH_SECRET: z.string().min(32).optional(),
 
   DAILY_LLM_COST_LIMIT_USD: z.coerce.number().default(15),
   MONTHLY_LLM_COST_LIMIT_USD: z.coerce.number().default(500),
 });
 
-export const env = envSchema.parse(process.env);
 export type Env = z.infer<typeof envSchema>;
+
+let cached: Env | null = null;
+
+function load(): Env {
+  if (!cached) cached = envSchema.parse(process.env);
+  return cached;
+}
+
+// Lazy proxy — env vars are parsed on first property access, not at import time.
+// Keeps tools like `drizzle-kit generate` (which only needs DATABASE_URL via
+// drizzle.config.ts) from blowing up when other vars are missing.
+export const env = new Proxy({} as Env, {
+  get(_target, prop: string) {
+    return load()[prop as keyof Env];
+  },
+});
+
+export function getEnv(): Env {
+  return load();
+}

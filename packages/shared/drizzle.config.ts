@@ -5,6 +5,6 @@ export default {
   out: './src/db/migrations',
   dialect: 'postgresql',
   dbCredentials: {
-    url: process.env.DATABASE_URL ?? 'postgresql://mentivue:dev@localhost:5432/mentivue',
+    url: process.env.DATABASE_URL ?? 'postgresql://mentivue:dev@localhost:5433/mentivue',
   },
 } satisfies Config;
