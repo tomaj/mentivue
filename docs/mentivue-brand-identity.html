@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mentivue · Brand Identity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /*
+   * MENTIVUE BRAND SYSTEM
+   * Design philosophy: Editorial intelligence meets quiet data authority.
+   * Inspired by: Financial Times, Bloomberg Terminal, A24 cinema posters,
+   * Scandinavian research journals.
+   */
+
+  :root {
+    /* === PRIMARY PALETTE === */
+    --ink: #0E1116;          /* Near-black, editorial weight */
+    --ink-soft: #1F2429;     /* Body text */
+    --paper: #F7F4ED;        /* Warm off-white, archival paper */
+    --paper-pure: #FFFFFF;
+    --bone: #EBE5D7;         /* Subtle warm accent */
+    
+    /* === ACCENT === */
+    --signal: #FF5B3A;       /* Editorial coral, signals "look here" */
+    --signal-soft: #FFE8E0;  /* Background tint */
+    
+    /* === SECONDARY (used sparingly) === */
+    --depth: #1B3A4B;        /* Deep teal-petrol, secondary surfaces */
+    --moss: #4A5D3A;         /* Sentiment positive, sparingly */
+    
+    /* === DATA STATE === */
+    --positive: #2D6A4F;
+    --negative: #C73E1D;
+    --neutral: #6B7280;
+    
+    /* === LAYOUT === */
+    --line: 1px solid var(--ink);
+    --line-soft: 1px solid rgba(14, 17, 22, 0.12);
+    
+    /* === TYPE SCALE === */
+    --type-display: 'Fraunces', Georgia, serif;
+    --type-body: 'Inter Tight', -apple-system, sans-serif;
+    --type-mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  
+  body {
+    font-family: var(--type-body);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.4;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: geometricPrecision;
+  }
+  
+  /* Subtle grain overlay across whole page */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* === HEADER === */
+  .doc-header {
+    border-bottom: var(--line);
+    padding: 24px 48px;
+    background: var(--paper);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+  }
+  
+  .doc-header-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .doc-meta {
+    display: flex;
+    gap: 32px;
+    font-family: var(--type-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+  }
+  
+  .doc-meta span:first-child {
+    color: var(--signal);
+  }
+
+  /* === CONTAINER === */
+  .page {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 80px 48px;
+  }
+  
+  .section + .section { margin-top: 120px; }
+
+  /* === SECTION HEADER === */
+  .section-marker {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 48px;
+    border-bottom: var(--line);
+    padding-bottom: 16px;
+  }
+  
+  .section-num {
+    font-family: var(--type-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--signal);
+  }
+  
+  .section-title {
+    font-family: var(--type-display);
+    font-size: 48px;
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-feature-settings: 'ss01';
+  }
+  
+  .section-lede {
+    margin-top: 24px;
+    max-width: 640px;
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+  
+  /* === LOGO SHOWCASE === */
+  .logo-hero {
+    background: var(--paper-pure);
+    border: var(--line);
+    padding: 100px 60px;
+    margin-bottom: 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .logo-hero::after {
+    content: 'PRIMARY';
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    font-family: var(--type-mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--ink);
+    opacity: 0.4;
+  }
+  
+  .logo-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .logo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: var(--line);
+    background: var(--ink);
+  }
+  
+  .logo-cell {
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    position: relative;
+  }
+  
+  .logo-cell-label {
+    position: absolute;
+    top: 14px;
+    left: 16px;
+    font-family: var(--type-mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.5;
+  }
+  
+  .cell-light {
+    background: var(--paper-pure);
+    color: var(--ink);
+  }
+  
+  .cell-dark {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  
+  .cell-signal {
+    background: var(--signal);
+    color: var(--paper-pure);
+  }
+  
+  .cell-depth {
+    background: var(--depth);
+    color: var(--paper);
+  }
+
+  /* === SVG LOGO STYLING === */
+  /* The actual logo mark is rendered inline below */
+  
+  .logo-svg {
+    height: 56px;
+    width: auto;
+  }
+  
+  .logo-svg-large {
+    height: 96px;
+    width: auto;
+  }
+  
+  .logo-svg-tiny {
+    height: 32px;
+    width: auto;
+  }
+
+  /* === LOGO VARIANTS GRID === */
+  .variants {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--ink);
+    border: var(--line);
+  }
+  
+  .variant {
+    background: var(--paper-pure);
+    padding: 48px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    position: relative;
+  }
+  
+  .variant-label {
+    position: absolute;
+    bottom: 16px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: var(--type-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  /* === COLOR SYSTEM === */
+  .colors {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 0;
+    border: var(--line);
+  }
+  
+  .swatch {
+    aspect-ratio: 1 / 1.3;
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: var(--line);
+    position: relative;
+    transition: transform 200ms ease;
+  }
+  
+  .swatch:last-child { border-right: none; }
+  .swatch:hover { transform: translateY(-4px); }
+  
+  .swatch-name {
+    font-family: var(--type-display);
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  
+  .swatch-meta {
+    font-family: var(--type-mono);
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    line-height: 1.6;
+    opacity: 0.7;
+  }
+  
+  .swatch-spec {
+    font-family: var(--type-mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    opacity: 0.5;
+  }
+  
+  /* Color tokens */
+  .sw-ink { background: var(--ink); color: var(--paper); grid-column: span 2; }
+  .sw-ink-soft { background: var(--ink-soft); color: var(--paper); grid-column: span 1; }
+  .sw-depth { background: var(--depth); color: var(--paper); grid-column: span 2; }
+  .sw-paper { background: var(--paper); color: var(--ink); grid-column: span 3; border-right: var(--line); }
+  .sw-bone { background: var(--bone); color: var(--ink); grid-column: span 1; }
+  .sw-signal { background: var(--signal); color: var(--paper); grid-column: span 2; }
+  .sw-signal-soft { background: var(--signal-soft); color: var(--ink); grid-column: span 1; }
+
+  /* === TYPOGRAPHY === */
+  .type-spec {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 48px;
+    border-top: var(--line);
+    padding: 40px 0;
+  }
+  
+  .type-spec:last-child {
+    border-bottom: var(--line);
+  }
+  
+  .type-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .type-label {
+    font-family: var(--type-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--signal);
+    margin-bottom: 8px;
+  }
+  
+  .type-family {
+    font-family: var(--type-display);
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  
+  .type-use {
+    font-family: var(--type-mono);
+    font-size: 11px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+  
+  .type-display-sample {
+    font-family: var(--type-display);
+    font-size: 96px;
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    line-height: 0.95;
+    color: var(--ink);
+    font-feature-settings: 'ss01';
+  }
+  
+  .type-display-sample em {
+    font-style: italic;
+    color: var(--signal);
+  }
+  
+  .type-body-sample {
+    font-family: var(--type-body);
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 540px;
+  }
+  
+  .type-mono-sample {
+    font-family: var(--type-mono);
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+  
+  .type-mono-sample .data-line {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    border-bottom: var(--line-soft);
+  }
+  
+  .data-num {
+    color: var(--signal);
+    font-weight: 500;
+  }
+
+  /* === LIVE APP PREVIEW === */
+  .preview-wrap {
+    border: var(--line);
+    background: var(--paper-pure);
+    overflow: hidden;
+  }
+  
+  .preview-chrome {
+    padding: 12px 16px;
+    border-bottom: var(--line);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--bone);
+  }
+  
+  .preview-dots {
+    display: flex;
+    gap: 6px;
+  }
+  
+  .preview-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--ink-soft);
+    opacity: 0.3;
+  }
+  
+  .preview-url {
+    font-family: var(--type-mono);
+    font-size: 11px;
+    color: var(--ink-soft);
+    background: var(--paper);
+    padding: 4px 10px;
+    border-radius: 4px;
+    flex: 1;
+    text-align: center;
+  }
+
+  /* === APP PAGE === */
+  .app {
+    padding: 0;
+  }
+  
+  .app-nav {
+    border-bottom: var(--line);
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .app-nav-links {
+    display: flex;
+    gap: 32px;
+  }
+  
+  .app-nav-link {
+    font-size: 13px;
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  
+  .app-nav-link:hover { color: var(--signal); }
+  
+  .app-cta {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    letter-spacing: -0.01em;
+  }
+  
+  /* === APP HERO === */
+  .app-hero {
+    padding: 80px 40px 60px;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 80px;
+    align-items: center;
+    border-bottom: var(--line);
+  }
+  
+  .hero-tag {
+    font-family: var(--type-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--signal);
+    margin-bottom: 24px;
+  }
+  
+  .hero-headline {
+    font-family: var(--type-display);
+    font-size: 72px;
+    font-weight: 400;
+    line-height: 1.0;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+    font-feature-settings: 'ss01';
+  }
+  
+  .hero-headline em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--signal);
+  }
+  
+  .hero-lede {
+    margin-top: 28px;
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    max-width: 480px;
+  }
+  
+  .hero-actions {
+    margin-top: 36px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  
+  .btn-primary {
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 14px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: var(--type-body);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 150ms;
+  }
+  
+  .btn-primary:hover { background: var(--depth); }
+  
+  .btn-secondary {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--ink);
+    padding: 13px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  
+  /* === LIVE INDEX === */
+  .live-index {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 28px;
+    position: relative;
+  }
+  
+  .live-index::before {
+    content: 'LIVE INDEX · Q2 2026';
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-family: var(--type-mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    opacity: 0.5;
+  }
+  
+  .live-index-title {
+    font-family: var(--type-display);
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .index-pulse {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: var(--signal);
+    border-radius: 50%;
+    margin-right: 6px;
+    animation: pulse 2s infinite ease-in-out;
+    vertical-align: middle;
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+  }
+  
+  .index-row {
+    display: grid;
+    grid-template-columns: 24px 1fr 60px 60px;
+    gap: 12px;
+    align-items: center;
+    padding: 11px 0;
+    border-bottom: 1px solid rgba(247, 244, 237, 0.08);
+    font-size: 13px;
+  }
+  
+  .index-row:last-child { border-bottom: none; }
+  
+  .index-rank {
+    font-family: var(--type-mono);
+    font-size: 11px;
+    opacity: 0.5;
+  }
+  
+  .index-name {
+    font-family: var(--type-display);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  
+  .index-score {
+    font-family: var(--type-mono);
+    text-align: right;
+    color: var(--signal);
+    font-weight: 500;
+  }
+  
+  .index-delta {
+    font-family: var(--type-mono);
+    text-align: right;
+    font-size: 11px;
+    opacity: 0.7;
+  }
+  
+  .delta-up { color: #5ECC8C; }
+  .delta-down { color: #E5775F; }
+  
+  /* === STATS BAND === */
+  .stats-band {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-bottom: var(--line);
+  }
+  
+  .stat {
+    padding: 36px 32px;
+    border-right: var(--line);
+    position: relative;
+  }
+  
+  .stat:last-child { border-right: none; }
+  
+  .stat-num {
+    font-family: var(--type-display);
+    font-size: 48px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+  }
+  
+  .stat-num em {
+    font-style: italic;
+    color: var(--signal);
+  }
+  
+  .stat-label {
+    margin-top: 12px;
+    font-family: var(--type-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  /* === PRICING === */
+  .app-pricing {
+    padding: 60px 40px;
+  }
+  
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    margin-top: 40px;
+    background: var(--ink);
+    border: var(--line);
+  }
+  
+  .tier {
+    background: var(--paper-pure);
+    padding: 36px 28px;
+    position: relative;
+  }
+  
+  .tier-featured {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  
+  .tier-featured::before {
+    content: 'RECOMMENDED';
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-family: var(--type-mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: var(--signal);
+  }
+  
+  .tier-name {
+    font-family: var(--type-display);
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  
+  .tier-tagline {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+  
+  .tier-featured .tier-tagline {
+    color: rgba(247, 244, 237, 0.7);
+  }
+  
+  .tier-price {
+    margin-top: 28px;
+    font-family: var(--type-display);
+    font-size: 56px;
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  
+  .tier-period {
+    font-family: var(--type-mono);
+    font-size: 12px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  
+  .tier-featured .tier-period { color: rgba(247, 244, 237, 0.5); }
+  
+  .tier-features {
+    margin-top: 32px;
+    list-style: none;
+    padding: 0;
+  }
+  
+  .tier-features li {
+    padding: 8px 0;
+    font-size: 13px;
+    border-bottom: var(--line-soft);
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+  }
+  
+  .tier-features li::before {
+    content: '—';
+    color: var(--signal);
+    flex-shrink: 0;
+  }
+  
+  .tier-featured .tier-features li {
+    border-bottom-color: rgba(247, 244, 237, 0.1);
+  }
+  
+  .tier-cta {
+    margin-top: 28px;
+    width: 100%;
+    padding: 12px;
+    background: var(--ink);
+    color: var(--paper);
+    border: 1px solid var(--ink);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: var(--type-body);
+    cursor: pointer;
+  }
+  
+  .tier-featured .tier-cta {
+    background: var(--signal);
+    border-color: var(--signal);
+  }
+
+  /* === USAGE / DONTS === */
+  .usage-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  
+  .usage-card {
+    border: var(--line);
+    padding: 32px;
+  }
+  
+  .usage-card.dont {
+    border-color: var(--negative);
+  }
+  
+  .usage-tag {
+    display: inline-block;
+    font-family: var(--type-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    margin-bottom: 20px;
+  }
+  
+  .tag-do { background: var(--moss); color: var(--paper); }
+  .tag-dont { background: var(--negative); color: var(--paper); }
+  
+  .usage-title {
+    font-family: var(--type-display);
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  
+  .usage-desc {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  
+  /* === FOOTER === */
+  .doc-footer {
+    border-top: var(--line);
+    margin-top: 120px;
+    padding: 40px 48px;
+    background: var(--ink);
+    color: var(--paper);
+  }
+  
+  .doc-footer-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .doc-footer-meta {
+    font-family: var(--type-mono);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    opacity: 0.6;
+  }
+
+  @media (max-width: 900px) {
+    .page { padding: 48px 24px; }
+    .section + .section { margin-top: 80px; }
+    .section-title { font-size: 36px; }
+    .type-display-sample { font-size: 64px; }
+    .hero-headline { font-size: 48px; }
+    .app-hero { grid-template-columns: 1fr; gap: 40px; padding: 40px 24px; }
+    .colors, .variants, .pricing-grid, .stats-band, .type-spec, .usage-grid {
+      grid-template-columns: 1fr !important;
+    }
+    .colors > * { grid-column: span 1 !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================
+     DOCUMENT HEADER
+============================================ -->
+<header class="doc-header">
+  <div class="doc-header-inner">
+    <!-- Header logo -->
+    <svg class="logo-svg-tiny" viewBox="0 0 280 80" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(8, 16)">
+        <circle cx="24" cy="24" r="22" fill="none" stroke="#0E1116" stroke-width="2"/>
+        <path d="M 6 24 Q 24 6 42 24 Q 24 42 6 24 Z" fill="none" stroke="#0E1116" stroke-width="2"/>
+        <circle cx="24" cy="24" r="5" fill="#FF5B3A"/>
+        <path d="M 48 24 L 52 24" stroke="#FF5B3A" stroke-width="2" stroke-linecap="square"/>
+      </g>
+      <text x="72" y="56" font-family="Fraunces, serif" font-size="32" font-weight="600" letter-spacing="-1" fill="#0E1116">mentivue</text>
+    </svg>
+    <div class="doc-meta">
+      <span>● BRAND SYSTEM</span>
+      <span>v1.0 — Q2 2026</span>
+      <span>SLOVAKIA · EUROPE</span>
+    </div>
+  </div>
+</header>
+
+<div class="page">
+
+<!-- ============================================
+     SECTION 01 — LOGO MARK
+============================================ -->
+<section class="section">
+  <div class="section-marker">
+    <span class="section-num">01 / IDENTITY</span>
+  </div>
+  <h2 class="section-title">The mark of <em style="font-style:italic;color:#FF5B3A;">attention</em>.</h2>
+  <p class="section-lede">
+    Mentivue je značka pozornosti. Geometrický monogram je zložený z troch znakov: <strong>kruh</strong> (sledované územie), <strong>oko</strong> (vidíme to, čo je pre teba neviditeľné) a <strong>signál</strong> (data point, ktorý mení rozhodnutie). Vznikol z jediného gesta — pozerania, ktoré nájde to dôležité.
+  </p>
+
+  <!-- Hero logo -->
+  <div class="logo-hero" style="margin-top: 60px;">
+    <div class="logo-display">
+      <svg class="logo-svg-large" viewBox="0 0 360 100" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(10, 18)">
+          <circle cx="32" cy="32" r="30" fill="none" stroke="#0E1116" stroke-width="2.5"/>
+          <path d="M 6 32 Q 32 6 58 32 Q 32 58 6 32 Z" fill="none" stroke="#0E1116" stroke-width="2.5"/>
+          <circle cx="32" cy="32" r="7" fill="#FF5B3A"/>
+          <path d="M 64 32 L 70 32" stroke="#FF5B3A" stroke-width="2.5" stroke-linecap="square"/>
+        </g>
+        <text x="92" y="68" font-family="Fraunces, serif" font-size="44" font-weight="600" letter-spacing="-1.5" fill="#0E1116">mentivue</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Variants on different backgrounds -->
+  <div class="logo-grid">
+    <div class="logo-cell cell-light">
+      <span class="logo-cell-label">LIGHT — PRIMARY</span>
+      <svg class="logo-svg" viewBox="0 0 280 80">
+        <g transform="translate(8, 16)">
+          <circle cx="24" cy="24" r="22" fill="none" stroke="#0E1116" stroke-width="2"/>
+          <path d="M 6 24 Q 24 6 42 24 Q 24 42 6 24 Z" fill="none" stroke="#0E1116" stroke-width="2"/>
+          <circle cx="24" cy="24" r="5" fill="#FF5B3A"/>
+          <path d="M 48 24 L 52 24" stroke="#FF5B3A" stroke-width="2" stroke-linecap="square"/>
+        </g>
+        <text x="72" y="56" font-family="Fraunces, serif" font-size="32" font-weight="600" letter-spacing="-1" fill="#0E1116">mentivue</text>
+      </svg>
+    </div>
+    <div class="logo-cell cell-dark">
+      <span class="logo-cell-label">DARK — INVERSE</span>
+      <svg class="logo-svg" viewBox="0 0 280 80">
+        <g transform="translate(8, 16)">
+          <circle cx="24" cy="24" r="22" fill="none" stroke="#F7F4ED" stroke-width="2"/>
+          <path d="M 6 24 Q 24 6 42 24 Q 24 42 6 24 Z" fill="none" stroke="#F7F4ED" stroke-width="2"/>
+          <circle cx="24" cy="24" r="5" fill="#FF5B3A"/>
+          <path d="M 48 24 L 52 24" stroke="#FF5B3A" stroke-width="2" stroke-linecap="square"/>
+        </g>
+        <text x="72" y="56" font-family="Fraunces, serif" font-size="32" font-weight="600" letter-spacing="-1" fill="#F7F4ED">mentivue</text>
+      </svg>
+    </div>
+    <div class="logo-cell cell-signal">
+      <span class="logo-cell-label">SIGNAL — ACCENT</span>
+      <svg class="logo-svg" viewBox="0 0 280 80">
+        <g transform="translate(8, 16)">
+          <circle cx="24" cy="24" r="22" fill="none" stroke="#FFFFFF" stroke-width="2"/>
+          <path d="M 6 24 Q 24 6 42 24 Q 24 42 6 24 Z" fill="none" stroke="#FFFFFF" stroke-width="2"/>
+          <circle cx="24" cy="24" r="5" fill="#0E1116"/>
+          <path d="M 48 24 L 52 24" stroke="#0E1116" stroke-width="2" stroke-linecap="square"/>
+        </g>
+        <text x="72" y="56" font-family="Fraunces, serif" font-size="32" font-weight="600" letter-spacing="-1" fill="#FFFFFF">mentivue</text>
+      </svg>
+    </div>
+    <div class="logo-cell cell-depth">
+      <span class="logo-cell-label">DEPTH — EDITORIAL</span>
+      <svg class="logo-svg" viewBox="0 0 280 80">
+        <g transform="translate(8, 16)">
+          <circle cx="24" cy="24" r="22" fill="none" stroke="#F7F4ED" stroke-width="2"/>
+          <path d="M 6 24 Q 24 6 42 24 Q 24 42 6 24 Z" fill="none" stroke="#F7F4ED" stroke-width="2"/>
+          <circle cx="24" cy="24" r="5" fill="#FF5B3A"/>
+          <path d="M 48 24 L 52 24" stroke="#FF5B3A" stroke-width="2" stroke-linecap="square"/>
+        </g>
+        <text x="72" y="56" font-family="Fraunces, serif" font-size="32" font-weight="600" letter-spacing="-1" fill="#F7F4ED">mentivue</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Mark-only variants -->
+  <h3 style="font-family: var(--type-display); font-size: 24px; margin-top: 80px; margin-bottom: 24px; letter-spacing: -0.01em;">
+    Monogram — application sizing
+  </h3>
+  <div class="variants">
+    <div class="variant">
+      <svg width="120" height="120" viewBox="0 0 48 48">
+        <circle cx="24" cy="24" r="22" fill="none" stroke="#0E1116" stroke-width="2"/>
+        <path d="M 6 24 Q 24 6 42 24 Q 24 42 6 24 Z" fill="none" stroke="#0E1116" stroke-width="2"/>
+        <circle cx="24" cy="24" r="5" fill="#FF5B3A"/>
+      </svg>
+      <span class="variant-label">FAVICON · APP ICON</span>
+    </div>
+    <div class="variant">
+      <svg width="64" height="64" viewBox="0 0 48 48">
+        <circle cx="24" cy="24" r="22" fill="none" stroke="#0E1116" stroke-width="2"/>
+        <path d="M 6 24 Q 24 6 42 24 Q 24 42 6 24 Z" fill="none" stroke="#0E1116" stroke-width="2"/>
+        <circle cx="24" cy="24" r="5" fill="#FF5B3A"/>
+      </svg>
+      <span class="variant-label">EMAIL · SOCIAL</span>
+    </div>
+    <div class="variant">
+      <svg width="32" height="32" viewBox="0 0 48 48">
+        <circle cx="24" cy="24" r="22" fill="none" stroke="#0E1116" stroke-width="2"/>
+        <path d="M 6 24 Q 24 6 42 24 Q 24 42 6 24 Z" fill="none" stroke="#0E1116" stroke-width="2"/>
+        <circle cx="24" cy="24" r="5" fill="#FF5B3A"/>
+      </svg>
+      <span class="variant-label">BROWSER TAB</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     SECTION 02 — COLOR SYSTEM
+============================================ -->
+<section class="section">
+  <div class="section-marker">
+    <span class="section-num">02 / COLOR</span>
+  </div>
+  <h2 class="section-title">A palette of <em style="font-style:italic;color:#FF5B3A;">composure</em>.</h2>
+  <p class="section-lede">
+    Mentivue stojí vizuálne medzi archívnym papierom <em>Financial Times</em> a editoriálnou ostrou tlačou <em>The New York Times Magazine</em>. Dominantná dvojica <strong>ink + paper</strong> tvorí 80% plochy. Coral <strong>signal</strong> je rezervovaný iba pre dôležité dátové body, CTA tlačidlá a momenty pozornosti.
+  </p>
+
+  <div class="colors" style="margin-top: 60px;">
+    <div class="swatch sw-ink">
+      <div>
+        <div class="swatch-spec">PRIMARY · 01</div>
+        <div class="swatch-name">Ink</div>
+      </div>
+      <div class="swatch-meta">
+        #0E1116<br>
+        rgb(14, 17, 22)<br>
+        oklch(0.18 0.01 254)
+      </div>
+    </div>
+    <div class="swatch sw-ink-soft">
+      <div>
+        <div class="swatch-spec">02</div>
+        <div class="swatch-name">Ink Soft</div>
+      </div>
+      <div class="swatch-meta">
+        #1F2429<br>
+        Body text
+      </div>
+    </div>
+    <div class="swatch sw-depth">
+      <div>
+        <div class="swatch-spec">SECONDARY · 03</div>
+        <div class="swatch-name">Depth</div>
+      </div>
+      <div class="swatch-meta">
+        #1B3A4B<br>
+        Editorial surfaces<br>
+        Hover · focus
+      </div>
+    </div>
+    <div class="swatch sw-paper">
+      <div>
+        <div class="swatch-spec">FOUNDATION · 04</div>
+        <div class="swatch-name">Paper</div>
+      </div>
+      <div class="swatch-meta">
+        #F7F4ED<br>
+        Warm archival<br>
+        Primary background — 75% surface
+      </div>
+    </div>
+    <div class="swatch sw-bone">
+      <div>
+        <div class="swatch-spec">05</div>
+        <div class="swatch-name">Bone</div>
+      </div>
+      <div class="swatch-meta">
+        #EBE5D7<br>
+        Subtle div
+      </div>
+    </div>
+    <div class="swatch sw-signal">
+      <div>
+        <div class="swatch-spec">SIGNAL · 06</div>
+        <div class="swatch-name">Signal</div>
+      </div>
+      <div class="swatch-meta">
+        #FF5B3A<br>
+        Editorial coral<br>
+        ≤ 5% of surface
+      </div>
+    </div>
+    <div class="swatch sw-signal-soft">
+      <div>
+        <div class="swatch-spec">07</div>
+        <div class="swatch-name">Tint</div>
+      </div>
+      <div class="swatch-meta">
+        #FFE8E0<br>
+        Highlight bg
+      </div>
+    </div>
+  </div>
+  
+  <p class="section-lede" style="margin-top: 40px; font-size: 14px;">
+    <strong>Ratio rule:</strong> Paper 60% · Ink 25% · Bone/Soft 10% · Signal 5%. Tento pomer chráni Mentivue pred „startup look“ a ukotvuje editoriálny pocit autority.
+  </p>
+</section>
+
+<!-- ============================================
+     SECTION 03 — TYPOGRAPHY
+============================================ -->
+<section class="section">
+  <div class="section-marker">
+    <span class="section-num">03 / TYPOGRAPHY</span>
+  </div>
+  <h2 class="section-title">Voices in the <em style="font-style:italic;color:#FF5B3A;">system</em>.</h2>
+  <p class="section-lede">
+    Tri písma. Každé má presnú úlohu. Display robí ťažký emocionálny prísľub, body nesie argument, mono ukazuje dôkaz. Žiadne mixovanie.
+  </p>
+
+  <div class="type-spec">
+    <div class="type-meta">
+      <div class="type-label">DISPLAY · HEADLINES</div>
+      <div class="type-family">Fraunces</div>
+      <div class="type-use">
+        Optical-sized serif from Undercase Type. Used for all headlines, report titles, and the wordmark. Italic alternates carry the signal coral.
+      </div>
+    </div>
+    <div>
+      <div class="type-display-sample">AI search,<br>analysed <em>weekly</em>.</div>
+    </div>
+  </div>
+
+  <div class="type-spec">
+    <div class="type-meta">
+      <div class="type-label">BODY · NARRATIVE</div>
+      <div class="type-family">Inter Tight</div>
+      <div class="type-use">
+        Compact geometric grotesque. Used for all body copy, UI labels, navigation. Generous height, tight tracking.
+      </div>
+    </div>
+    <div>
+      <p class="type-body-sample">
+        Týždenne meriame, ako ChatGPT, Claude, Perplexity a Gemini odpovedajú na vyše tisíc reálnych nákupných otázok. Reportujeme, kde tvoja značka vyhráva — a kde jej hlas chýba. Pre marketingových lídrov, ktorí už nečítajú SERP, ale stále potrebujú vedieť, kto vedie.
+      </p>
+    </div>
+  </div>
+
+  <div class="type-spec">
+    <div class="type-meta">
+      <div class="type-label">MONO · DATA</div>
+      <div class="type-family">JetBrains Mono</div>
+      <div class="type-use">
+        Used exclusively for data labels, timestamps, tabular figures, ratios, and metadata. Carries the analytical authority.
+      </div>
+    </div>
+    <div>
+      <div class="type-mono-sample">
+        <div class="data-line"><span>ALZA.SK</span><span class="data-num">42.1%</span></div>
+        <div class="data-line"><span>DATART</span><span class="data-num">28.4%</span></div>
+        <div class="data-line"><span>NAY</span><span class="data-num">24.7%</span></div>
+        <div class="data-line"><span>PLANEO</span><span class="data-num">18.2%</span></div>
+        <div class="data-line" style="border:none"><span>ANDREA SHOP</span><span class="data-num">15.9%</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     SECTION 04 — LIVE PREVIEW
+============================================ -->
+<section class="section">
+  <div class="section-marker">
+    <span class="section-num">04 / APPLICATION</span>
+  </div>
+  <h2 class="section-title">The system, <em style="font-style:italic;color:#FF5B3A;">in motion</em>.</h2>
+  <p class="section-lede">
+    Tu je celá značka v jednom obrazovkovom kontexte — domovská stránka mentivue.sk. Tvar, farba a typografia sa stretávajú na konkrétnom predmete: dáta, autorita, rozhodnutie.
+  </p>
+
+  <div class="preview-wrap" style="margin-top: 60px;">
+    <div class="preview-chrome">
+      <div class="preview-dots">
+        <span class="preview-dot"></span>
+        <span class="preview-dot"></span>
+        <span class="preview-dot"></span>
+      </div>
+      <div class="preview-url">mentivue.sk</div>
+      <div style="width: 48px;"></div>
+    </div>
+
+    <div class="app">
+      <!-- NAV -->
+      <nav class="app-nav">
+        <svg class="logo-svg" style="height: 32px;" viewBox="0 0 280 80">
+          <g transform="translate(8, 16)">
+            <circle cx="24" cy="24" r="22" fill="none" stroke="#0E1116" stroke-width="2"/>
+            <path d="M 6 24 Q 24 6 42 24 Q 24 42 6 24 Z" fill="none" stroke="#0E1116" stroke-width="2"/>
+            <circle cx="24" cy="24" r="5" fill="#FF5B3A"/>
+            <path d="M 48 24 L 52 24" stroke="#FF5B3A" stroke-width="2" stroke-linecap="square"/>
+          </g>
+          <text x="72" y="56" font-family="Fraunces, serif" font-size="32" font-weight="600" letter-spacing="-1" fill="#0E1116">mentivue</text>
+        </svg>
+        <div class="app-nav-links">
+          <a class="app-nav-link" href="#">Index</a>
+          <a class="app-nav-link" href="#">Report</a>
+          <a class="app-nav-link" href="#">Audit</a>
+          <a class="app-nav-link" href="#">Methodology</a>
+          <a class="app-nav-link" href="#">Pricing</a>
+        </div>
+        <button class="app-cta">Get the Q2 report →</button>
+      </nav>
+
+      <!-- HERO -->
+      <div class="app-hero">
+        <div>
+          <div class="hero-tag">● Q2 2026 · ELECTRONICS · SLOVAKIA</div>
+          <h1 class="hero-headline">
+            What AI<br>
+            says about<br>
+            <em>your brand</em>.
+          </h1>
+          <p class="hero-lede">
+            Týždenne meriame ako ChatGPT, Claude, Perplexity a Gemini odpovedajú na 1&nbsp;176 reálnych nákupných otázok. Pre marketingových lídrov, ktorí už nečítajú SERP.
+          </p>
+          <div class="hero-actions">
+            <button class="btn-primary">
+              Read the Index → 
+            </button>
+            <button class="btn-secondary">Get a brand audit</button>
+          </div>
+        </div>
+
+        <!-- Live Index Widget -->
+        <div class="live-index">
+          <div class="live-index-title">
+            <span class="index-pulse"></span> Mentivue Index — Live
+          </div>
+          <div class="index-row">
+            <span class="index-rank">01</span>
+            <span class="index-name">Alza.sk</span>
+            <span class="index-score">87.3</span>
+            <span class="index-delta delta-up">+2.1</span>
+          </div>
+          <div class="index-row">
+            <span class="index-rank">02</span>
+            <span class="index-name">Datart</span>
+            <span class="index-score">72.8</span>
+            <span class="index-delta delta-down">−0.8</span>
+          </div>
+          <div class="index-row">
+            <span class="index-rank">03</span>
+            <span class="index-name">Nay</span>
+            <span class="index-score">68.2</span>
+            <span class="index-delta delta-up">+1.4</span>
+          </div>
+          <div class="index-row">
+            <span class="index-rank">04</span>
+            <span class="index-name">Planeo</span>
+            <span class="index-score">54.1</span>
+            <span class="index-delta delta-down">−3.2</span>
+          </div>
+          <div class="index-row">
+            <span class="index-rank">05</span>
+            <span class="index-name">Andrea Shop</span>
+            <span class="index-score">48.6</span>
+            <span class="index-delta" style="opacity: 0.5;">—</span>
+          </div>
+          <div class="index-row">
+            <span class="index-rank">06</span>
+            <span class="index-name">Mall.sk</span>
+            <span class="index-score">41.2</span>
+            <span class="index-delta delta-up">+0.9</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STATS -->
+      <div class="stats-band">
+        <div class="stat">
+          <div class="stat-num">1<em>,176</em></div>
+          <div class="stat-label">CURATED SK PROMPTS</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">4</div>
+          <div class="stat-label">AI ENGINES TRACKED</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">15</div>
+          <div class="stat-label">BRANDS · WEEKLY</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num"><em>90</em></div>
+          <div class="stat-label">DAYS · LONGITUDINAL</div>
+        </div>
+      </div>
+
+      <!-- PRICING -->
+      <div class="app-pricing">
+        <div class="section-marker" style="margin-bottom: 24px;">
+          <span class="section-num">PRICING — Q3 2026</span>
+        </div>
+        <h2 style="font-family: var(--type-display); font-size: 40px; font-weight: 400; letter-spacing: -0.025em; line-height: 1.05;">
+          Three tiers. <em style="font-style:italic;color:#FF5B3A;">One signal.</em>
+        </h2>
+        <div class="pricing-grid">
+          <div class="tier">
+            <div class="tier-name">Watch</div>
+            <div class="tier-tagline">Health monitoring for one brand</div>
+            <div class="tier-price">€490<span class="tier-period">/mo</span></div>
+            <ul class="tier-features">
+              <li>Weekly Pulse newsletter</li>
+              <li>Monthly Health Snapshot</li>
+              <li>Quarterly Trajectory Report</li>
+              <li>Real-time SoV alerts</li>
+            </ul>
+            <button class="tier-cta">Start with Watch</button>
+          </div>
+          <div class="tier tier-featured">
+            <div class="tier-name">Pro</div>
+            <div class="tier-tagline">Action plan + quarterly audit + advisor</div>
+            <div class="tier-price">€1,490<span class="tier-period">/mo</span></div>
+            <ul class="tier-features">
+              <li>Everything in Watch</li>
+              <li>Monthly Action Report (15 pages)</li>
+              <li>Quarterly Full Audit (35 pages)</li>
+              <li>Strategy call each quarter</li>
+              <li>Slack advisor channel</li>
+              <li>Custom monitoring prompts</li>
+            </ul>
+            <button class="tier-cta">Choose Pro</button>
+          </div>
+          <div class="tier">
+            <div class="tier-name">Enterprise</div>
+            <div class="tier-tagline">Multi-brand, weekly cadence, on-demand</div>
+            <div class="tier-price">€4,990<span class="tier-period">/mo</span></div>
+            <ul class="tier-features">
+              <li>Everything in Pro</li>
+              <li>Up to 5 brands tracked</li>
+              <li>Weekly 30-min sync</li>
+              <li>On-demand research (4h/mo)</li>
+              <li>API + BI integration</li>
+              <li>Annual on-site workshop</li>
+            </ul>
+            <button class="tier-cta">Talk to us</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     SECTION 05 — USAGE
+============================================ -->
+<section class="section">
+  <div class="section-marker">
+    <span class="section-num">05 / USAGE</span>
+  </div>
+  <h2 class="section-title">Do · <em style="font-style:italic;color:#FF5B3A;">Don't</em>.</h2>
+  <p class="section-lede">
+    Pravidlá udržiavajú značku rozpoznateľnú. Tieto sú minimálne a striktné.
+  </p>
+
+  <div class="usage-grid" style="margin-top: 60px;">
+    <div class="usage-card">
+      <span class="usage-tag tag-do">DO · 01</span>
+      <div class="usage-title">Use ink on paper</div>
+      <p class="usage-desc">Default kombinácia. Ink (#0E1116) na Paper (#F7F4ED) je 80% všetkých výstupov. Signal coral iba ako bodový akcent.</p>
+    </div>
+    <div class="usage-card dont">
+      <span class="usage-tag tag-dont">DON'T · 01</span>
+      <div class="usage-title">Don't paint with signal</div>
+      <p class="usage-desc">Coral nie je background. Nikdy nepoužívaj na veľké plochy. Stratíš editoriálnu autoritu a získaš startup look.</p>
+    </div>
+    <div class="usage-card">
+      <span class="usage-tag tag-do">DO · 02</span>
+      <div class="usage-title">Wordmark always lowercase</div>
+      <p class="usage-desc">„mentivue“ je vždy malými písmenami. Veľké M sa nepoužíva nikde — ani na začiatku vety. „Today we read in mentivue“.</p>
+    </div>
+    <div class="usage-card dont">
+      <span class="usage-tag tag-dont">DON'T · 02</span>
+      <div class="usage-title">Don't pair with another serif</div>
+      <p class="usage-desc">Fraunces je jediný serif v systéme. Body text vždy Inter Tight. Nikdy nemix s Georgia, Times, ani inými serif fontmi.</p>
+    </div>
+    <div class="usage-card">
+      <span class="usage-tag tag-do">DO · 03</span>
+      <div class="usage-title">Use mono for data</div>
+      <p class="usage-desc">Čísla, percentá, deltas, timestamps — vždy JetBrains Mono. Vytvára okamžitý vizuálny kontrast medzi narrative a evidence.</p>
+    </div>
+    <div class="usage-card dont">
+      <span class="usage-tag tag-dont">DON'T · 03</span>
+      <div class="usage-title">Don't put mark in a circle frame</div>
+      <p class="usage-desc">Monogram sám obsahuje kruh. Pridanie ďalšieho framu (avatar circles, badges) je redundantné. Mark vždy free-standing alebo na square chip.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     SECTION 06 — RATIONALE
+============================================ -->
+<section class="section">
+  <div class="section-marker">
+    <span class="section-num">06 / RATIONALE</span>
+  </div>
+  <h2 class="section-title">Why <em style="font-style:italic;color:#FF5B3A;">this</em> and not<br>another AI startup.</h2>
+  <p class="section-lede">
+    Cieľom nebol „SaaS look“. Cieľom bola dôveryhodnosť — taká, akú má kvartálny report od Bloombergu alebo McKinsey memo. Klient, ktorý platí €1&nbsp;490 mesačne, musí cítiť, že kupuje analýzu, nie tool.
+  </p>
+  
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 60px;">
+    <div style="border-top: 1px solid #0E1116; padding-top: 24px;">
+      <div style="font-family: var(--type-mono); font-size: 11px; letter-spacing: 0.1em; color: #FF5B3A; margin-bottom: 12px;">REFERENCES</div>
+      <ul style="list-style: none; padding: 0; font-size: 15px; line-height: 1.8;">
+        <li>· Financial Times — print typography</li>
+        <li>· Bloomberg Terminal — data density</li>
+        <li>· A24 Films — editorial confidence</li>
+        <li>· The Browser Company — controlled play</li>
+        <li>· Linear — quiet precision</li>
+      </ul>
+    </div>
+    <div style="border-top: 1px solid #0E1116; padding-top: 24px;">
+      <div style="font-family: var(--type-mono); font-size: 11px; letter-spacing: 0.1em; color: #FF5B3A; margin-bottom: 12px;">ANTI-REFERENCES</div>
+      <ul style="list-style: none; padding: 0; font-size: 15px; line-height: 1.8;">
+        <li>· Generic AI startups (purple gradients)</li>
+        <li>· Web3 aesthetics (neon, glass)</li>
+        <li>· „Friendly“ illustrations</li>
+        <li>· Stock photos of dashboards</li>
+        <li>· Sans-only typography systems</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<!-- ============================================
+     FOOTER
+============================================ -->
+<footer class="doc-footer">
+  <div class="doc-footer-inner">
+    <svg class="logo-svg" viewBox="0 0 280 80" style="height: 36px;">
+      <g transform="translate(8, 16)">
+        <circle cx="24" cy="24" r="22" fill="none" stroke="#F7F4ED" stroke-width="2"/>
+        <path d="M 6 24 Q 24 6 42 24 Q 24 42 6 24 Z" fill="none" stroke="#F7F4ED" stroke-width="2"/>
+        <circle cx="24" cy="24" r="5" fill="#FF5B3A"/>
+        <path d="M 48 24 L 52 24" stroke="#FF5B3A" stroke-width="2" stroke-linecap="square"/>
+      </g>
+      <text x="72" y="56" font-family="Fraunces, serif" font-size="32" font-weight="600" letter-spacing="-1" fill="#F7F4ED">mentivue</text>
+    </svg>
+    <div class="doc-footer-meta">
+      BRAND SYSTEM v1.0 · MAY 2026 · BRATISLAVA
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
