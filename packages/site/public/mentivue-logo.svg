@@ -1,0 +1,32 @@
+<svg width="280" height="80" viewBox="0 0 280 80" xmlns="http://www.w3.org/2000/svg">
+  <!-- Mentivue primary logo - geometric vision pulse -->
+  <!-- Concept: stylized eye + signal pulse + data point -->
+  
+  <!-- Logo mark -->
+  <g transform="translate(8, 16)">
+    <!-- Outer ring (containment) -->
+    <circle cx="24" cy="24" r="22" fill="none" stroke="#0E1116" stroke-width="2"/>
+    
+    <!-- Inner geometric eye - intersecting arcs creating diamond -->
+    <path d="M 6 24 Q 24 6 42 24 Q 24 42 6 24 Z" 
+          fill="none" stroke="#0E1116" stroke-width="2"/>
+    
+    <!-- Pupil/data point - sharp accent -->
+    <circle cx="24" cy="24" r="5" fill="#FF5B3A"/>
+    
+    <!-- Pulse line emerging from right -->
+    <path d="M 48 24 L 52 24" stroke="#FF5B3A" stroke-width="2" stroke-linecap="square"/>
+  </g>
+  
+  <!-- Wordmark -->
+  <g transform="translate(72, 24)">
+    <text x="0" y="32" 
+          font-family="'Fraunces', 'Times New Roman', serif" 
+          font-size="32" 
+          font-weight="600"
+          letter-spacing="-1"
+          fill="#0E1116">
+      mentivue
+    </text>
+  </g>
+</svg>

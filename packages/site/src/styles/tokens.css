@@ -1,0 +1,32 @@
+/* Mentivue design tokens — single source of truth for colors, fonts, spacing */
+
+:root {
+  /* Color */
+  --ink: #0E1116;
+  --ink-soft: #1F2429;
+  --paper: #F7F4ED;
+  --paper-pure: #FFFFFF;
+  --bone: #EBE5D7;
+  --bone-deep: #DDD5C2;
+  --depth: #1B3A4B;
+  --signal: #FF5B3A;
+  --signal-soft: #FFE8E0;
+  --positive: #2D6A4F;
+  --negative: #C73E1D;
+  --neutral: #6B7280;
+
+  /* Type */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Inter Tight', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Layout */
+  --container: 1280px;
+  --pad-x: clamp(20px, 4vw, 56px);
+  --content-w: 680px;
+  --toc-w: 240px;
+
+  /* Motion */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+}

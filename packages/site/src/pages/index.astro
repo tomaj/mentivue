@@ -1,17 +1,625 @@
 ---
-import '../styles/global.css';
+import SiteLayout from "../layouts/SiteLayout.astro";
+import "../styles/page-homepage.css";
 ---
-<!DOCTYPE html>
-<html lang="sk">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mentivue</title>
-</head>
-<body>
-  <main>
-    <h1>Mentivue</h1>
-    <p>Skeleton — site package ready.</p>
-  </main>
-</body>
-</html>
+<SiteLayout title="Mentivue — čo AI hovorí o vašej značke" description="Týždenne meriame ako ChatGPT, Claude, Perplexity a Gemini odpovedajú na nákupné otázky vašich zákazníkov. Pre marketingových lídrov, ktorí už nečítajú SERP.">
+<!-- ───────────── HERO ───────────── -->
+<section class="hero" data-screen-label="02 Hero" id="top">
+  <div class="container hero-grid">
+
+    <div class="hero-left">
+      <div class="hero-tag reveal">
+        <span class="pulse-dot" aria-hidden="true"></span>
+        <span class="mono-label">Q2 2026 · Vlna I · Slovenský e-commerce</span>
+      </div>
+
+      <h1 class="hero-title reveal d1">
+        Čo AI hovorí<br/>o <em>vašej značke.</em>
+      </h1>
+
+      <p class="hero-lede reveal d2">
+        Týždenne meriame ako ChatGPT, Claude, Perplexity a Gemini odpovedajú na reálne nákupné otázky <em>vašich zákazníkov.</em> Pre marketingových lídrov, ktorí už nečítajú SERP.
+      </p>
+
+      <div class="hero-ctas reveal d3">
+        <a class="btn" href="#index">Prečítať Index <span class="arrow">→</span></a>
+        <a class="btn btn--ghost" href="#audit">Objednať audit značky</a>
+      </div>
+
+      <div class="hero-meta reveal d4" aria-hidden="true">
+        <div>
+          <span class="mono-tiny">Vydanie</span>
+          <span class="num">Q2 · 2026</span>
+        </div>
+        <div>
+          <span class="mono-tiny">Aktualizované</span>
+          <span class="num">03:42 SEČ</span>
+        </div>
+        <div>
+          <span class="mono-tiny">Rozsah</span>
+          <span class="num">SR · 15 značiek</span>
+        </div>
+      </div>
+    </div>
+
+    <aside class="hero-right reveal d2" aria-label="Live Mentivue Index">
+      <div class="index-card">
+        <span class="corner">Live Index · Q2 2026</span>
+        <div class="index-head">
+          <span class="pulse-dot" aria-hidden="true"></span>
+          <div class="index-head-text">
+            <span class="index-head-title">Mentivue Index — naživo</span>
+            <span class="index-head-sub">Δ · Týždenná zmena indexu</span>
+          </div>
+        </div>
+
+        <div class="index-cols" aria-hidden="true">
+          <span class="mono-tiny">#</span>
+          <span class="mono-tiny">Značka</span>
+          <span class="mono-tiny" style="text-align:right">Skóre</span>
+          <span class="mono-tiny" style="text-align:right">Δ WoW</span>
+        </div>
+
+        <div class="index-rows">
+          <div class="index-row">
+            <span class="index-rank">01</span>
+            <span class="index-brand">Alza.sk</span>
+            <span class="index-score">87.3</span>
+            <span class="index-delta up">+2.1 ▲</span>
+          </div>
+          <div class="index-row">
+            <span class="index-rank">02</span>
+            <span class="index-brand">Datart</span>
+            <span class="index-score">72.8</span>
+            <span class="index-delta down">−0.8 ▼</span>
+          </div>
+          <div class="index-row">
+            <span class="index-rank">03</span>
+            <span class="index-brand">Nay</span>
+            <span class="index-score">68.2</span>
+            <span class="index-delta up">+1.4 ▲</span>
+          </div>
+          <div class="index-row">
+            <span class="index-rank">04</span>
+            <span class="index-brand">Planeo</span>
+            <span class="index-score">54.1</span>
+            <span class="index-delta down">−3.2 ▼</span>
+          </div>
+          <div class="index-row">
+            <span class="index-rank">05</span>
+            <span class="index-brand">Andrea Shop</span>
+            <span class="index-score">48.6</span>
+            <span class="index-delta flat">— 0.0</span>
+          </div>
+          <div class="index-row">
+            <span class="index-rank">06</span>
+            <span class="index-brand">Mall.sk</span>
+            <span class="index-score">41.2</span>
+            <span class="index-delta up">+0.9 ▲</span>
+          </div>
+        </div>
+
+        <div class="index-foot">
+          <span class="mono-tiny">Aktualizácia · PO 09:00 SEČ</span>
+          <a href="#index">Pozrieť celý Index <span class="arrow">→</span></a>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ───────────── STATS BAND ───────────── -->
+<section class="stats" data-screen-label="03 Stats" aria-label="Methodology snapshot">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="stat-num italic count" data-target="60" data-suffix="k+">0</div>
+        <div class="stat-label">Zmienok značiek / Q</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num count" data-target="4" data-suffix="">0</div>
+        <div class="stat-label">AI enginy</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num count" data-target="15" data-suffix="">0</div>
+        <div class="stat-label">Značiek · týždenne</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num count" data-target="90" data-suffix="">0</div>
+        <div class="stat-label">Dní · dlhodobo</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── HOW IT WORKS ───────────── -->
+<section class="block" data-screen-label="04 Method" id="method">
+  <div class="container">
+    <div class="method-head">
+      <div>
+        <span class="section-tag">01 / Metóda</span>
+        <h2 class="section-title">Od otázok zákazníkov<br/>k <em>rozhodnutiam značky.</em></h2>
+      </div>
+      <p class="intro">Tri kroky, každý týždeň. Žiadny scraping, žiadne extrapolácie — iba priame, reprodukovateľné meranie voči enginom, ktoré vaši zákazníci skutočne používajú.</p>
+    </div>
+
+    <div class="method-grid">
+      <article class="method-card">
+        <header class="method-step">
+          <span class="n">01</span>
+          <span class="tag">Otázky</span>
+        </header>
+        <h3 class="method-title">Pýtame sa otázky, ktoré sa pýtajú vaši zákazníci.</h3>
+        <p class="method-body">Kurátorovaný katalóg slovenských nákupných otázok — discovery, porovnávanie, kúpny zámer.</p>
+        <div class="method-visual" aria-hidden="true">
+          <div class="prompt-list" id="prompt-list">
+            <span>› kde kúpiť OLED televízor do 1500€</span>
+            <span>› najlepšia práčka pre rodinu 4 osôb</span>
+            <span>› Alza vs Datart doručenie cena</span>
+            <span>› chladnička no frost odporúčanie 2026</span>
+            <span>› macbook air alebo pro pre dizajnéra</span>
+            <span>› reklamácia notebooku po 2 rokoch</span>
+            <span>› iphone 15 najlepšia cena slovensko</span>
+            <span>› herný monitor 27 palcov 144hz</span>
+            <span>› bezdrôtové slúchadlá do 200 eur</span>
+            <span>› robotický vysávač pre srsť</span>
+            <span>› android tablet pre študenta</span>
+            <span>› kávovar automatický pre kanceláriu</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="method-card">
+        <header class="method-step">
+          <span class="n">02</span>
+          <span class="tag">Enginy</span>
+        </header>
+        <h3 class="method-title">Štyri AI enginy odpovedajú, každý týždeň.</h3>
+        <p class="method-body">Rovnaké otázky. Čerstvé sessions. Žiadna pamäť, žiadna personalizácia, žiadna kontaminácia.</p>
+        <div class="method-visual" aria-hidden="true">
+          <div class="engines">
+            <div class="engine-row">
+              <span class="dot live"></span>
+              <span class="name">ChatGPT</span>
+              <span class="meta">PO 09:00</span>
+            </div>
+            <div class="engine-row">
+              <span class="dot live"></span>
+              <span class="name">Claude</span>
+              <span class="meta">PO 10:00</span>
+            </div>
+            <div class="engine-row">
+              <span class="dot live"></span>
+              <span class="name">Perplexity</span>
+              <span class="meta">PO 11:00</span>
+            </div>
+            <div class="engine-row">
+              <span class="dot live"></span>
+              <span class="name">Gemini</span>
+              <span class="meta">PO 12:00</span>
+            </div>
+            <div class="engine-row" style="border:none; padding-top:14px;">
+              <span class="dot" style="background:transparent"></span>
+              <span class="meta" style="grid-column: 2 / -1; text-align: left;">→ 4 704 párov otázka × engine / týždeň</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="method-card">
+        <header class="method-step">
+          <span class="n">03</span>
+          <span class="tag">Signál</span>
+        </header>
+        <h3 class="method-title">Meriame, validujeme, reportujeme.</h3>
+        <p class="method-body">Zmienky značiek, share of voice, sentiment, presnosť — skórované, validované, dlhodobé.</p>
+        <div class="method-visual" aria-hidden="true">
+          <svg class="sov-chart" viewBox="0 0 360 180" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- gridlines -->
+            <g stroke="#EBE5D7" stroke-width="1" stroke-dasharray="2 4">
+              <line x1="0" y1="45"  x2="360" y2="45"/>
+              <line x1="0" y1="90"  x2="360" y2="90"/>
+              <line x1="0" y1="135" x2="360" y2="135"/>
+            </g>
+            <!-- comparison (ink) -->
+            <polyline fill="none" stroke="#0E1116" stroke-width="2"
+              points="0,120 30,118 60,122 90,115 120,108 150,112 180,105 210,108 240,100 270,98 300,95 330,92 360,90"/>
+            <!-- primary (signal coral) -->
+            <polyline fill="none" stroke="#FF5B3A" stroke-width="2"
+              points="0,140 30,130 60,125 90,118 120,102 150,95 180,80 210,72 240,58 270,52 300,40 330,32 360,22"/>
+            <!-- end dots -->
+            <circle cx="360" cy="22" r="3" fill="#FF5B3A"/>
+            <circle cx="360" cy="90" r="3" fill="#0E1116"/>
+          </svg>
+          <div class="sov-legend">
+            <span><i class="coral"></i> Vaša značka</span>
+            <span><i></i> Priemer kategórie</span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── WHO WE TRACK ───────────── -->
+<section class="block" data-screen-label="05 Coverage" id="brands">
+  <div class="container">
+    <div class="brands-head">
+      <div>
+        <span class="section-tag">02 / Rozsah</span>
+        <h2 class="section-title"><em>15 značiek.</em><br/>Každý pondelok.</h2>
+      </div>
+      <div class="brands-meta">
+        Slovensko · E-commerce<br/>
+        Q2 2026 · Vlna I
+      </div>
+    </div>
+
+    <div class="brands-grid" id="brands-grid">
+      <!-- Filled by JS -->
+    </div>
+
+    <div class="cohorts-coming">
+      <div class="cohorts-coming-head">
+        <span class="lbl">Najbližšie vlny</span>
+        <span class="sub">Rezervujte si ranú cenu vlny</span>
+      </div>
+      <div class="cohorts-grid">
+        <a class="cohort-card" href="Research.html#cohort-b">
+          <div class="step"><span>Vlna II</span><span class="when">V príprave</span></div>
+          <div class="name">Slovenské bankovníctvo</div>
+          <div class="scope">10–15 značiek · retail a SME</div>
+          <span class="reserve">Rezervovať miesto <span class="arrow">→</span></span>
+        </a>
+        <a class="cohort-card" href="Research.html#cohort-c">
+          <div class="step"><span>Vlna III</span><span class="when">V príprave</span></div>
+          <div class="name">Slovenské poistenie</div>
+          <div class="scope">8–12 značiek · P&amp;C a život</div>
+          <span class="reserve">Rezervovať miesto <span class="arrow">→</span></span>
+        </a>
+        <a class="cohort-card" href="Research.html#cohort-d">
+          <div class="step"><span>Vlna IV</span><span class="when">V skúmaní</span></div>
+          <div class="name">Slovenský retail</div>
+          <div class="scope">12 značiek · potraviny, móda, domov</div>
+          <span class="reserve">Rezervovať miesto <span class="arrow">→</span></span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── EVIDENCE SAMPLE ───────────── -->
+<section class="block" data-screen-label="06 Evidence" id="evidence">
+  <div class="container">
+    <div class="evidence-head">
+      <div>
+        <span class="section-tag">03 / Evidencia</span>
+        <h2 class="section-title">Ako vyzerá meranie <em>v praxi.</em></h2>
+      </div>
+      <p class="intro">Jedna otázka. Jeden engine. Päť vecí, ktoré zaznamenávame. Reprodukovateľné z verejnej metodológie.</p>
+    </div>
+
+    <div class="evidence-card">
+      <div class="row-wrap">
+        <div class="key">Otázka</div>
+        <div><span class="evidence-query">kde kúpiť OLED televízor do 1&nbsp;500&nbsp;€</span></div>
+      </div>
+
+      <div class="row-wrap">
+        <div class="key">ChatGPT · odpoveď</div>
+        <p class="evidence-response">
+          „Pre OLED v cenovej kategórii do <span class="hl">1&nbsp;500&nbsp;€</span> odporúčam <span class="hl">Alza.sk</span> a <span class="hl">Datart</span>, ktoré majú široký výber LG OLED modelov v tomto rozpätí. Alza ponúka skladovú dostupnosť..."
+        </p>
+      </div>
+
+      <div class="row-wrap">
+        <div class="key">Meranie</div>
+        <div class="evidence-measure">
+          <div class="line">Zmienky značiek:
+            <span class="chip yes"><span class="mark">✓</span> Alza</span>
+            <span class="chip yes"><span class="mark">✓</span> Datart</span>
+            <span class="chip no"><span class="mark">✗</span> Nay</span>
+          </div>
+          <div class="line">Pozícia: Alza #1 · Datart #2</div>
+          <div class="line">Sentiment: pozitívny (oba) · neutrálna výhrada k cene</div>
+          <div class="line">Zdroj citácie: heureka.sk · alza.sk</div>
+          <div class="line">Skórované: M03 (prítomnosť) · M07 (poradie) · M14 (sentiment)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── PRODUCTS ───────────── -->
+<section class="block" data-screen-label="07 Pricing" id="pricing">
+  <div class="container">
+    <div class="products-head">
+      <div>
+        <span class="section-tag">04 / Cenník</span>
+        <h2 class="section-title">Tri cesty dovnútra.<br/><em>Jeden signál.</em></h2>
+      </div>
+    </div>
+
+    <div class="products-grid">
+      <article class="product">
+        <div class="product-tag">
+          <span>Industry Report</span>
+          <span>Kvartálne</span>
+        </div>
+        <h3 class="product-name">Bezplatný Industry Report</h3>
+        <p class="product-desc">10-stranový kvartálny prehľad slovenskej AI-search krajiny.</p>
+        <div class="product-price">€0</div>
+        <div class="product-price-meta">PDF · 10 strán</div>
+        <ul class="product-bullets">
+          <li>Rankingy kategórií a share of voice</li>
+          <li>Pohyb medzikvartálne</li>
+          <li>Zhrnutie metodológie a dáta v appendixe</li>
+        </ul>
+        <div class="product-cta">
+          <a class="btn" href="#report">Stiahnuť Q2 report <span class="arrow">→</span></a>
+        </div>
+      </article>
+
+      <article class="product product--featured" aria-label="Featured plan">
+        <div class="product-tag">
+          <span>Per-Brand Audit</span>
+          <span class="badge">● Flagship</span>
+        </div>
+        <h3 class="product-name">Per-Brand Audit</h3>
+        <p class="product-desc">35-stranový hĻbkový audit vašej značky vo všetkých štyroch enginoch.</p>
+        <div class="product-price">€2 990<span class="per">/ jednorazovo</span></div>
+        <div class="product-price-meta">Dodanie do 5 dní · 35 strán</div>
+        <ul class="product-bullets">
+          <li>Detailný rozpad viditeľnosti po jednotlivých otázkach</li>
+          <li>Pozícia voči konkurencii a analýza medzier</li>
+          <li>30-minútový výklad s research leadom</li>
+        </ul>
+        <div class="product-cta">
+          <a class="btn btn--signal" href="#audit">Objednať audit <span class="arrow">→</span></a>
+        </div>
+      </article>
+
+      <article class="product">
+        <div class="product-tag">
+          <span>Pro Predplatné</span>
+          <span>Mesačne</span>
+        </div>
+        <h3 class="product-name">Pro Predplatné</h3>
+        <p class="product-desc">Kontinuálny monitoring s mesačnými action plánmi a osobným poradcom.</p>
+        <div class="product-price">€1 490<span class="per">/ mes.</span></div>
+        <div class="product-price-meta">Ročne alebo kvartálne · zrušenie kedykoľvek</div>
+        <ul class="product-bullets">
+          <li>Týždenný prístup k Indexu a export raw dát</li>
+          <li>Mesačný action plán s prioritami</li>
+          <li>Osobný research poradca k dispozícii</li>
+        </ul>
+        <div class="product-cta">
+          <a class="btn" href="#pro">Predplatiť Pro <span class="arrow">→</span></a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── METHODOLOGY ───────────── -->
+<section class="block methodology" data-screen-label="08 Methodology" id="methodology">
+  <div class="container">
+    <span class="section-tag">05 / Autorita</span>
+    <div class="meth-grid" style="margin-top: 24px;">
+      <div>
+        <p class="meth-quote">
+          Nehádame. Neextrapolujeme.<br/>
+          Meriame <em>reálne otázky, ktoré sa pýtajú vaši zákazníci</em> — naprieč 4 enginmi, každý pondelok, validované týždenne.
+        </p>
+        <div class="meth-attrib">— Metodológia Mentivue Research · M22</div>
+      </div>
+
+      <div>
+        <ul class="meth-list">
+          <li>
+            <span class="key">Otázky</span>
+            <span class="val">Kurátorovaný katalóg slovenských nákupných otázok, aktualizovaný mesačne.</span>
+          </li>
+          <li>
+            <span class="key">Enginy</span>
+            <span class="val">ChatGPT, Claude, Perplexity, Gemini — čerstvé sessions každý pondelok.</span>
+          </li>
+          <li>
+            <span class="key">Vlna</span>
+            <span class="val"><span class="num">15</span> značiek vo Vlne I. <span class="num">8</span> vertikál v aktívnej príprave.</span>
+          </li>
+          <li>
+            <span class="key">Validácia</span>
+            <span class="val">M1–M22 — ľudská kontrola, zhoda hodnotiteľov, monitoring driftu.</span>
+          </li>
+          <li>
+            <span class="key">Transparentnosť</span>
+            <span class="val">Plná metodológia, prompt set a scoring rubrika verejne dostupné.</span>
+          </li>
+        </ul>
+        <a class="meth-link" href="#methodology-full">Prečítať metodológiu <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── TRACKED BRANDS STRIP ───────────── -->
+<section class="tracked-strip" data-screen-label="09 Trust" aria-label="Tracked brands">
+  <div class="container">
+    <div class="label">Sledované značky · Q2 2026 · Slovensko</div>
+    <div class="roll">
+      <span class="name">Alza</span><span class="sep">·</span><span class="name">Datart</span><span class="sep">·</span><span class="name">Nay</span><span class="sep">·</span><span class="name">Planeo</span><span class="sep">·</span><span class="name">Andrea&nbsp;Shop</span><span class="sep">·</span><span class="name">Hej.sk</span><span class="sep">·</span><span class="name">Okay</span><span class="sep">·</span><span class="name">Mall</span><span class="sep">·</span><span class="name">Electro&nbsp;World</span><span class="sep">·</span><span class="name">iStores</span><span class="sep">·</span><span class="name">Mironet</span><span class="sep">·</span><span class="name">Megapixel</span><span class="sep">·</span><span class="name">TPD</span><span class="sep">·</span><span class="name">Faxcopy</span><span class="sep">·</span><span class="name">Notebooky.sk</span>
+    </div>
+  </div>
+</section>
+
+<div class="pulse-rail" aria-hidden="true"></div>
+
+<!-- ───────────── PULSE NEWSLETTER ───────────── -->
+<section class="pulse" data-screen-label="10 Pulse" id="pulse">
+  <div class="container pulse-inner">
+    <div>
+      <span class="section-tag">06 / Pulse</span>
+      <h2>Dostávajte <em>Pulse,</em><br/>každý štvrtok.</h2>
+      <p>Jeden signál, jeden príbeh, jedna akcia. Týždenne pre marketingových lídrov, ktorí radšej prečítajú 600 slov ako 60 dashboardov.</p>
+    </div>
+
+    <form class="pulse-form" id="pulse-form" novalidate>
+      <div class="pulse-input-row">
+        <input type="email" required placeholder="vy@znacka.sk" aria-label="Pracovný e-mail" id="pulse-email" />
+        <button type="submit">Prihlásiť</button>
+      </div>
+      <div class="pulse-fine">Zadarmo · ~600 slov · Kedykoľvek zrušíte</div>
+      <div class="pulse-success" id="pulse-success" role="status" aria-live="polite"></div>
+    </form>
+  </div>
+</section>
+
+
+<script is:inline>
+  // ────────────── Brands grid ──────────────
+  (function buildBrands() {
+    const brands = [
+      ['Alza',          '#01 · 87.3'],
+      ['Datart',        '#02 · 72.8'],
+      ['Nay',           '#03 · 68.2'],
+      ['Planeo',        '#04 · 54.1'],
+      ['Andrea Shop',   '#05 · 48.6'],
+      ['Hej.sk',        '#06 · 44.9'],
+      ['Okay',          '#07 · 42.5'],
+      ['Mall',          '#08 · 41.2'],
+      ['Electro World', '#09 · 38.7'],
+      ['iStores',       '#10 · 35.4'],
+      ['Mironet',       '#11 · 31.8'],
+      ['Megapixel',     '#12 · 28.6'],
+      ['TPD',           '#13 · 24.9'],
+      ['Faxcopy',       '#14 · 21.2'],
+      ['Notebooky.sk',  '#15 · 18.4'],
+    ];
+    const root = document.getElementById('brands-grid');
+    if (!root) return;
+    brands.forEach((b, i) => {
+      const el = document.createElement('div');
+      el.className = 'brand-card';
+      el.innerHTML =
+        '<div class="num">' + String(i + 1).padStart(2, '0') + ' / 15</div>' +
+        '<div><div class="name">' + b[0] + '</div></div>' +
+        '<div class="score">' + b[1] + '</div>';
+      root.appendChild(el);
+    });
+  })();
+
+  // ────────────── Reveal on scroll ──────────────
+  (function reveal() {
+    const els = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) {
+      els.forEach(e => e.classList.add('in'));
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    els.forEach(e => io.observe(e));
+  })();
+
+  // ────────────── Count-up stat numbers ──────────────
+  (function countUp() {
+    const nums = document.querySelectorAll('.stat-num.count');
+    const fmt = (n, locale, suffix) => {
+      let s;
+      if (locale === 'sk') {
+        s = n.toLocaleString('sk-SK').replace(/\s/g, '\u00a0');
+      } else {
+        s = n.toLocaleString('en-US');
+      }
+      return s + (suffix || '');
+    };
+    const animate = (el) => {
+      const target = parseInt(el.dataset.target, 10);
+      const locale = el.dataset.locale === 'sk' ? 'sk' : 'en';
+      const suffix = el.dataset.suffix || '';
+      const duration = 1200;
+      const start = performance.now();
+      const tick = (now) => {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        const v = Math.round(target * eased);
+        el.textContent = fmt(v, locale, suffix);
+        if (t < 1) requestAnimationFrame(tick);
+        else el.textContent = fmt(target, locale, suffix);
+      };
+      requestAnimationFrame(tick);
+    };
+    if (!('IntersectionObserver' in window)) {
+      nums.forEach(animate);
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          animate(e.target);
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.4 });
+    nums.forEach(n => io.observe(n));
+  })();
+
+  // ────────────── Live Index micro-flicker ──────────────
+  (function liveTick() {
+    const rows = document.querySelectorAll('.index-row .index-score');
+    if (!rows.length) return;
+    setInterval(() => {
+      const i = Math.floor(Math.random() * rows.length);
+      const el = rows[i];
+      const original = el.textContent;
+      el.style.transition = 'color 200ms ease';
+      el.style.color = '#FFE8E0';
+      setTimeout(() => { el.style.color = ''; }, 320);
+      void original;
+    }, 2600);
+  })();
+
+  // ────────────── Newsletter form ──────────────
+  (function pulseForm() {
+    const form = document.getElementById('pulse-form');
+    if (!form) return;
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('pulse-email').value.trim();
+      const out = document.getElementById('pulse-success');
+      if (!email || !/.+@.+\..+/.test(email)) {
+        out.textContent = '● Zadajte platný pracovný e-mail';
+        out.style.color = '#FF8A6F';
+        return;
+      }
+      out.textContent = '● Prihlásené — skontrolujte e-mail pre potvrdenie';
+      out.style.color = '#94D9B1';
+      form.querySelector('input').value = '';
+    });
+  })();
+
+  // ────────────── Smooth scroll for in-page links ──────────────
+  (function smooth() {
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', (e) => {
+        const id = a.getAttribute('href').slice(1);
+        if (!id) return;
+        const target = document.getElementById(id);
+        if (target) {
+          e.preventDefault();
+          const top = target.getBoundingClientRect().top + window.scrollY - 64;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+      });
+    });
+  })();
+</script>
+
+</script>
+</SiteLayout>
