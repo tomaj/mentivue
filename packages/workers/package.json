@@ -13,6 +13,7 @@
   "dependencies": {
     "@mentivue/shared": "workspace:*",
     "bullmq": "^5.34.0",
+    "drizzle-orm": "^0.38.0",
     "ioredis": "^5.4.1"
   },
   "devDependencies": {

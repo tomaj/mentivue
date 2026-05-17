@@ -88,7 +88,7 @@ console.log(`✓ Persisted llm_call ${call.id}`);
 console.log(`✓ Persisted raw_response ${response?.id}`);
 console.log('');
 console.log('Done. Inspect with:');
-console.log('  psql postgresql://mentivue:dev@localhost:5432/mentivue');
+console.log('  psql postgresql://mentivue:dev@localhost:5433/mentivue');
 console.log('  SELECT id, provider, model, input_tokens, output_tokens, estimated_cost_usd, latency_ms');
 console.log('    FROM llm_calls ORDER BY created_at DESC LIMIT 5;');
 
