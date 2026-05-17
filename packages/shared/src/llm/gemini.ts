@@ -53,16 +53,19 @@ export async function callGemini(opts: LLMCallOptions): Promise<LLMCallResult> {
       }
     | undefined;
 
-  const citations: Citation[] = [];
-  for (const chunk of grounding?.groundingChunks ?? []) {
-    const url = chunk.web?.uri;
-    if (!url) continue;
-    citations.push({
-      url,
-      title: chunk.web?.title,
-      domain: safeDomain(url),
-    });
-  }
+  const rawChunks = grounding?.groundingChunks ?? [];
+  const citations: Citation[] = await Promise.all(
+    rawChunks
+      .filter((c): c is { web: { uri: string; title?: string } } => Boolean(c.web?.uri))
+      .map(async (c) => {
+        const unwrapped = await unwrapGroundingUrl(c.web.uri);
+        return {
+          url: unwrapped,
+          title: c.web.title,
+          domain: safeDomain(unwrapped),
+        };
+      }),
+  );
 
   const usage = response.usageMetadata;
   const inputTokens = usage?.promptTokenCount ?? 0;
@@ -102,4 +105,29 @@ function safeDomain(url: string): string | undefined {
 
 function isValidKey(value: string | undefined): boolean {
   return Boolean(value && !value.endsWith('...') && value.length > 10);
+}
+
+const GROUNDING_HOST = 'vertexaisearch.cloud.google.com';
+
+/**
+ * Gemini Grounding returns citation URLs as opaque redirects through
+ * vertexaisearch.cloud.google.com. The real destination is only available
+ * after following the redirect — we issue a HEAD with redirect:'manual'
+ * and read the Location header. Falls back to the original URL on any
+ * failure (5s timeout, network error, missing header).
+ */
+async function unwrapGroundingUrl(url: string): Promise<string> {
+  if (!url.includes(GROUNDING_HOST)) return url;
+  try {
+    const res = await fetch(url, {
+      method: 'HEAD',
+      redirect: 'manual',
+      signal: AbortSignal.timeout(5000),
+    });
+    const location = res.headers.get('location');
+    if (location) return location;
+  } catch {
+    // fall through
+  }
+  return url;
 }

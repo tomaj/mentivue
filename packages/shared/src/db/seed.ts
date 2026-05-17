@@ -50,6 +50,19 @@ const brandData: Array<{ slug: string; name: string; website: string; aliases: s
   { slug: 'tpd', name: 'TPD', website: 'https://www.tpd.sk', aliases: ['TPD', 'tpd.sk'] },
   { slug: 'faxcopy', name: 'Faxcopy', website: 'https://www.faxcopy.sk', aliases: ['Faxcopy', 'faxcopy.sk'] },
   { slug: 'notebooky-sk', name: 'Notebooky.sk', website: 'https://www.notebooky.sk', aliases: ['Notebooky.sk', 'Notebooky'] },
+  // Expansion based on AI-surfaced untracked brands across May 2026 smoke runs
+  { slug: 'euronics', name: 'Euronics', website: 'https://www.euronics.sk', aliases: ['Euronics', 'EURONICS', 'euronics.sk'] },
+  { slug: 'datacomp', name: 'Datacomp', website: 'https://www.datacomp.sk', aliases: ['Datacomp', 'Datacomp.sk', 'datacomp.sk'] },
+  { slug: 'agem', name: 'AGEM Computers', website: 'https://www.agem.sk', aliases: ['AGEM', 'AGEM Computers', 'agem.sk'] },
+  { slug: 'emos', name: 'EMOS', website: 'https://www.emos.sk', aliases: ['EMOS', 'emos.sk'] },
+  // Comparators & marketplaces that AI repeatedly cites — track as brands so
+  // SoV captures "is the AI sending traffic to a comparator instead of an e-shop?"
+  { slug: 'heureka', name: 'Heureka', website: 'https://www.heureka.sk', aliases: ['Heureka', 'Heureka.sk', 'heureka.sk', 'Heureka.group', 'obchody.heureka.sk'] },
+  { slug: 'pricemania', name: 'Pricemania', website: 'https://www.pricemania.sk', aliases: ['Pricemania', 'pricemania.sk', 'PriceMania'] },
+  { slug: 'najeshopy', name: 'NajEshopy', website: 'https://www.najeshopy.sk', aliases: ['NajEshopy', 'Najeshopy.sk', 'najeshopy.sk'] },
+  // Cross-border references per PRD §3.4
+  { slug: 'amazon', name: 'Amazon', website: 'https://www.amazon.de', aliases: ['Amazon', 'amazon.de', 'amazon.com', 'Amazon.de'] },
+  { slug: 'aliexpress', name: 'AliExpress', website: 'https://aliexpress.com', aliases: ['AliExpress', 'Ali Express', 'aliexpress.com', 'Ali'] },
 ];
 
 await db
@@ -82,26 +95,31 @@ const yamlPath = resolve(repoRoot, 'prompts/sk-electronics.yaml');
 const raw = readFileSync(yamlPath, 'utf-8');
 const parsed = yaml.load(raw) as YamlFile;
 
-const sample = parsed.prompts.filter((p) => p.frequency_tier === 'daily' && p.is_active).slice(0, 10);
-
-await db
-  .insert(prompts)
-  .values(
-    sample.map((p) => ({
-      verticalId: vertical.id,
-      externalId: p.external_id,
-      category: p.category,
-      subcategory: p.subcategory ?? null,
-      language: p.language,
-      text: p.text,
-      frequencyTier: p.frequency_tier,
-      isActive: p.is_active,
-    })),
-  )
-  .onConflictDoNothing({ target: prompts.externalId });
+// Import ALL prompts from the YAML. Insert in batches of 500 to keep
+// the prepared statement under Postgres' 65k parameter limit.
+const active = parsed.prompts.filter((p) => p.is_active);
+const BATCH = 500;
+for (let i = 0; i < active.length; i += BATCH) {
+  const chunk = active.slice(i, i + BATCH);
+  await db
+    .insert(prompts)
+    .values(
+      chunk.map((p) => ({
+        verticalId: vertical.id,
+        externalId: p.external_id,
+        category: p.category,
+        subcategory: p.subcategory ?? null,
+        language: p.language,
+        text: p.text,
+        frequencyTier: p.frequency_tier,
+        isActive: p.is_active,
+      })),
+    )
+    .onConflictDoNothing({ target: prompts.externalId });
+}
 
 const promptCount = await db.$count(prompts);
-console.log(`✓ Prompts: ${promptCount} total (${sample.length} sample of daily tier seeded)`);
+console.log(`✓ Prompts: ${promptCount} total (${active.length} active in YAML)`);
 console.log('');
 console.log('Seed complete. Try a test collection:');
 console.log('  cd packages/workers && bun run src/scripts/test-collect.ts');
