@@ -89,6 +89,44 @@ npx wrangler pages deploy packages/site/dist --project-name=mentivue
 **Other targets** — `dist/` is plain static; works on Vercel, Netlify, GitHub
 Pages, S3+CloudFront, any nginx host.
 
+### Password-protect the site (pre-launch staging)
+
+While the brand and content are still being polished, lock the deployment so
+only invited people can see it. Two zero-config options on Cloudflare:
+
+**Option A — Cloudflare Access** (recommended, free for up to 50 users, magic-link login):
+
+1. After deploying to Pages, go to **Cloudflare dashboard → Zero Trust → Access → Applications → Add an application → Self-hosted**.
+2. Application domain: `mentivue.sk` (or `mentivue.pages.dev` for the preview URL).
+3. **Identity provider:** add **One-time PIN** (no SSO setup needed — Cloudflare emails a 6-digit code).
+4. **Policy:** Action `Allow`, selector `Emails` → list addresses (`tomas@mentivue.sk`, reviewers, etc.) or `Email domain ends with @mentivue.sk`.
+5. Save. Visitors get a "Sign in with email" page until you remove the policy.
+
+Cost: **€0** (Self-Hosted plan covers up to 50 users).
+
+**Option B — Basic Auth via a tiny Worker** (faster to set up, single shared password):
+
+```js
+// infra/access-worker.js — bind in front of the Pages domain via Workers Routes
+export default {
+  async fetch(req, env) {
+    const auth = req.headers.get('authorization');
+    const expected = 'Basic ' + btoa(`${env.USER}:${env.PASS}`);
+    if (auth !== expected) {
+      return new Response('Auth required', {
+        status: 401,
+        headers: { 'WWW-Authenticate': 'Basic realm="Mentivue staging"' },
+      });
+    }
+    return fetch(req); // pass through to Pages
+  },
+};
+```
+
+Deploy with `wrangler deploy infra/access-worker.js`, set `USER` + `PASS` as
+Worker secrets, then add a route `mentivue.sk/*` → this worker. Remove the
+route when launching publicly.
+
 ### App + workers (`packages/app`, `packages/workers`) — Hetzner CX22
 
 Stub `infra/deploy.sh` is checked in for SSH-based deploys. Wire up once the
