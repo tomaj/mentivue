@@ -25,7 +25,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.96.0",
     "@google/genai": "^1.30.0",
-    "drizzle-orm": "^0.38.0",
+    "drizzle-orm": "^0.45.2",
     "js-yaml": "^4.1.0",
     "openai": "^6.7.0",
     "postgres": "^3.4.5",
