@@ -1,0 +1,294 @@
+---
+import LegalLayout from "../layouts/LegalLayout.astro";
+---
+<LegalLayout title="Metodológia — Mentivue" description="Reprodukovateľná metodológia merania AI search visibility pre slovenský e-commerce.">
+<section class="page-hero" data-screen-label="02 Hero">
+  <div class="container">
+    <div class="eyebrow"><span class="mono-label">Metodológia · M22 · Máj 2026</span></div>
+    <h1 class="page-title">Ako Mentivue meria <em>to čo AI hovorí</em> o značkách.</h1>
+    <p class="lede">Plná metodológia. Publikovaná. Reprodukovateľná.</p>
+    <div class="byline">
+      <span>
+        <span class="avatar" aria-hidden="true">TH</span>
+        <span class="mono-tiny">Autor · Tomáš H.</span>
+      </span>
+      <span class="sep" aria-hidden="true"></span>
+      <span class="mono-tiny">Posledná revízia · 14. 5. 2026</span>
+      <span class="sep" aria-hidden="true"></span>
+      <span class="mono-tiny">~ <span class="mono">12</span> min čítania</span>
+      <span class="sep" aria-hidden="true"></span>
+      <a href="#" class="mono-tiny" style="color:#FF5B3A; border-bottom: 1px solid #FF5B3A; padding-bottom:1px;">Stiahnuť PDF →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ───── Document ───── -->
+<div class="container">
+  <article class="doc">
+
+    <!-- TOC -->
+    <nav class="doc-toc toc" aria-label="Obsah">
+      <button class="toc-mobile-toggle" aria-expanded="false" onclick="this.parentElement.classList.toggle('is-open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('is-open'));">
+        <span>Obsah · 7 sekcií</span>
+        <span aria-hidden="true">▾</span>
+      </button>
+      <div class="toc-eyebrow">Metodológia · M22</div>
+      <h3 class="toc-title">Obsah</h3>
+      <ul>
+        <li class="is-active"><a href="#uvod">01 · Úvod</a></li>
+        <li><a href="#prompt-set">02 · Prompt set</a>
+          <ul>
+            <li><a href="#sk-prompty">SK prompty</a></li>
+            <li><a href="#kategorie">8 kategórií</a></li>
+            <li><a href="#validacna-vrstva">Validačná vrstva</a></li>
+          </ul>
+        </li>
+        <li><a href="#enginy">03 · LLM enginy</a>
+          <ul>
+            <li><a href="#chatgpt">ChatGPT</a></li>
+            <li><a href="#claude">Claude</a></li>
+            <li><a href="#perplexity">Perplexity</a></li>
+            <li><a href="#gemini">Gemini</a></li>
+          </ul>
+        </li>
+        <li><a href="#meranie">04 · Meranie</a>
+          <ul>
+            <li><a href="#extrakcia">Extrakcia značiek</a></li>
+            <li><a href="#sentiment">Sentiment</a></li>
+            <li><a href="#citations">Citation parsing</a></li>
+          </ul>
+        </li>
+        <li><a href="#validacia">05 · Validácia (M1–M22)</a></li>
+        <li><a href="#limity">06 · Limity a transparentnosť</a></li>
+        <li><a href="#historia">07 · História metodológie</a></li>
+      </ul>
+    </nav>
+
+    <!-- Main content -->
+    <main class="doc-content">
+
+      <section id="uvod">
+        <div class="sec-eyebrow">01 · Úvod</div>
+        <h2>Prečo meriame to <em>čo AI hovorí.</em></h2>
+        <p class="lead">AI vyhľadávacie systémy už dnes formujú nákupné rozhodnutia. Mentivue túto vrstvu meria — týždenne, longitudinálne a s plne publikovanou metodológiou.</p>
+        <p>SERP rebríčky stratili v Slovensku počas posledných osemnástich mesiacov významnú časť svojej predpovednej hodnoty. Klesajúce CTR, rastúce zero-click odpovede, AI asistenti integrovaní priamo do prehliadačov, ChatGPT zaobchádzajúce s nákupnými otázkami ako so štandardným use-case. Pre marketingových lídrov to znamená jedno: značky sú dnes <strong>viditeľné inde</strong>, než sa pred dvomi rokmi merali.</p>
+        <p>Mentivue túto inú vrstvu meria. Nie agregátmi tretích strán, nie odhadmi, nie scrapingom. Priamo — kladením reálnych nákupných otázok štyrom najpoužívanejším AI enginom v týždennej kadencii a štruktúrovaným zaznamenávaním odpovedí.<sup class="fn">1</sup></p>
+        <aside class="sidenote">
+          <span class="n">1</span>Týždenná kadencia bola zvolená experimentálne — denné meranie ukazuje vysoký šum, mesačné príliš veľkú latenciu na anomálie. Týždeň je kompromisom.
+        </aside>
+        <p>Táto stránka popisuje, ako presne to robíme. Je <em>úplná</em>, nie zhrnutie. Ak vám niečo chýba, napíšte autorovi — pridáme to.</p>
+
+        <blockquote class="pullquote">
+          Žiadny scraping. Žiadne extrapolácie. Iba priame, reprodukovateľné meranie.
+          <span class="by">— Mentivue · zásada č. 1</span>
+        </blockquote>
+      </section>
+
+      <section id="prompt-set">
+        <div class="sec-eyebrow">02 · Prompt set</div>
+        <h2>Kde sa pýtame to, čo by sa <em>pýtali oni.</em></h2>
+        <p>Kvalita merania začína pri kvalite otázok. Kurátorovaný katalóg slovenských prompto­v sme zostavili tak, aby reprezentoval reálne nákupné správanie v Slovensku — nie idealizované otázky z lab prostredia.</p>
+
+        <h3 id="sk-prompty">SK prompty</h3>
+        <p>Východiskovým bodom bol súbor 4&nbsp;200 anonymizovaných vyhľadávacích reťazcov získaných od partnerských e-shopov v období Q4 2025 a Q1 2026. Z neho sme vybrali tie, ktoré spĺňali tri kritériá: <strong>nákupný zámer</strong> (nie informačný), <strong>komerčná hodnota</strong> (vedie k objednávke alebo dopytu) a <strong>jazyková prirodzenosť</strong> (slovenský zákazník by sa tak naozaj pýtal).</p>
+        <p>Súbor následne prešiel troma kolami validácie s tromi nezávislými hodnotiteľmi. Spolu prešlo finálnym sitom <span class="num">1&nbsp;176</span> otázok, ktoré dnes tvoria stabilný prompt set. Katalóg sa aktualizuje raz mesačne — pridávame nové vzory, archivujeme zastarané.</p>
+
+        <h3 id="kategorie">8 kategórií</h3>
+        <p>Prompty sú klasifikované do 8 nákupných tried, ktoré pokrývajú celý lievik od objavovania po pozákupnú starostlivosť:</p>
+
+        <div class="callout">
+          <div class="head">
+            <span class="title">Prompt katalóg · stav k 14. 5. 2026</span>
+            <span class="meta">M03 · v1.7</span>
+          </div>
+          <table>
+            <tbody>
+              <tr><td>Discovery prompty</td><td>250</td></tr>
+              <tr><td>Product-specific otázky</td><td>300</td></tr>
+              <tr><td>Comparison (porovnania)</td><td>150</td></tr>
+              <tr><td>Cena a dostupnosť</td><td>140</td></tr>
+              <tr><td>Recenzie a hodnotenia</td><td>120</td></tr>
+              <tr><td>Reklamácia a podpora</td><td>96</td></tr>
+              <tr><td>Doručenie a logistika</td><td>80</td></tr>
+              <tr><td>Alternatívy a nepriame</td><td>40</td></tr>
+              <tr class="total"><td>Spolu</td><td>1&nbsp;176</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="validacna-vrstva">Validačná vrstva</h3>
+        <p>Každý prompt v katalógu má tri metadáta: <em>buyer-intent stage</em> (1–7), <em>kategória produktu</em> a <em>zdroj</em> (pôvod reťazca v anonymizovanom datasete). Túto metadátovú vrstvu kontroluje M01 — modul, ktorý raz mesačne preveruje konzistenciu klasifikácií. Drift zaznamenávame v interných reportoch a sprístupňujeme klientom Pro tieru.</p>
+      </section>
+
+      <section id="enginy">
+        <div class="sec-eyebrow">03 · LLM enginy</div>
+        <h2>Štyri enginy, jeden pondelok.</h2>
+        <p>Týždenné meranie prebieha vždy v pondelok ráno medzi <span class="num">09:00</span> a <span class="num">12:00</span> SEČ. Každý prompt sa odpýta v <strong>čerstvej session</strong> bez histórie, bez personalizácie, bez geolokácie. Cieľom je čo najmenej kontaminované meranie.</p>
+
+        <h3 id="chatgpt">ChatGPT</h3>
+        <p>Aktuálne verzia GPT-5 (od marca 2026), teplota 0.7, default systémový prompt. Bez vlastných GPT-s, bez memory, bez plugin­ov. Použitý je API endpoint, nie web UI, aby sa minimalizovali stateové artefakty.</p>
+
+        <h3 id="claude">Claude</h3>
+        <p>Aktuálne <code class="inline">claude-sonnet-4.5</code>, default teplota, no system prompt. Web search povolený, ale loggovaný — pomáha pri analýze citation sources (viď bod <a class="in-text" href="#citations">04 · Citation parsing</a>).</p>
+
+        <h3 id="perplexity">Perplexity</h3>
+        <p>Perplexity Pro, Sonar Large model, „Best" mode (povolený web search). Toto je jediný engine, kde priamo merame aj odkazované zdroje — ostatné enginy citujú zriedkavejšie alebo necituvjú vôbec.</p>
+
+        <h3 id="gemini">Gemini</h3>
+        <p>Gemini 2.5 Pro cez Google AI Studio API. Najmladší účastník panelu — pridaný v Q1 2026 po dosiahnutí stabilnej kvality odpovedí v slovenčine.</p>
+
+        <p>Spolu sa každý týždeň vykoná <span class="num">4&nbsp;704</span> meraní (4 enginy × 1&nbsp;176 prompto­v). Surové odpovede sa archivujú v plnom znení po dobu <span class="num">180</span> dní.</p>
+      </section>
+
+      <section id="meranie">
+        <div class="sec-eyebrow">04 · Meranie</div>
+        <h2>Z odpovede k <em>signálu.</em></h2>
+        <p>Surová odpoveď je text — niekoľko desiatok až stoviek slov. Z nej extrahujeme štruktúrované údaje pomocou troch nezávislých extrakčných modulov.</p>
+
+        <h3 id="extrakcia">Extrakcia značiek (M03 · M07)</h3>
+        <p>Modul <code class="inline">M03</code> identifikuje výskyt značky v odpovedi pomocou kombinácie pravidlovej extrakcie (lemmatizovaná zhoda s katalógom 200+ slovenských e-com značiek) a sémantickej verifikácie LLM-as-judge. Modul <code class="inline">M07</code> následne určuje <em>pozíciu</em> značky — kde v rebríčku odpovede sa nachádza.</p>
+
+        <div class="code">
+          <span class="corner">M03 · M07 · pseudo</span>
+<span class="c">// pre každý prompt × engine</span>
+<span class="k">for</span> response <span class="k">in</span> responses:
+    brands  = extract_brands(response, catalog=<span class="s">SK_BRANDS</span>)
+    ranked  = rank_by_appearance(response, brands)
+    judged  = verify_with_llm(response, brands)
+    output  = intersect(brands, judged)
+
+    <span class="c">// emit measurement</span>
+    write(prompt, engine, output, ranked, ts=<span class="s">"2026-05-14T09:14Z"</span>)
+        </div>
+
+        <h3 id="sentiment">Sentiment (M14)</h3>
+        <p>Sentiment voči konkrétnej značke v odpovedi meriame na škále <span class="num">−1.0</span> až <span class="num">+1.0</span>. Modul <code class="inline">M14</code> používa fine-tunovaný klasifikátor (RoBERTa-base) trénovaný na <span class="num">12&nbsp;000</span> manuálne anotovaných slovenských úryvkoch z domén e-commerce, médií a fór. Inter-rater agreement na validačnej množine je <span class="num">κ = 0.78</span>.</p>
+
+        <h3 id="citations">Citation parsing (M11)</h3>
+        <p>Z odpovedí, ktoré obsahujú citácie (najmä Perplexity, čiastočne Claude s web search), parsujeme zdrojové domény a počty výskytov. Týmto sa dostávame k metrike <em>citation share</em> — koľko percent citácií v daný týždeň vašu značku alebo jej obsahový partnerov spomenulo.</p>
+      </section>
+
+      <section id="validacia">
+        <div class="sec-eyebrow">05 · Validácia · M1–M22</div>
+        <h2>Dvadsaťdva kontrolných modulov.</h2>
+        <p>Každý dátový bod v Mentivue Index prejde pred publikovaním sériou validácií. Tieto moduly sú očíslované M01–M22 a každý má vlastnú technickú dokumentáciu (na vyžiadanie pre klientov Pro a Audit).</p>
+
+        <div class="callout">
+          <div class="head">
+            <span class="title">Skupiny validačných modulov</span>
+            <span class="meta">22 modulov · 3 vrstvy</span>
+          </div>
+          <table>
+            <tbody>
+              <tr><td>M01–M06 · Prompt &amp; katalóg integrita</td><td>6</td></tr>
+              <tr><td>M07–M12 · Extrakcia značiek a pozícií</td><td>6</td></tr>
+              <tr><td>M13–M18 · Sentiment a sémantika</td><td>6</td></tr>
+              <tr><td>M19–M22 · Drift, anomálie, transparentnosť</td><td>4</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Kľúčové z hľadiska čitateľa sú dva moduly: <strong>M19</strong> (drift monitoring — sledovanie, či sa správanie engin­u medzi týždňami nemení tak, že by zneplatnil predošlé merania) a <strong>M22</strong> (transparentnosť — povinnosť publikovať akýkoľvek zásah do metodológie do <span class="num">7</span> dní od jeho aplikácie).</p>
+      </section>
+
+      <section id="limity">
+        <div class="sec-eyebrow">06 · Limity a transparentnosť</div>
+        <h2>Čo Mentivue <em>nevidí.</em></h2>
+        <p>Sme research firma. To znamená priznať, čo nemerame.</p>
+        <p>Nemeráme: personalizované odpovede pre konkrétneho zákazníka, odpovede na non-shopping otázky, čerstvosť odpovedí v 24-hodinovom okne, AI asistenti bežiaci on-device, custom GPT-s a Claude Projects, „voice assistant" interakcie typu Siri.</p>
+
+        <div class="note">
+          <span class="label">● Otvorené ohraničenie</span>
+          Personalizované odpovede sú samostatný research program — Mentivue Persona, plánovaný do <em>vlny&nbsp;II</em>. Do toho času nepredstierame, že tieto čísla zachytávajú každého zákazníka individuálne. Ide o priemer over reprezentatívnej, čerstvej session.
+        </div>
+
+        <p>Súbory, ktoré <em>vidíme</em>: web-search-enabled chat odpovede, deep research mód v Perplexity, štandardné chat odpovede ostatných troch enginov. To je dnes <span class="num">~ 78 %</span> trhu AI vyhľadávacích interakcií v Slovensku — odhadnuté podľa kvartálneho prieskumu spotrebiteľov, ktorý prevádzkujeme ako sekundárny zdroj.</p>
+      </section>
+
+      <section id="historia">
+        <div class="sec-eyebrow">07 · História metodológie</div>
+        <h2>Verzie a zmeny.</h2>
+        <p>Každú zmenu metodológie zaznamenávame v changelogu. Stará verzia zostáva publikovaná v archíve, aby bolo možné historické dáta správne kontextualizovať.</p>
+
+        <ul>
+          <li><strong>M22 · 14. 5. 2026</strong> — pridaná Vlna II (Bankovníctvo) ako pilotný panel pre validačnú vrstvu. Žiadny dopad na Q2 Index.</li>
+          <li><strong>M21 · 3. 4. 2026</strong> — Gemini 2.5 Pro nahradil Gemini 1.5 ako default. Re-base­line celej Q1 retrospektívne, dáta označené príznakom <code class="inline">REBASE-Q1-2026</code>.</li>
+          <li><strong>M19 · 6. 3. 2026</strong> — pridaný drift monitoring pre ChatGPT (po prechode na GPT-5 v Q1).</li>
+          <li><strong>M14 · 12. 1. 2026</strong> — sentiment klasifikátor nahradený z VADER-SK na fine-tunovaný RoBERTa. Pozitívne K validácie z <span class="num">κ = 0.61</span> na <span class="num">κ = 0.78</span>.</li>
+          <li><strong>M01 · 1. 12. 2025</strong> — prvá publikovaná verzia metodológie. Začiatok longitudinálnych dát.</li>
+        </ul>
+
+        <p>Plný changelog je dostupný v <a class="in-text" href="#">archíve metodológií →</a>. Pri akýchkoľvek otázkach napíšte autorovi priamo: <a class="in-text" href="mailto:tomas@mentivue.sk">tomas@mentivue.sk</a>.</p>
+      </section>
+
+      <!-- Page-end utility row -->
+      <div class="page-end">
+        <div class="versions">
+          <span>Verzia · M22 · 14. 5. 2026</span>
+          <span aria-hidden="true">·</span>
+          <a href="#">Predošlé verzie</a>
+        </div>
+        <div class="actions">
+          <a class="btn" href="#">Stiahnuť PDF <span class="arrow">→</span></a>
+          <a class="btn btn--ghost" href="mailto:tomas@mentivue.sk">Otázka na autora</a>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Right gutter for sidenotes (positioned absolutely; only used on wide screens) -->
+    <div class="doc-side" aria-hidden="true">
+      <div class="mono-tiny" style="margin-bottom:12px;">Bočné poznámky</div>
+      <div style="font-family: var(--font-display); font-style: italic; font-size: 14px; line-height: 1.5; color: var(--ink-soft); padding-left: 14px; border-left: 1px solid var(--bone);">
+        <span style="font-family: var(--font-mono); font-style: normal; font-size: 10px; letter-spacing: 0.14em; color: var(--signal); display:block; margin-bottom: 6px;">M22</span>
+        Aktuálna verzia metodológie. Predošlé verzie sú archivované pre kontext historických dát.
+      </div>
+      <div style="margin-top:24px; font-family: var(--font-display); font-style: italic; font-size: 14px; line-height: 1.5; color: var(--ink-soft); padding-left: 14px; border-left: 1px solid var(--bone);">
+        <span style="font-family: var(--font-mono); font-style: normal; font-size: 10px; letter-spacing: 0.14em; color: var(--signal); display:block; margin-bottom: 6px;">Pomôcka</span>
+        TOC vľavo je sticky — kliknite ľubovoľnú sekciu na presun. Vlna II pridá samostatnú metodológiu pre bankový panel.
+      </div>
+    </div>
+  </article>
+</div>
+
+<!-- ───── Footer ───── -->
+
+<script is:inline>
+  // Smooth in-page scroll for TOC
+  (function smooth(){
+    document.querySelectorAll('a[href^="#"]').forEach(function(a){
+      a.addEventListener('click', function(e){
+        var id = a.getAttribute('href').slice(1);
+        if (!id) return;
+        var t = document.getElementById(id);
+        if (t) {
+          e.preventDefault();
+          var top = t.getBoundingClientRect().top + window.scrollY - 80;
+          window.scrollTo({ top: top, behavior: 'smooth' });
+        }
+      });
+    });
+  })();
+
+  // Highlight active TOC item on scroll
+  (function tocActive(){
+    var items = Array.from(document.querySelectorAll('.toc > ul > li > a[href^="#"]'));
+    if (!items.length) return;
+    var sections = items.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+    function update(){
+      var y = window.scrollY + 100;
+      var activeIdx = 0;
+      sections.forEach(function(s, i){
+        if (s && s.offsetTop <= y) activeIdx = i;
+      });
+      items.forEach(function(a, i){
+        a.parentElement.classList.toggle('is-active', i === activeIdx);
+      });
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  })();
+</script>
+
+</script>
+</LegalLayout>

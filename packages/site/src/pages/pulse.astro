@@ -1,0 +1,119 @@
+---
+import BlogLayout from "../layouts/BlogLayout.astro";
+---
+<BlogLayout title="Mentivue Pulse — týždenný newsletter" description="Týždenný digest AI search visibility pre slovenský e-commerce." bodyClass="pulse-archive">
+<div class="reading-progress" aria-hidden="true"><div class="bar" id="rp"></div></div>
+<section class="art-hero">
+  <div class="container" style="max-width: 860px;">
+    <a class="back-link" href="Blog.html">← Späť na blog</a>
+
+    <div class="pulse-issue">
+      <span>Pulse</span>
+      <span class="num">#042</span>
+      <span aria-hidden="true">·</span>
+      <span>14. 5. 2026 · štvrtok 06:00</span>
+    </div>
+
+    <h1 style="font-size: clamp(32px, 4vw, 44px); max-width: 26ch;">Tri signály z pondelka. <em>Jeden už koná.</em></h1>
+    <p class="subtitle" style="font-size: 18px; max-width: 56ch;">Jeden signál. Jeden príbeh. Jedna akcia. Šesť minút čítania, ako vždy.</p>
+
+    <div class="author-bar">
+      <div class="who">
+        <span class="avatar">TH</span>
+        <div style="display:flex;flex-direction:column;gap:2px;">
+          <span class="name">Tomáš H.</span>
+          <span class="role">Pulse · vydanie #042 · 6 min čítania</span>
+        </div>
+      </div>
+      <a class="btn" href="#subscribe">Prihlásiť sa <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- 1/2/3 grid -->
+<div class="container" style="max-width: 860px;">
+  <div class="one-three">
+    <div>
+      <span class="lbl">01 · Signál</span>
+      <h4>Datart preskočil Alzu v iPhone 17 Pro.</h4>
+      <p>Z priemernej pozície 3.1 na 1.3 počas troch týždňov. Q2 content kampaň v 14 recenzných doménach urobila viac, ako sme čakali.</p>
+    </div>
+    <div>
+      <span class="lbl">02 · Príbeh</span>
+      <h4>Nay získal +18 citation sources.</h4>
+      <p>Hlavne herné notebooky cez zive.sk. Reakčný čas Perplexity bol 36 hodín, ChatGPT 5 dní — rozdiel, na ktorý sa oplatí plánovať.</p>
+    </div>
+    <div>
+      <span class="lbl">03 · Akcia</span>
+      <h4>Auditujte vlastné citácie.</h4>
+      <p>Koľko domén dnes cituje vašu značku v AI odpovediach? Pre väčšinu klientov je toto číslo nižšie ako odhad CMO.</p>
+    </div>
+  </div>
+
+  <!-- Compact body -->
+  <article class="doc" style="grid-template-columns: 1fr;">
+    <main class="doc-content" style="max-width: 680px; margin: 0 auto;">
+      <section>
+        <div class="sec-eyebrow">Pulse · brief</div>
+        <h2>Týždeň, ktorý <em>posunul panel.</em></h2>
+        <p class="lead">V pondelok 12. mája sa Mentivue Index Datartu dotkol <span class="num">72.8</span> — bod, ktorý vyzeral nedosiahnuteľný ešte v apríli. Nie je to len jedna značka; je to ukážka taktiky, ktorú zvyšok panela teraz uvidí.</p>
+
+        <p>Tento týždeň pomerne jasný príbeh: <em>content distribúcia funguje</em>. Štrnásť recenzných domén, ktoré počas marca a apríla pravidelne uverejňovali product-focused obsah o Datarte, sa premietlo do AI odpovedí rýchlejšie, ako sme si mysleli — najmä na Perplexity. ChatGPT a Claude reagovali pomalšie, ale konzistentne. Detailne sme to rozobrali v <a class="in-text" href="Article.html">tohotýždňovom Industry článku</a>.</p>
+
+        <blockquote class="pullquote">
+          Kto má viac kvalitných „shelves", v ktorých sa môže engine zachytiť, vyhráva.
+          <span class="by">— Pulse #042 · 14. 5. 2026</span>
+        </blockquote>
+
+        <p><strong>Druhá vec, ktorá si zaslúži všimnutie</strong>: ChatGPT sentiment voči Alza v kategórii Smartphones klesol o <span class="num">−0.4</span> bodu (z <span class="num">+0.71</span> na <span class="num">+0.31</span>). Pravdepodobne súvisí s recenziami zákazníckej podpory zverejnenými minulý týždeň. Sledujeme — ak by sa to potvrdilo aj v Claude a Perplexity, je to záver, ktorý si zaslúži samostatný článok.</p>
+
+        <p>A nakoniec praktická časť. Ak vás dnes zaujíma, kde reálne začať: spýtajte sa svojho content tímu, koľko domén vás dnes cituje v AI vyhľadávaní. Ak to nevedia povedať, je to dobrá hodina kalendára pre Mentivue audit.</p>
+
+        <p style="font-family: var(--font-display); font-style: italic; font-size: 18px; color: var(--ink); margin-top: 32px;">— Tomáš</p>
+      </section>
+    </main>
+  </article>
+
+  <!-- Subscribe -->
+  <div class="pulse-block" id="subscribe">
+    <div>
+      <h3>Pulse, <em>každý štvrtok 06:00.</em></h3>
+      <p>Najnovšie vydania chodia priamo do schránky. Žiadny dashboard, žiadne notifikácie — len 600 slov a jedna akcia.</p>
+    </div>
+    <form class="form" onsubmit="event.preventDefault();">
+      <div class="row">
+        <input type="email" placeholder="vy@znacka.sk" aria-label="Pracovný e-mail" required />
+        <button type="submit">Subscribe</button>
+      </div>
+      <div class="fine">Zadarmo · ~600 slov · Kedykoľvek zrušíte</div>
+    </form>
+  </div>
+
+  <nav class="prevnext" aria-label="Ďalšie Pulse vydania">
+    <a href="Pulse.html">
+      <span class="dir">← Predošlé</span>
+      <span class="t">Pulse #041 · Tri značky, jeden problém</span>
+    </a>
+    <a href="Pulse.html">
+      <span class="dir">Nasledujúce →</span>
+      <span class="t">Pulse #043 · Vychádza vo štvrtok 21. 5.</span>
+    </a>
+  </nav>
+</div>
+
+
+<script is:inline>
+  (function reading(){
+    var bar = document.getElementById('rp');
+    if (!bar) return;
+    function update(){
+      var h = document.documentElement;
+      var max = h.scrollHeight - h.clientHeight;
+      bar.style.width = (max > 0 ? Math.min(1, h.scrollTop / max) * 100 : 0).toFixed(1) + '%';
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  })();
+
+</script>
+</BlogLayout>

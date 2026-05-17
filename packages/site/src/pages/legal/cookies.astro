@@ -1,0 +1,204 @@
+---
+import LegalLayout from "../../layouts/LegalLayout.astro";
+---
+<LegalLayout title="Cookies — Mentivue" description="Politika súborov cookies na mentivue.sk.">
+<section class="page-hero">
+  <div class="container">
+    <div class="eyebrow"><span class="mono-label">Cookies · v1.0 · účinné od 1. 6. 2026</span></div>
+    <h1 class="page-title" style="font-size: clamp(36px, 4.5vw, 48px);">Cookies. <em>Krátko a pravdivo.</em></h1>
+    <p class="lede" style="font-size: 18px;">Používame minimum cookies — len to, čo treba na fungovanie a anonymné meranie návštevnosti. Žiadne marketingové, žiadny remarketing.</p>
+    <div class="byline">
+      <span class="mono-tiny">Posledná úprava · 14. 5. 2026</span>
+      <span class="sep" aria-hidden="true"></span>
+      <span class="mono-tiny">Predošlé verzie · <a href="#" style="color:#0E1116; border-bottom:1px solid #FF5B3A; padding-bottom:1px;">archív</a></span>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <article class="doc">
+
+    <nav class="doc-toc toc" aria-label="Obsah">
+      <button class="toc-mobile-toggle" aria-expanded="false" onclick="this.parentElement.classList.toggle('is-open'); this.setAttribute('aria-expanded', this.parentElement.classList.contains('is-open'));">
+        <span>Obsah · 4 sekcie</span>
+        <span aria-hidden="true">▾</span>
+      </button>
+      <div class="toc-eyebrow">Cookies · v1.0</div>
+      <h3 class="toc-title">Obsah</h3>
+      <ul>
+        <li class="is-active"><a href="#co-su">01 · Čo sú cookies</a></li>
+        <li><a href="#ake">02 · Aké používame</a></li>
+        <li><a href="#vase-nastavenia">03 · Vaše nastavenia</a></li>
+        <li><a href="#prava">04 · Vaše práva</a></li>
+      </ul>
+    </nav>
+
+    <main class="doc-content">
+
+      <section id="co-su">
+        <div class="sec-eyebrow">01 · Čo sú cookies</div>
+        <h2>Súbory, ktoré <em>nás identifikujú,</em> nie vás.</h2>
+        <p class="lead">Cookies sú malé textové súbory, ktoré web ukladá vo vašom prehliadači. Mentivue ich používa minimalisticky — máme tri kategórie a žiadnu z nich nezdielame s tretími stranami pre reklamné účely.</p>
+        <p>Z pohľadu zákonov (najmä GDPR a slovenského Zákona o elektronických komunikáciách) nás zaujímajú dve veci: aké cookies používame a ktoré z nich vyžadujú váš výslovný súhlas. Krátka odpoveď: <em>nevyhnutné</em> nevyžadujú, <em>funkčné</em> a <em>analytické</em> áno.</p>
+      </section>
+
+      <section id="ake">
+        <div class="sec-eyebrow">02 · Aké používame</div>
+        <h2>Šesť cookies. <em>Žiadne pre reklamu.</em></h2>
+        <p>Nasledujúca tabuľka zhrňuje všetky cookies, ktoré Mentivue dnes nasadzuje. Pri každej zmene tabuľku aktualizujeme a archivujeme predošlú verziu.</p>
+
+        <table class="cookie-table">
+          <thead>
+            <tr>
+              <th>Názov</th>
+              <th>Účel</th>
+              <th>Trvanie</th>
+              <th>Typ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>mentivue_session</td>
+              <td>Udrží vás prihlásených medzi stránkami dashboardu.</td>
+              <td>30 dní</td>
+              <td class="type-essential">Nevyhnutné</td>
+            </tr>
+            <tr>
+              <td>mentivue_csrf</td>
+              <td>Ochrana proti CSRF útokom pri odosielaní formulárov.</td>
+              <td>Session</td>
+              <td class="type-essential">Nevyhnutné</td>
+            </tr>
+            <tr>
+              <td>mentivue_pref</td>
+              <td>Vaše preferencie — jazyk, časové pásmo, sidebar collapse.</td>
+              <td>1 rok</td>
+              <td class="type-functional">Funkčné</td>
+            </tr>
+            <tr>
+              <td>mentivue_consent</td>
+              <td>Zaznamenáva, ktoré kategórie cookies ste odsúhlasili.</td>
+              <td>1 rok</td>
+              <td class="type-functional">Funkčné</td>
+            </tr>
+            <tr>
+              <td>_plausible (anon.)</td>
+              <td>Anonymné meranie návštevnosti (Plausible Analytics, žiadne ID).</td>
+              <td>Session</td>
+              <td class="type-analytics">Analytické</td>
+            </tr>
+            <tr>
+              <td>mentivue_ab</td>
+              <td>Stable bucket pre experimenty na marketingových stránkach.</td>
+              <td>90 dní</td>
+              <td class="type-analytics">Analytické</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="note">
+          <span class="label">● Čo nepoužívame</span>
+          Mentivue nepoužíva žiadne marketingové cookies. Žiadny Google Ads remarketing, žiadny Meta Pixel, žiadne tretie strany pre attribution. Ak by sme to v budúcnosti potrebovali, oznámime to s minimálne <em>30-dňovým predstihom</em> a budete musieť výslovne súhlasiť.
+        </div>
+      </section>
+
+      <section id="vase-nastavenia">
+        <div class="sec-eyebrow">03 · Vaše nastavenia</div>
+        <h2>Spravujte si <em>preferencie.</em></h2>
+        <p>Vyberte si, ktoré kategórie cookies má Mentivue použiť. Nevyhnutné cookies sú vyžadované pre základné fungovanie webu — bez nich by ste sa nevedeli prihlásiť ani odoslať formulár.</p>
+
+        <div class="consent" role="group" aria-labelledby="consent-title">
+          <span id="consent-title" class="sr-only">Cookie preferencie</span>
+
+          <div class="row">
+            <span class="number">01</span>
+            <div>
+              <div class="name">Nevyhnutné</div>
+              <div class="desc">Prihlásenie, formulárová ochrana. Nedajú sa vypnúť — bez nich by stránka nefungovala.</div>
+            </div>
+            <span class="toggle" data-on="forced" role="switch" aria-checked="true" aria-disabled="true" title="Nedá sa vypnúť"></span>
+          </div>
+
+          <div class="row">
+            <span class="number">02</span>
+            <div>
+              <div class="name">Funkčné</div>
+              <div class="desc">Vaše preferencie (jazyk, časové pásmo). Odporúčame zapnuté.</div>
+            </div>
+            <span class="toggle" data-on="true" role="switch" aria-checked="true" tabindex="0"></span>
+          </div>
+
+          <div class="row">
+            <span class="number">03</span>
+            <div>
+              <div class="name">Analytické</div>
+              <div class="desc">Anonymné meranie cez Plausible. Bez osobných údajov, bez cross-site trackingu.</div>
+            </div>
+            <span class="toggle" data-on="true" role="switch" aria-checked="true" tabindex="0"></span>
+          </div>
+
+          <div class="row">
+            <span class="number">04</span>
+            <div>
+              <div class="name">Marketingové</div>
+              <div class="desc">Nepoužívame ich. Toggle je tu informačne — dodávame slovo, ktoré drží.</div>
+            </div>
+            <span class="toggle" data-on="forced-off" role="switch" aria-checked="false" aria-disabled="true" title="Nepoužívame"></span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px;">
+          <a class="btn" href="#">Uložiť preferencie <span class="arrow">→</span></a>
+          <a class="btn btn--ghost" href="#">Akceptovať odporúčané</a>
+        </div>
+      </section>
+
+      <section id="prava">
+        <div class="sec-eyebrow">04 · Vaše práva</div>
+        <h2>Súhlas, ktorý sa <em>dá vziať späť.</em></h2>
+        <p>Súhlas s funkčnými alebo analytickými cookies môžete kedykoľvek odvolať — buď úpravou nastavení v sekcii vyššie, alebo vymazaním cookies vo vašom prehliadači. Odvolanie súhlasu nemá vplyv na zákonnosť spracovania pred jeho odvolaním.</p>
+        <p>Ak chcete vedieť, ako Mentivue spracúva osobné údaje mimo cookies, prečítajte si <a class="in-text" href="#">Zásady ochrany súkromia</a>. Pre B2B kontrakty platí samostatne <a class="in-text" href="#">DPA</a>.</p>
+        <p>Pri otázkach týkajúcich sa cookies napíšte na <a class="in-text" href="mailto:tomas@mentivue.sk">tomas@mentivue.sk</a> alebo na úrad pre ochranu osobných údajov SR.</p>
+      </section>
+
+      <div class="page-end">
+        <div class="versions">
+          <span>Verzia · v1.0 · 14. 5. 2026</span>
+        </div>
+        <div class="actions">
+          <a class="btn" href="#">Stiahnuť PDF <span class="arrow">→</span></a>
+          <a class="btn btn--ghost" href="mailto:tomas@mentivue.sk">Otázka o cookies</a>
+        </div>
+      </div>
+    </main>
+
+    <div class="doc-side" aria-hidden="true">
+      <div class="mono-tiny" style="margin-bottom:12px;">Pomôcka</div>
+      <div style="font-family: var(--font-display); font-style: italic; font-size: 14px; line-height: 1.5; color: var(--ink-soft); padding-left: 14px; border-left: 1px solid var(--bone);">
+        <span style="font-family: var(--font-mono); font-style: normal; font-size: 10px; letter-spacing: 0.14em; color: var(--signal); display:block; margin-bottom: 6px;">Plausible</span>
+        Analytické meranie cez Plausible je <em>cookie-less</em> v štandardnej konfigurácii. Cookie <code>_plausible</code> je session-only fallback pre A/B variant stability.
+      </div>
+    </div>
+  </article>
+</div>
+
+
+<script is:inline>
+  // Toggle consent rows
+  document.querySelectorAll('.consent .toggle').forEach(function(t){
+    if (t.dataset.on === 'forced' || t.dataset.on === 'forced-off') return;
+    t.addEventListener('click', function(){
+      var on = t.dataset.on === 'true';
+      t.dataset.on = on ? 'false' : 'true';
+      t.setAttribute('aria-checked', !on);
+    });
+    t.addEventListener('keydown', function(e){
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        t.click();
+      }
+    });
+  });
+
+</script>
+</LegalLayout>

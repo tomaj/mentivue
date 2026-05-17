@@ -1,10 +1,11 @@
 ---
 import Logo from './Logo.astro';
 ---
-<footer class="footer">
+{/* Dual class names so both Homepage CSS (.footer, .footer-top, .footer-brand, .footer-cols, .footer-bot) and legal-template.css (footer.site, .ft-top, .brand, .cols, .ft-bot) apply correctly. */}
+<footer class="footer site">
   <div class="container">
-    <div class="footer-top">
-      <div class="footer-brand">
+    <div class="footer-top ft-top">
+      <div class="footer-brand brand">
         <Logo tone="paper" href="/" />
         <div class="tagline">Výskum pre <em>éru AI vyhľadávania.</em></div>
         <div class="roadmap">
@@ -13,7 +14,7 @@ import Logo from './Logo.astro';
         </div>
       </div>
 
-      <div class="footer-cols">
+      <div class="footer-cols cols">
         <div class="footer-col">
           <h4>Produkt</h4>
           <ul>
@@ -28,8 +29,8 @@ import Logo from './Logo.astro';
           <ul>
             <li><a href="/about">O nás</a></li>
             <li><a href="/methodology">Metodológia</a></li>
-            <li><a href="/#press">Pre médiá</a></li>
-            <li><a href="/#contact">Kontakt</a></li>
+            <li><a href="/research">Výskum</a></li>
+            <li><a href="mailto:tomas@mentivue.sk">Kontakt</a></li>
           </ul>
         </div>
         <div class="footer-col">
@@ -46,14 +47,14 @@ import Logo from './Logo.astro';
           <ul>
             <li><a href="#li">LinkedIn</a></li>
             <li><a href="#x">X</a></li>
-            <li><a href="#email">E-mail</a></li>
+            <li><a href="mailto:hello@mentivue.sk">E-mail</a></li>
             <li><a href="/blog">Blog</a></li>
           </ul>
         </div>
       </div>
     </div>
 
-    <div class="footer-bot">
+    <div class="footer-bot ft-bot">
       <span class="mono">Mentivue · Bratislava · 2026</span>
       <span class="mono">© MMXXVI · Všetky merania reprodukovateľné</span>
     </div>

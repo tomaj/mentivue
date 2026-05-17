@@ -1,0 +1,303 @@
+---
+import BlogLayout from "../layouts/BlogLayout.astro";
+---
+<BlogLayout title="Blog — Mentivue" description="Čítanie pre éru AI vyhľadávania: prípadové štúdie, metodológia, signály z týždňa.">
+<section class="blog-hero">
+  <div class="container">
+    <div class="row">
+      <div>
+        <span class="mono-label">Mentivue · Blog · Kurátorované</span>
+        <h1>Čítanie pre éru<br/><em>AI vyhľadávania.</em></h1>
+        <p class="lede">Týždenne. Kratšie ako rovesníci. Hutnejšie ako dashboard.</p>
+      </div>
+
+      <form class="subscribe-inline" onsubmit="event.preventDefault();">
+        <div class="lbl">Prihláste sa na Pulse — každý štvrtok</div>
+        <div class="row">
+          <input type="email" placeholder="vy@znacka.sk" aria-label="Pracovný e-mail" required />
+          <button type="submit">Subscribe →</button>
+        </div>
+        <div class="fine">~600 slov · zadarmo · kedykoľvek zrušíte</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ───── Filter bar ───── -->
+<section class="filter-bar">
+  <div class="container row">
+    <a href="#" class="is-active">Všetko <span class="count">42</span></a>
+    <a href="#">Pulse <span class="count">28</span></a>
+    <a href="#">Industry <span class="count">9</span></a>
+    <a href="#">Methodology <span class="count">3</span></a>
+    <a href="#">Founder Notes <span class="count">2</span></a>
+    <span class="meta">Q2 2026 · vlna I</span>
+  </div>
+</section>
+
+<!-- ───── Featured + grid ───── -->
+<div class="container">
+  <a class="featured-card" href="Article.html" aria-label="Čo Datart spravil inak v Q2 2026">
+    <div class="thumb">
+      <span class="badge">● Industry · feature</span>
+      <div class="mark" aria-hidden="true">
+        <svg viewBox="0 0 240 200">
+          <g stroke="#F7F4ED" fill="none" stroke-width="1.5" opacity="0.45">
+            <!-- competitor line -->
+            <polyline points="10,140 40,138 70,135 100,128 130,118 160,108 190,98 220,88"/>
+            <!-- alza line (coral) -->
+            <polyline points="10,160 40,150 70,145 100,130 130,108 160,82 190,52 220,28" stroke="#FF5B3A" stroke-width="2.4"/>
+            <!-- end dots -->
+            <circle cx="220" cy="28" r="4" fill="#FF5B3A" stroke="none"/>
+            <circle cx="220" cy="88" r="3" fill="#F7F4ED" opacity="0.7" stroke="none"/>
+            <!-- annotation -->
+            <line x1="130" y1="50" x2="130" y2="160" stroke="#FF5B3A" stroke-width="1" stroke-dasharray="3 3" opacity="0.6"/>
+          </g>
+          <text x="135" y="50" font-family="'Fraunces',serif" font-style="italic" font-size="14" fill="#FF5B3A">Q2 kampaň</text>
+        </svg>
+      </div>
+    </div>
+    <div class="content">
+      <div class="meta">
+        <span class="kind">Industry</span>
+        <span class="sep" aria-hidden="true"></span>
+        <span>14. 5. 2026</span>
+        <span class="sep" aria-hidden="true"></span>
+        <span>12 min čítania</span>
+      </div>
+      <h2>Čo Datart spravil inak <em>v Q2 2026.</em></h2>
+      <p class="lede">Analýza, prečo ich Mentivue Index skočil o +8 bodov za tri týždne — a čo to znamená pre konkurenciu v slovenskej elektronike.</p>
+      <div class="foot">
+        <span class="avatar">TH</span>
+        <span class="author">Tomáš H.</span>
+        <span style="width:1px;height:14px;background:rgba(14,17,22,0.18);"></span>
+        <span class="read-time">12 min čítania</span>
+      </div>
+    </div>
+  </a>
+
+  <!-- Editorial grid -->
+  <div class="art-grid editorial">
+
+    <!-- Row 1: 3 + 3 -->
+    <a class="art-card span-3" href="Pulse.html">
+      <div class="thumb striped">
+        <span class="placeholder-label">Pulse #042 · obálka</span>
+      </div>
+      <div class="meta">
+        <span class="kind">
+          <span class="pulse-dot"></span>
+          Pulse #042
+        </span>
+        <span class="sep" aria-hidden="true"></span>
+        <span class="date">14. 5. 2026</span>
+      </div>
+      <h3 class="title">Tri signály z pondelkového merania.</h3>
+      <p class="excerpt">Datart pred Alzou v iPhone 17 Pro, Nay získal +18 citation sources, ChatGPT sentiment voči audio kategórii klesol.</p>
+      <div class="foot">
+        <span class="author">Tomáš H.</span>
+        <span class="read-time">6 min</span>
+      </div>
+    </a>
+
+    <a class="art-card span-3" href="Article.html">
+      <div class="thumb coral">
+        <div class="thumb-mark" aria-hidden="true">
+          <svg viewBox="0 0 100 100">
+            <g stroke="#0E1116" fill="none" stroke-width="1.5">
+              <circle cx="50" cy="50" r="40"/>
+              <path d="M 12 50 Q 50 12 88 50 Q 50 88 12 50 Z"/>
+              <circle cx="50" cy="50" r="10" fill="#FF5B3A" stroke="none"/>
+            </g>
+          </svg>
+        </div>
+        <span class="placeholder-label">M22 · vizuál</span>
+      </div>
+      <div class="meta">
+        <span class="kind methodology">M·</span>
+        <span class="sep" aria-hidden="true"></span>
+        <span class="date">12. 5. 2026</span>
+      </div>
+      <h3 class="title">M22: Drift monitoring pre ChatGPT po GPT-5 upgrade.</h3>
+      <p class="excerpt">Ako sa Mentivue Index baseline vyrovnáva s úplne novým modelom v paneli — bez prerušenia longitudinálnych dát.</p>
+      <div class="foot">
+        <span class="author">Tomáš H.</span>
+        <span class="read-time">8 min</span>
+      </div>
+    </a>
+
+    <!-- Row 2: 4 + 2 -->
+    <a class="art-card span-4" href="Article.html">
+      <div class="thumb" style="background: #1B3A4B;">
+        <div class="thumb-mark" aria-hidden="true" style="color: rgba(247,244,237,0.4);">
+          <svg viewBox="0 0 200 140">
+            <g stroke="currentColor" fill="none" stroke-width="1.4">
+              <line x1="20" y1="120" x2="180" y2="120"/>
+              <line x1="20" y1="20" x2="20" y2="120"/>
+              <rect x="36" y="80" width="20" height="40"/>
+              <rect x="64" y="60" width="20" height="60"/>
+              <rect x="92" y="40" width="20" height="80" fill="#FF5B3A" stroke="none"/>
+              <rect x="120" y="68" width="20" height="52"/>
+              <rect x="148" y="92" width="20" height="28"/>
+            </g>
+          </svg>
+        </div>
+        <span class="placeholder-label" style="background: #0E1116; color: #F7F4ED; border-color: rgba(247,244,237,0.2);">Q2 Index pohyby</span>
+      </div>
+      <div class="meta">
+        <span class="kind industry">INDUSTRY</span>
+        <span class="sep" aria-hidden="true"></span>
+        <span class="date">6. 5. 2026</span>
+      </div>
+      <h3 class="title" style="max-width: 32ch;">Q2 Index pohyby: čo nám prvé štyri týždne ukázali o nákupnom správaní.</h3>
+      <p class="excerpt">15 značiek, 4 enginy, 60 dní longitudinálnych dát. Tri zistenia, ktoré sme nečakali, a jedno potvrdenie hypotézy z decembra 2025.</p>
+      <div class="foot">
+        <span class="author">Tomáš H.</span>
+        <span class="read-time">7 min</span>
+      </div>
+    </a>
+
+    <a class="art-card span-2" href="Pulse.html">
+      <div class="thumb bone">
+        <span class="placeholder-label">Pulse #041</span>
+      </div>
+      <div class="meta">
+        <span class="kind"><span class="pulse-dot"></span>Pulse #041</span>
+        <span class="sep" aria-hidden="true"></span>
+        <span class="date">7. 5. 2026</span>
+      </div>
+      <h3 class="title">Tri značky, jeden problém.</h3>
+      <p class="excerpt">Prečo Planeo, Andrea Shop a Hej.sk stratili pozíciu v Top 3 v identickú stredu.</p>
+      <div class="foot">
+        <span class="author">Tomáš H.</span>
+        <span class="read-time">5 min</span>
+      </div>
+    </a>
+
+    <!-- Row 3: 2 + 4 (alternated) -->
+    <a class="art-card span-2" href="Pulse.html">
+      <div class="thumb striped">
+        <span class="placeholder-label">Pulse #040</span>
+      </div>
+      <div class="meta">
+        <span class="kind"><span class="pulse-dot"></span>Pulse #040</span>
+        <span class="sep" aria-hidden="true"></span>
+        <span class="date">30. 4. 2026</span>
+      </div>
+      <h3 class="title">Apríl v štyroch enginoch.</h3>
+      <p class="excerpt">Mesačný snapshot — Gemini posilnil v audio, ChatGPT prerozdelil rebríček v notebookoch.</p>
+      <div class="foot">
+        <span class="author">Tomáš H.</span>
+        <span class="read-time">4 min</span>
+      </div>
+    </a>
+
+    <a class="art-card span-4" href="Article.html">
+      <div class="thumb" style="background: #F7F4ED;">
+        <div class="thumb-mark" aria-hidden="true">
+          <svg viewBox="0 0 200 140">
+            <g fill="none" stroke="#0E1116" stroke-width="1">
+              <text x="20" y="46" font-family="'JetBrains Mono',monospace" font-size="10" fill="#1F2429" letter-spacing="2">› kde kúpiť OLED do 1500€</text>
+              <text x="20" y="66" font-family="'JetBrains Mono',monospace" font-size="10" fill="#1F2429" letter-spacing="2">› macbook air alebo pro pre dizajn</text>
+              <text x="20" y="86" font-family="'JetBrains Mono',monospace" font-size="10" fill="#FF5B3A" letter-spacing="2">› robotický vysávač na srsť</text>
+              <text x="20" y="106" font-family="'JetBrains Mono',monospace" font-size="10" fill="#1F2429" letter-spacing="2">› herný monitor 27 144Hz</text>
+            </g>
+          </svg>
+        </div>
+        <span class="placeholder-label">8. 5. 2026</span>
+      </div>
+      <div class="meta">
+        <span class="kind founder">Founder Notes</span>
+        <span class="sep" aria-hidden="true"></span>
+        <span class="date">8. 5. 2026</span>
+      </div>
+      <h3 class="title" style="max-width: 30ch;">Prečo Mentivue začína pri slovenskej elektronike.</h3>
+      <p class="excerpt">Long-form esej o tom, prečo sme prvú vlnu zámerne ohraničili — a čo nám tá disciplína dáva, čo by sme inak nemali.</p>
+      <div class="foot">
+        <span class="author">Tomáš H.</span>
+        <span class="read-time">9 min</span>
+      </div>
+    </a>
+
+    <!-- Row 4: 3 + 3 -->
+    <a class="art-card span-3" href="Article.html">
+      <div class="thumb bone">
+        <div class="thumb-mark" aria-hidden="true">
+          <svg viewBox="0 0 200 140">
+            <g fill="none" stroke="#0E1116" stroke-width="1.2">
+              <line x1="30" y1="120" x2="170" y2="120"/>
+              <line x1="30" y1="20" x2="30" y2="120"/>
+              <polyline points="30,90 60,80 90,75 120,60 150,55 170,40" stroke="#FF5B3A" stroke-width="2"/>
+              <polyline points="30,100 60,95 90,90 120,85 150,82 170,80"/>
+            </g>
+          </svg>
+        </div>
+        <span class="placeholder-label">Industry · graf</span>
+      </div>
+      <div class="meta">
+        <span class="kind industry">INDUSTRY</span>
+        <span class="sep" aria-hidden="true"></span>
+        <span class="date">4. 5. 2026</span>
+      </div>
+      <h3 class="title">Ako sa pýtajú zákazníci v máji.</h3>
+      <p class="excerpt">Sezónne posuny v nákupnom dopyte zachytené v 1 176-otázkovom katalógu. Tri vzory, ktoré opakujeme od marca.</p>
+      <div class="foot">
+        <span class="author">Tomáš H.</span>
+        <span class="read-time">6 min</span>
+      </div>
+    </a>
+
+    <a class="art-card span-3" href="Pulse.html">
+      <div class="thumb striped">
+        <span class="placeholder-label">Pulse #039</span>
+      </div>
+      <div class="meta">
+        <span class="kind"><span class="pulse-dot"></span>Pulse #039</span>
+        <span class="sep" aria-hidden="true"></span>
+        <span class="date">23. 4. 2026</span>
+      </div>
+      <h3 class="title">Jeden signál: Claude má najlepšie citácie.</h3>
+      <p class="excerpt">Čo to znamená pre váš obsahový plán, ak hľadáte autoritu v AI odpovediach.</p>
+      <div class="foot">
+        <span class="author">Tomáš H.</span>
+        <span class="read-time">5 min</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- Pagination -->
+  <nav class="pagination" aria-label="Stránkovanie">
+    <span class="meta">Strana 1 z 8 · zobrazených 9 z 42 článkov</span>
+    <a class="btn" href="#">Ďalšie články <span class="arrow">→</span></a>
+  </nav>
+</div>
+
+<!-- ───── Archive ───── -->
+<section class="archive">
+  <div class="container">
+    <h3>Archív</h3>
+    <div class="year">
+      <span class="y">2026</span>
+      <div class="months">
+        <a href="#">Máj <span class="n">· 8</span></a>
+        <a href="#">Apríl <span class="n">· 6</span></a>
+        <a href="#">Marec <span class="n">· 5</span></a>
+        <a href="#">Február <span class="n">· 4</span></a>
+        <a href="#">Január <span class="n">· 4</span></a>
+      </div>
+    </div>
+    <div class="year">
+      <span class="y">2025</span>
+      <div class="months">
+        <a href="#">December <span class="n">· 3</span></a>
+        <a href="#">November <span class="n">· 2</span></a>
+        <a href="#">Október <span class="n">· 2</span></a>
+        <span style="color: var(--ink-soft);">— predtým len v internom Notion archíve</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+</BlogLayout>

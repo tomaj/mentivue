@@ -1,0 +1,310 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import "../styles/page-research.css";
+---
+<SiteLayout title="Výskum — Mentivue" description="Výskumná cestovná mapa: vlny, rozsah a roadmap pre AI search visibility merania.">
+<section class="hero" data-screen-label="02 Hero">
+  <div class="container">
+    <div class="hero-tag reveal">
+      <span class="pulse-dot" aria-hidden="true"></span>
+      <span class="mono-label">Výskumná cestovná mapa · Výskumné vlny</span>
+    </div>
+
+    <h1 class="hero-title reveal d1">
+      Vlna&nbsp;I: <em>naživo.</em><br/>Vlny&nbsp;II, III, IV: <em>v&nbsp;príprave.</em>
+    </h1>
+
+    <p class="hero-lede reveal d2">
+      Mentivue je výskumná firma pre éru AI vyhľadávania. Začíname slovenským e-commerce — vlnou, kde je nákupné správanie najlepšie čítateľné. Bankovníctvo, poistenie a retail aktívne pripravujeme.
+    </p>
+
+    <div class="hero-meta reveal d3">
+      <div>
+        <span class="mono-tiny">Vlna I · Naživo</span>
+        <span class="num live"><span class="pulse-dot" aria-hidden="true"></span> Slovenský e-commerce</span>
+      </div>
+      <div>
+        <span class="mono-tiny">Vlna II · V príprave</span>
+        <span class="num queued">Slovenské bankovníctvo</span>
+      </div>
+      <div>
+        <span class="mono-tiny">Vlna III · V príprave</span>
+        <span class="num queued">Slovenské poistenie</span>
+      </div>
+      <div>
+        <span class="mono-tiny">Vlna IV · V skúmaní</span>
+        <span class="num queued">Slovenský retail</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── ACTIVE COHORT ───── -->
+<section class="block" data-screen-label="03 Active cohort" id="cohort-a">
+  <div class="container">
+    <div class="head-2col">
+      <div>
+        <span class="section-tag">01 / Aktívna vlna</span>
+        <h2 class="section-title">Vlna I — <em>slovenský e-commerce.</em></h2>
+      </div>
+      <p class="intro">Naživo od Q2 2026. Pätnásť značiek, štyri enginy, každý pondelok. Kontinuálne dlhodobé meranie s verejnou metodológiou.</p>
+    </div>
+
+    <div class="active-summary">
+      <div>
+        <div class="k">Stav</div>
+        <div class="v"><em>Naživo</em><span class="sub">Od Q2 2026 · 14 týždňov dát</span></div>
+      </div>
+      <div>
+        <div class="k">Rozsah</div>
+        <div class="v">15 značiek<span class="sub">Slovenský trh · e-commerce retail</span></div>
+      </div>
+      <div>
+        <div class="k">Najbližšia aktualizácia</div>
+        <div class="v">PO 09:00<span class="sub">SEČ · Bratislava local</span></div>
+      </div>
+    </div>
+
+    <div class="brands-grid" id="brands-grid"><!-- Filled by JS --></div>
+  </div>
+</section>
+
+<!-- ───── UPCOMING COHORTS ───── -->
+<section class="block" data-screen-label="04 Upcoming cohorts" id="upcoming">
+  <div class="container">
+    <div class="head-2col">
+      <div>
+        <span class="section-tag">02 / Pripravované vlny</span>
+        <h2 class="section-title">Tri nové vertikály.<br/><em>Jedna roadmapa.</em></h2>
+      </div>
+      <p class="intro">Rezervácie raných vĺn otvorené. Rezervované miesto zamyká launch cenu a pustí vás do tvarovania prompt katalógu pre váš vertikál.</p>
+    </div>
+
+    <div class="upcoming-grid">
+      <article class="uc uc--featured" id="cohort-b">
+        <div class="uc-tag">
+          <span>Vlna II</span>
+          <span class="when">● Práve rezervujeme</span>
+        </div>
+        <h3 class="uc-name">Slovenské bankovníctvo</h3>
+        <p class="uc-desc">Retailové a SME bankovníctvo — prvý ne-retailový vertikál, kde AI search už dnes pohyne advisory a porovnávanie produktov.</p>
+        <div class="uc-meta">V príprave · 10–15 značiek · ~900 otázok</div>
+        <ul class="uc-list">
+          <li>Bežné účty, hypotéky, SME úvery</li>
+          <li>Porovnávacie a advisory tried otázok</li>
+          <li>Regulačná presnosť skórovaná (M19, M21)</li>
+          <li>Metodológia adaptovaná z Vlny I</li>
+        </ul>
+        <div class="uc-cta">
+          <a class="btn btn--signal" href="#request">Rezervovať miesto <span class="arrow">→</span></a>
+        </div>
+      </article>
+
+      <article class="uc" id="cohort-c">
+        <div class="uc-tag">
+          <span>Vlna III</span>
+          <span class="when">V príprave</span>
+        </div>
+        <h3 class="uc-name">Slovenské poistenie</h3>
+        <p class="uc-desc">Property &amp; casualty, život a zdravie — produkty s vysokou dôverou, kde AI halucinácia je merateľným rizikom.</p>
+        <div class="uc-meta">V príprave · 8–12 značiek · ~720 otázok</div>
+        <ul class="uc-list">
+          <li>Auto, domov, cestovanie, život, zdravie</li>
+          <li>Presnosť detailov krytia (M20, M22)</li>
+          <li>Meranie odporúčacieho bias</li>
+          <li>Tried otázok pre nároky a výluky</li>
+        </ul>
+        <div class="uc-cta">
+          <a class="btn" href="#request">Rezervovať miesto <span class="arrow">→</span></a>
+        </div>
+      </article>
+
+      <article class="uc" id="cohort-d">
+        <div class="uc-tag">
+          <span>Vlna IV</span>
+          <span class="when">V skúmaní</span>
+        </div>
+        <h3 class="uc-name">Slovenský retail</h3>
+        <p class="uc-desc">Potraviny, móda a domov — rýchlo sa pohybujúce kategórie, kde AI search dobíha tradičný discovery.</p>
+        <div class="uc-meta">V skúmaní · 12 značiek · ~1 050 otázok</div>
+        <ul class="uc-list">
+          <li>Donosenie a vyzdvihnutie potravín</li>
+          <li>Porovnávanie módy a lifestyle</li>
+          <li>Domov, záhrada, DIY</li>
+          <li>Modelovanie sezónneho dopytu (M18)</li>
+        </ul>
+        <div class="uc-cta">
+          <a class="btn" href="#request">Rezervovať miesto <span class="arrow">→</span></a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ───── GEOGRAPHIC ROADMAP ───── -->
+<section class="block" data-screen-label="05 Geo roadmap" id="geo">
+  <div class="container">
+    <div class="head-2col">
+      <div>
+        <span class="section-tag">03 / Geografia</span>
+        <h2 class="section-title">Zo Slovenska smerom von.<br/>Jeden <em>trh</em> po druhom.</h2>
+      </div>
+      <p class="intro">Odmietame polovičné meranie naprieč desiatimi krajinami. Každý trh má vlastný prompt katalóg, vlastný panel, vlastný validation pass.</p>
+    </div>
+
+    <div class="geo-track">
+      <div class="geo-line" aria-hidden="true"><div class="fill"></div></div>
+      <div class="geo-stops">
+        <div class="geo-stop live">
+          <span class="when">2026 · Naživo</span>
+          <span class="where"><em>Slovensko</em></span>
+          <span class="desc">Vlna I v prevádzke. CZ-jazykový reuse plánovaný pre ~30 % otázok.</span>
+        </div>
+        <div class="geo-stop">
+          <span class="when">2027 · Plánované</span>
+          <span class="where">Česko</span>
+          <span class="desc">Natívne CZ otázky, panel adaptovaný na odlišný retailový trh. Vlny I–II štartujú spolu.</span>
+        </div>
+        <div class="geo-stop">
+          <span class="when">2028 · Plánované</span>
+          <span class="where">Poľsko</span>
+          <span class="desc">Väčší panel, regionálne varianty otázok. Vlny I–IV paralelný rollout.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── REQUEST FORM ───── -->
+<section class="request" data-screen-label="06 Request" id="request">
+  <div class="container">
+    <span class="section-tag">04 / Požiadavka</span>
+    <div class="request-grid" style="margin-top:18px">
+      <div>
+        <h2>Rezervujte si miesto, alebo <em>požiadajte o vlnu,</em> ktorú sme ešte nespustili.</h2>
+        <p>Povedzte nám, čo chcete merať. Odpovieme do dvoch pracovných dní s posudkom vhodnosti a cenovou ponukou ranej vlny.</p>
+
+        <div style="display:flex;flex-direction:column;gap:16px;margin-top:8px">
+          <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(247,244,237,.55)">Čo dostanete</div>
+          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column">
+            <li style="font-size:14px;padding:10px 0 10px 22px;border-top:1px solid rgba(247,244,237,.14);position:relative;color:rgba(247,244,237,.85)">
+              <span style="position:absolute;left:0;top:17px;width:10px;height:1px;background:var(--signal)"></span>
+              Zamknuté launch ceny pre celý prvý rok
+            </li>
+            <li style="font-size:14px;padding:10px 0 10px 22px;border-top:1px solid rgba(247,244,237,.14);position:relative;color:rgba(247,244,237,.85)">
+              <span style="position:absolute;left:0;top:17px;width:10px;height:1px;background:var(--signal)"></span>
+              Vstup do prípravy prompt katalógu pre váš vertikál
+            </li>
+            <li style="font-size:14px;padding:10px 0 10px 22px;border-top:1px solid rgba(247,244,237,.14);border-bottom:1px solid rgba(247,244,237,.14);position:relative;color:rgba(247,244,237,.85)">
+              <span style="position:absolute;left:0;top:17px;width:10px;height:1px;background:var(--signal)"></span>
+              Prvé čítanie dát, 4 týždne pred verejným reportom
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <form class="request-form" id="request-form" novalidate>
+        <div class="req-field">
+          <label for="r-name">Meno</label>
+          <input id="r-name" type="text" placeholder="Marek Horváth" required />
+        </div>
+        <div class="req-field">
+          <label for="r-email">Pracovný e-mail</label>
+          <input id="r-email" type="email" placeholder="vy@znacka.sk" required />
+        </div>
+        <div class="req-field">
+          <label for="r-company">Firma</label>
+          <input id="r-company" type="text" placeholder="Značka alebo výskumná organizácia" required />
+        </div>
+        <div class="req-field">
+          <label for="r-cohort">Vlna záujmu</label>
+          <select id="r-cohort">
+            <option>Vlna II · Slovenské bankovníctvo</option>
+            <option>Vlna III · Slovenské poistenie</option>
+            <option>Vlna IV · Slovenský retail</option>
+            <option>Iné — popíšem v poznámke</option>
+          </select>
+        </div>
+        <div class="req-field">
+          <label for="r-note">Poznámka (voliteľné)</label>
+          <textarea id="r-note" placeholder="Čo by ste chceli merať ako prvé?"></textarea>
+        </div>
+        <button class="btn btn--signal" type="submit">Odoslať požiadavku <span class="arrow">→</span></button>
+        <div class="request-out" id="request-out" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ───── FOOTER ───── -->
+
+<script is:inline>
+  (function buildBrands(){
+    var brands = [
+      ['Alza','#01 · 87.3'],['Datart','#02 · 72.8'],['Nay','#03 · 68.2'],
+      ['Planeo','#04 · 54.1'],['Andrea Shop','#05 · 48.6'],['Hej.sk','#06 · 44.9'],
+      ['Okay','#07 · 42.5'],['Mall','#08 · 41.2'],['Electro World','#09 · 38.7'],
+      ['iStores','#10 · 35.4'],['Mironet','#11 · 31.8'],['Megapixel','#12 · 28.6'],
+      ['TPD','#13 · 24.9'],['Faxcopy','#14 · 21.2'],['Notebooky.sk','#15 · 18.4']
+    ];
+    var root = document.getElementById('brands-grid');
+    if (!root) return;
+    brands.forEach(function(b,i){
+      var el = document.createElement('div');
+      el.className = 'brand-card';
+      el.innerHTML =
+        '<div class="num">' + String(i+1).padStart(2,'0') + ' / 15</div>' +
+        '<div class="name">' + b[0] + '</div>' +
+        '<div class="score">' + b[1] + '</div>';
+      root.appendChild(el);
+    });
+  })();
+
+  (function reveal(){
+    var els = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) { els.forEach(function(e){e.classList.add('in')}); return; }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+    els.forEach(function(e){ io.observe(e); });
+  })();
+
+  (function form(){
+    var f = document.getElementById('request-form');
+    if (!f) return;
+    f.addEventListener('submit', function(e){
+      e.preventDefault();
+      var email = document.getElementById('r-email').value.trim();
+      var name = document.getElementById('r-name').value.trim();
+      var co = document.getElementById('r-company').value.trim();
+      var out = document.getElementById('request-out');
+      if (!email || !/.+@.+\..+/.test(email) || !name || !co) {
+        out.textContent = '● Vyplňte povinné polia';
+        out.style.color = '#FF8A6F';
+        return;
+      }
+      out.textContent = '● Odoslané — odpovieme do 2 pracovných dní';
+      out.style.color = '#94D9B1';
+      f.querySelectorAll('input, textarea').forEach(function(i){ i.value = ''; });
+    });
+  })();
+
+  (function smooth(){
+    document.querySelectorAll('a[href^="#"]').forEach(function(a){
+      a.addEventListener('click', function(e){
+        var id = a.getAttribute('href').slice(1);
+        if (!id) return;
+        var target = document.getElementById(id);
+        if (target) {
+          e.preventDefault();
+          var top = target.getBoundingClientRect().top + window.scrollY - 64;
+          window.scrollTo({ top: top, behavior: 'smooth' });
+        }
+      });
+    });
+  })();
+
+</script>
+</SiteLayout>
