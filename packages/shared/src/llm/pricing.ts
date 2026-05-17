@@ -36,14 +36,14 @@ export const PRICING: Record<ProviderModel, ModelPricing> = {
     searchFeePerCall: 0,
   },
   'google:gemini-2.5-flash': {
-    inputPerMTok: 0.1,
-    outputPerMTok: 0.4,
-    searchFeePerCall: 0.014,
+    inputPerMTok: 0.3,
+    outputPerMTok: 2.5,
+    searchFeePerCall: 0.035, // grounding $35/1k queries above free tier
   },
   'google:gemini-2.0-flash': {
     inputPerMTok: 0.1,
     outputPerMTok: 0.4,
-    searchFeePerCall: 0.014,
+    searchFeePerCall: 0.035,
   },
   'perplexity:sonar': {
     inputPerMTok: 1.0,
