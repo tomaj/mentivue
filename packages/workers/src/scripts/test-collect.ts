@@ -1,17 +1,15 @@
-// Manual end-to-end test:
+// Manual end-to-end test across all available LLM providers:
 //   1. Pick 1 active daily prompt from DB
-//   2. Call Claude Haiku
-//   3. Persist llm_calls + raw_responses rows
-//   4. Print summary
+//   2. For each provider with a configured API key, call it (web search ON)
+//   3. Persist llm_calls + raw_responses (with citations)
+//   4. Print summary table
 //
 // Usage:
-//   cd packages/workers && bun run src/scripts/test-collect.ts
-//   # or from repo root:
-//   bun run packages/workers/src/scripts/test-collect.ts
+//   pnpm --filter @mentivue/workers test:collect
 
 import { and, eq } from 'drizzle-orm';
-import { db, prompts, llmCalls, rawResponses } from '@mentivue/shared/db';
-import { callClaude } from '@mentivue/shared/llm';
+import { db, llmCalls, prompts, rawResponses } from '@mentivue/shared/db';
+import { getAvailableClients, type LLMClient, type LLMCallResult } from '@mentivue/shared/llm';
 
 const prompt = await db.query.prompts.findFirst({
   where: and(eq(prompts.isActive, true), eq(prompts.frequencyTier, 'daily')),
@@ -22,74 +20,126 @@ if (!prompt) {
   process.exit(1);
 }
 
-console.log('▸ Prompt:', prompt.text);
-console.log('  external_id:', prompt.externalId);
-console.log('');
-console.log('▸ Calling Claude Haiku…');
-
-let claudeResult;
-try {
-  claudeResult = await callClaude({
-    prompt: prompt.text,
-    maxTokens: 1024,
-    temperature: 0.7,
-  });
-} catch (err) {
-  console.error('✗ Claude call failed:', err);
-  await db
-    .insert(llmCalls)
-    .values({
-      promptId: prompt.id,
-      provider: 'anthropic',
-      model: 'claude-haiku-4-5-20251001',
-      callType: 'collection',
-      status: 'error',
-      errorMessage: err instanceof Error ? err.message : String(err),
-    });
+const clients = getAvailableClients();
+if (clients.length === 0) {
+  console.error('✗ No LLM providers configured. Add at least one API key in .env.');
   process.exit(1);
 }
 
-console.log(`✓ Response received in ${claudeResult.latencyMs} ms`);
-console.log(`  tokens: ${claudeResult.inputTokens} in / ${claudeResult.outputTokens} out`);
-console.log(`  cost:   $${claudeResult.costUsd.toFixed(6)}`);
-console.log('');
-console.log('─── Response preview ───');
-console.log(claudeResult.text.slice(0, 500) + (claudeResult.text.length > 500 ? '…' : ''));
-console.log('────────────────────────');
+console.log('▸ Prompt:', prompt.text);
+console.log('  external_id:', prompt.externalId);
+console.log('  providers:', clients.map((c) => c.provider).join(', '));
 console.log('');
 
-const [call] = await db
-  .insert(llmCalls)
-  .values({
-    promptId: prompt.id,
-    provider: 'anthropic',
-    model: claudeResult.model,
-    callType: 'collection',
-    inputTokens: claudeResult.inputTokens,
-    outputTokens: claudeResult.outputTokens,
-    cachedInputTokens: claudeResult.cachedInputTokens || null,
-    estimatedCostUsd: claudeResult.costUsd,
-    latencyMs: claudeResult.latencyMs,
-    status: 'success',
-  })
-  .returning();
+interface Row {
+  provider: string;
+  model: string;
+  status: 'success' | 'error';
+  tokensIn: number;
+  tokensOut: number;
+  citations: number;
+  costUsd: number;
+  latencyMs: number;
+  preview?: string;
+  error?: string;
+}
 
-if (!call) throw new Error('Failed to insert llm_call');
+const results: Row[] = await Promise.all(clients.map((c) => runOne(c, prompt.id, prompt.text)));
 
-const [response] = await db
-  .insert(rawResponses)
-  .values({
-    llmCallId: call.id,
-    responseText: claudeResult.text,
-  })
-  .returning();
-
-console.log(`✓ Persisted llm_call ${call.id}`);
-console.log(`✓ Persisted raw_response ${response?.id}`);
 console.log('');
-console.log('Done. Inspect with:');
-console.log('  psql postgresql://mentivue:dev@localhost:5433/mentivue');
-console.log('  SELECT id, provider, model, input_tokens, output_tokens, estimated_cost_usd, latency_ms');
-console.log('    FROM llm_calls ORDER BY created_at DESC LIMIT 5;');
+console.log('─── Results ───');
+for (const r of results) {
+  const cost = r.costUsd ? `$${r.costUsd.toFixed(6)}` : '—';
+  const status = r.status === 'success' ? '✓' : '✗';
+  console.log(
+    `${status} ${r.provider.padEnd(11)} ${r.model.padEnd(28)} ` +
+      `${String(r.tokensIn).padStart(5)} in / ${String(r.tokensOut).padStart(5)} out  ` +
+      `${String(r.citations).padStart(2)} cites  ` +
+      `${cost.padStart(11)}  ${String(r.latencyMs).padStart(6)} ms`,
+  );
+  if (r.error) console.log(`     error: ${r.error}`);
+  if (r.preview) console.log(`     preview: ${r.preview}`);
+}
+
+console.log('');
+const succeeded = results.filter((r) => r.status === 'success');
+const totalCost = succeeded.reduce((sum, r) => sum + r.costUsd, 0);
+console.log(
+  `Total: ${succeeded.length}/${results.length} succeeded, $${totalCost.toFixed(6)} spent.`,
+);
 
 process.exit(0);
+
+async function runOne(client: LLMClient, promptId: string, promptText: string): Promise<Row> {
+  try {
+    const result: LLMCallResult = await client.call({
+      prompt: promptText,
+      maxTokens: 1024,
+      temperature: 0.7,
+      enableSearch: true,
+    });
+
+    const [call] = await db
+      .insert(llmCalls)
+      .values({
+        promptId,
+        provider: result.provider,
+        model: result.model,
+        callType: 'collection',
+        inputTokens: result.inputTokens,
+        outputTokens: result.outputTokens,
+        cachedInputTokens: result.cachedInputTokens || null,
+        searchFeeUsd: result.searchCalls > 0 ? result.costUsd : null,
+        estimatedCostUsd: result.costUsd,
+        latencyMs: result.latencyMs,
+        status: 'success',
+      })
+      .returning();
+
+    if (!call) throw new Error('Failed to insert llm_call');
+
+    await db.insert(rawResponses).values({
+      llmCallId: call.id,
+      responseText: result.text,
+      citations: result.citations.length > 0 ? result.citations : null,
+    });
+
+    return {
+      provider: result.provider,
+      model: result.model,
+      status: 'success',
+      tokensIn: result.inputTokens,
+      tokensOut: result.outputTokens,
+      citations: result.citations.length,
+      costUsd: result.costUsd,
+      latencyMs: result.latencyMs,
+      preview: result.text.slice(0, 100).replace(/\s+/g, ' ').trim() + '…',
+    };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    await db
+      .insert(llmCalls)
+      .values({
+        promptId,
+        provider: client.provider,
+        model: client.defaultModel,
+        callType: 'collection',
+        status: 'error',
+        errorMessage: message,
+        estimatedCostUsd: 0,
+      })
+      .catch(() => {});
+
+    return {
+      provider: client.provider,
+      model: client.defaultModel,
+      status: 'error',
+      tokensIn: 0,
+      tokensOut: 0,
+      citations: 0,
+      costUsd: 0,
+      latencyMs: 0,
+      error: message.slice(0, 200),
+    };
+  }
+}
