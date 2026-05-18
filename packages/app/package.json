@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@mentivue/shared": "workspace:*",
+    "drizzle-orm": "^0.38.0",
     "hono": "^4.6.14"
   },
   "devDependencies": {
