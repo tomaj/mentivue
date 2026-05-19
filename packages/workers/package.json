@@ -12,16 +12,18 @@
     "analyze:pending": "bun --env-file=../../.env run src/scripts/analyze-pending.ts",
     "report:snapshot": "bun --env-file=../../.env run src/scripts/report-snapshot.ts",
     "schedule:demo": "bun --env-file=../../.env run src/scripts/schedule-demo.ts",
-    "smoke:all": "bun --env-file=../../.env run src/scripts/smoke-all.ts"
+    "smoke:all": "bun --env-file=../../.env run src/scripts/smoke-all.ts",
+    "pilot": "bun --env-file=../../.env run src/scripts/pilot.ts",
+    "pilot:review": "bun --env-file=../../.env run src/scripts/pilot-review.ts"
   },
   "dependencies": {
     "@mentivue/shared": "workspace:*",
     "bullmq": "^5.34.0",
-    "drizzle-orm": "^0.38.0",
+    "drizzle-orm": "^0.45.2",
     "ioredis": "^5.4.1"
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "typescript": "^5.7.0"
+    "typescript": "^6.0.3"
   }
 }

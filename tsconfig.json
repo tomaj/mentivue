@@ -14,9 +14,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
+    "allowImportingTsExtensions": true,
     "noEmit": true,
     "jsx": "preserve",
-    "baseUrl": ".",
     "paths": {
       "@mentivue/shared": ["./packages/shared/src/index.ts"],
       "@mentivue/shared/*": ["./packages/shared/src/*"]
