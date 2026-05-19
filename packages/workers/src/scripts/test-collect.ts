@@ -7,9 +7,9 @@
 // Usage:
 //   pnpm --filter @mentivue/workers test:collect
 
-import { and, eq } from 'drizzle-orm';
 import { db, llmCalls, prompts, rawResponses } from '@mentivue/shared/db';
-import { getAvailableClients, type LLMClient, type LLMCallResult } from '@mentivue/shared/llm';
+import { getAvailableClients, type LLMCallResult, type LLMClient } from '@mentivue/shared/llm';
+import { and, eq } from 'drizzle-orm';
 
 const prompt = await db.query.prompts.findFirst({
   where: and(eq(prompts.isActive, true), eq(prompts.frequencyTier, 'daily')),
@@ -113,7 +113,7 @@ async function runOne(client: LLMClient, promptId: string, promptText: string): 
       citations: result.citations.length,
       costUsd: result.costUsd,
       latencyMs: result.latencyMs,
-      preview: result.text.slice(0, 100).replace(/\s+/g, ' ').trim() + '…',
+      preview: `${result.text.slice(0, 100).replace(/\s+/g, ' ').trim()}…`,
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);

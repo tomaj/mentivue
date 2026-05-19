@@ -68,12 +68,7 @@ const heureka = allBrands.find((b) => b.slug === 'heureka');
 // ----------------------------------------------------------------------------
 // Wipe prior fake data (only collection llm_calls from fake provider models)
 // ----------------------------------------------------------------------------
-const FAKE_MODELS = [
-  'claude-haiku-4-5-20251001',
-  'gpt-4o-mini',
-  'sonar',
-  'gemini-2.0-flash-exp',
-];
+const FAKE_MODELS = ['claude-haiku-4-5-20251001', 'gpt-4o-mini', 'sonar', 'gemini-2.0-flash-exp'];
 const priorCalls = await db.query.llmCalls.findMany({
   where: inArray(llmCalls.model, FAKE_MODELS),
   columns: { id: true },
@@ -158,18 +153,42 @@ type ProviderProfile = {
   intensity: number;
 };
 const providers: ProviderProfile[] = [
-  { provider: 'anthropic',  model: 'claude-haiku-4-5-20251001', klientMentionRate: 0.65, klientSentimentBase: 0.55, intensity: 0.65 },
-  { provider: 'openai',     model: 'gpt-4o-mini',                klientMentionRate: 0.78, klientSentimentBase: 0.62, intensity: 0.92 },
-  { provider: 'perplexity', model: 'sonar',                      klientMentionRate: 0.55, klientSentimentBase: 0.42, intensity: 0.50 },
-  { provider: 'gemini',     model: 'gemini-2.0-flash-exp',       klientMentionRate: 0.48, klientSentimentBase: 0.38, intensity: 0.30 },
+  {
+    provider: 'anthropic',
+    model: 'claude-haiku-4-5-20251001',
+    klientMentionRate: 0.65,
+    klientSentimentBase: 0.55,
+    intensity: 0.65,
+  },
+  {
+    provider: 'openai',
+    model: 'gpt-4o-mini',
+    klientMentionRate: 0.78,
+    klientSentimentBase: 0.62,
+    intensity: 0.92,
+  },
+  {
+    provider: 'perplexity',
+    model: 'sonar',
+    klientMentionRate: 0.55,
+    klientSentimentBase: 0.42,
+    intensity: 0.5,
+  },
+  {
+    provider: 'gemini',
+    model: 'gemini-2.0-flash-exp',
+    klientMentionRate: 0.48,
+    klientSentimentBase: 0.38,
+    intensity: 0.3,
+  },
 ];
 
 // Competitor weight when klient brand isn't mentioned (or as secondary)
 const competitors = [
-  { brand: datart,  weight: 0.40 },
-  { brand: nay,     weight: 0.30 },
-  { brand: planeo,  weight: 0.18 },
-  { brand: andrea,  weight: 0.12 },
+  { brand: datart, weight: 0.4 },
+  { brand: nay, weight: 0.3 },
+  { brand: planeo, weight: 0.18 },
+  { brand: andrea, weight: 0.12 },
 ];
 
 // ----------------------------------------------------------------------------
@@ -215,7 +234,10 @@ function weightedCompetitor(): (typeof competitors)[number]['brand'] {
     acc += c.weight;
     if (r < acc) return c.brand;
   }
-  return competitors[0]!.brand;
+  // Unreachable in practice (weights sum to 1) — fallback for type safety.
+  const first = competitors[0];
+  if (!first) throw new Error('competitors array empty');
+  return first.brand;
 }
 
 function sentimentBucket(score: number): 'positive' | 'neutral' | 'negative' {
@@ -250,7 +272,9 @@ function pickDomain(): string {
     acc += c.w;
     if (r < acc) return c.d;
   }
-  return citationDomains[0]!.d;
+  const first = citationDomains[0];
+  if (!first) throw new Error('citationDomains array empty');
+  return first.d;
 }
 
 // ----------------------------------------------------------------------------
@@ -281,7 +305,9 @@ function getAnomalyAdjustments(daysAgo: number, provider: string, subcat: string
   return { mentionMul, sentAdd };
 }
 
-console.log(`  Building ${DAYS}d × ${providers.length} providers × ${CALLS_PER_DAY_PER_PROVIDER} calls/day = ${DAYS * providers.length * CALLS_PER_DAY_PER_PROVIDER} calls…`);
+console.log(
+  `  Building ${DAYS}d × ${providers.length} providers × ${CALLS_PER_DAY_PER_PROVIDER} calls/day = ${DAYS * providers.length * CALLS_PER_DAY_PER_PROVIDER} calls…`,
+);
 
 for (let d = DAYS - 1; d >= 0; d--) {
   const ts0 = new Date(now.getTime() - d * 86400000);
@@ -290,7 +316,8 @@ for (let d = DAYS - 1; d >= 0; d--) {
     const profile = providers[pIdx]!;
     for (let c = 0; c < CALLS_PER_DAY_PER_PROVIDER; c++) {
       // Pick a prompt subcategory uniformly so heatmap has coverage
-      const subcatKey = subcategoryKeys[(d * CALLS_PER_DAY_PER_PROVIDER + c) % subcategoryKeys.length]!;
+      const subcatKey =
+        subcategoryKeys[(d * CALLS_PER_DAY_PER_PROVIDER + c) % subcategoryKeys.length]!;
       const bucket = promptsBySubcat.get(subcatKey)!;
       const prompt = bucket[Math.floor(Math.random() * bucket.length)]!;
       const promptIdx = allPrompts.indexOf(prompt);
@@ -365,8 +392,10 @@ for (let i = 0; i < insertedCalls.length; i++) {
   });
 
   callToResponseIdx.push(responsesToInsert.length);
+  const call = insertedCalls[i];
+  if (!call) continue;
   responsesToInsert.push({
-    llmCallId: insertedCalls[i]!.id,
+    llmCallId: call.id,
     responseText: text,
     citations,
   });
@@ -387,7 +416,9 @@ const mentionsToInsert: Array<typeof brandMentions.$inferInsert> = [];
 for (let i = 0; i < insertedCalls.length; i++) {
   const respIdx = callToResponseIdx[i];
   if (respIdx === undefined || respIdx < 0) continue;
-  const respId = insertedResponses[respIdx]!.id;
+  const resp = insertedResponses[respIdx];
+  if (!resp) continue;
+  const respId = resp.id;
   const meta = callMeta[i]!;
 
   const mentioned: Array<{ brandId: string; sentiment: number }> = [];
@@ -404,7 +435,7 @@ for (let i = 0; i < insertedCalls.length; i++) {
     if (used.has(c.id)) continue;
     used.add(c.id);
     // Competitor sentiment baseline (slightly less positive than klient if klient is mentioned)
-    const sent = clamp((Math.random() * 0.8 - 0.1), -1, 1);
+    const sent = clamp(Math.random() * 0.8 - 0.1, -1, 1);
     mentioned.push({ brandId: c.id, sentiment: sent });
   }
 
@@ -442,8 +473,10 @@ const qualityRows: Array<typeof responseQuality.$inferInsert> = [];
 for (let i = 0; i < insertedCalls.length; i++) {
   if (callToResponseIdx[i] === undefined || callToResponseIdx[i] === -1) continue;
   const refused = Math.random() < 0.015;
+  const call = insertedCalls[i];
+  if (!call) continue;
   qualityRows.push({
-    llmCallId: insertedCalls[i]!.id,
+    llmCallId: call.id,
     qualityScore: refused ? 0 : 5 + Math.random() * 5,
     relevance: refused ? 0 : randInt(2, 3),
     specificity: refused ? 0 : randInt(2, 3),
@@ -537,8 +570,8 @@ console.log(`  ✓ ${reportRows.length} reports inserted`);
 
 console.log('');
 console.log('Fake dashboard data ready. Try:');
-console.log(`  pnpm dev:app`);
-console.log(`  open http://localhost:3030/login`);
+console.log('  pnpm dev:app');
+console.log('  open http://localhost:3030/login');
 console.log(`  klient login:  ${TEST_EMAIL} / ${TEST_PASSWORD}`);
 console.log(`  admin login:   ${ADMIN_EMAIL} / ${ADMIN_PASSWORD}`);
 console.log('');

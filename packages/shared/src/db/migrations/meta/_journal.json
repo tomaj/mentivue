@@ -22,6 +22,13 @@
       "when": 1779088445432,
       "tag": "0002_supreme_omega_sentinel",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1779097822200,
+      "tag": "0003_fancy_peter_parker",
+      "breakpoints": true
     }
   ]
 }

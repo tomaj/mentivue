@@ -1,0 +1,86 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    ":dependencyDashboard",
+    "schedule:weekends",
+    "group:linters",
+    "group:test",
+    "group:monorepos",
+    ":prHourlyLimit2",
+    ":prConcurrentLimit10"
+  ],
+  "timezone": "Europe/Bratislava",
+  "labels": ["dependencies"],
+  "rangeStrategy": "bump",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 5am on monday"]
+  },
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security"],
+    "schedule": ["at any time"]
+  },
+  "packageRules": [
+    {
+      "description": "Automerge non-major dev deps once CI is green",
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    },
+    {
+      "description": "Automerge patch updates for all deps",
+      "matchUpdateTypes": ["patch"],
+      "automerge": true
+    },
+    {
+      "description": "Group LLM SDKs — anthropic, openai, gemini, perplexity",
+      "groupName": "llm sdks",
+      "matchPackageNames": ["@anthropic-ai/sdk", "openai", "@google/genai", "langfuse"]
+    },
+    {
+      "description": "Group Drizzle (orm + kit move together)",
+      "groupName": "drizzle",
+      "matchPackageNames": ["drizzle-orm", "drizzle-kit"]
+    },
+    {
+      "description": "Group Astro core + integrations",
+      "groupName": "astro",
+      "matchPackageNames": [
+        "astro",
+        "@astrojs/sitemap",
+        "@astrojs/tailwind",
+        "@astrojs/check",
+        "@tailwindcss/vite"
+      ]
+    },
+    {
+      "description": "Group Tailwind",
+      "groupName": "tailwind",
+      "matchPackageNames": ["tailwindcss", "@tailwindcss/vite", "@tailwindcss/postcss"]
+    },
+    {
+      "description": "Group Sentry SDKs",
+      "groupName": "sentry",
+      "matchPackagePrefixes": ["@sentry/"]
+    },
+    {
+      "description": "Group BullMQ + Redis client",
+      "groupName": "bullmq",
+      "matchPackageNames": ["bullmq", "ioredis"]
+    },
+    {
+      "description": "Major bumps need manual review — never automerge",
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "labels": ["dependencies", "major"]
+    },
+    {
+      "description": "Pin Docker base images by digest",
+      "matchDatasources": ["docker"],
+      "pinDigests": true
+    }
+  ]
+}

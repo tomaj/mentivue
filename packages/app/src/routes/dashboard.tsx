@@ -1,13 +1,12 @@
-import { Hono } from 'hono';
-import { eq } from 'drizzle-orm';
 import { brands, db } from '@mentivue/shared/db';
-import { AppLayout } from '../layouts/AppLayout.tsx';
-import { C, Delta, MonoLabel, Num, timeOfDayGreeting } from '../components/primitives.tsx';
+import { eq } from 'drizzle-orm';
+import { Hono } from 'hono';
 import { WelcomeStrip } from '../components/Chrome.tsx';
+import { C, Delta, MonoLabel, Num, timeOfDayGreeting } from '../components/primitives.tsx';
 import {
+  AnomalyCard,
   anomalyTags,
   anomalyTitle,
-  AnomalyCard,
   CitationList,
   DonutMini,
   heatmapColKeys,
@@ -21,6 +20,7 @@ import {
   TopicHeatmap,
   UpcomingCard,
 } from '../components/Widgets.tsx';
+import { AppLayout } from '../layouts/AppLayout.tsx';
 import {
   klientAnomalies,
   klientIndexSparkline,
@@ -59,7 +59,16 @@ dash.get('/app/dashboard', async (c) => {
         brandName="—"
       >
         <div style="padding:48px 28px;color:#1F2429">
-          <p>Pre váš účet ešte nie je priradená sledovaná značka. Kontaktujte <a href="mailto:tomas@mentivue.sk" style="color:#FF5B3A;border-bottom:1px solid #FF5B3A">tomas@mentivue.sk</a>.</p>
+          <p>
+            Pre váš účet ešte nie je priradená sledovaná značka. Kontaktujte{' '}
+            <a
+              href="mailto:tomas@mentivue.sk"
+              style="color:#FF5B3A;border-bottom:1px solid #FF5B3A"
+            >
+              tomas@mentivue.sk
+            </a>
+            .
+          </p>
         </div>
       </AppLayout>,
     );
@@ -69,21 +78,33 @@ dash.get('/app/dashboard', async (c) => {
   if (!brand) return c.text('Brand not found.', 500);
 
   // Parallel data load
-  const [summary, sparkline, topBrands, llmRows, anomalies, citations, heatmapRows, lastUpdate, upcoming] =
-    await Promise.all([
-      klientIndexSummary(klient.brandId, 30),
-      klientIndexSparkline(klient.brandId, 30),
-      topBrandsSov(klient.brandId, 30, 4),
-      llmProviderBreakdown(klient.brandId, 30),
-      klientAnomalies(klient.brandId),
-      topCitations(30, 10),
-      topicHeatmap(klient.brandId, heatmapRowKeys, heatmapColKeys, 30),
-      lastUpdateAt(),
-      upcomingItems(klient.id),
-    ]);
+  const [
+    summary,
+    sparkline,
+    topBrands,
+    llmRows,
+    anomalies,
+    citations,
+    heatmapRows,
+    lastUpdate,
+    upcoming,
+  ] = await Promise.all([
+    klientIndexSummary(klient.brandId, 30),
+    klientIndexSparkline(klient.brandId, 30),
+    topBrandsSov(klient.brandId, 30, 4),
+    llmProviderBreakdown(klient.brandId, 30),
+    klientAnomalies(klient.brandId),
+    topCitations(30, 10),
+    topicHeatmap(klient.brandId, heatmapRowKeys, heatmapColKeys, 30),
+    lastUpdateAt(),
+    upcomingItems(klient.id),
+  ]);
 
   // SoV trend needs top 3 competitor brand IDs
-  const competitorIds = topBrands.filter((b) => !b.is_klient).slice(0, 3).map((b) => b.brand_id);
+  const competitorIds = topBrands
+    .filter((b) => !b.is_klient)
+    .slice(0, 3)
+    .map((b) => b.brand_id);
   const trendCells = await sovTrendMultiBrand(klient.brandId, competitorIds, 90, 'week');
 
   const heatmapCells = new Map<string, { sentiment: number | null; sample: number }>();
@@ -96,11 +117,12 @@ dash.get('/app/dashboard', async (c) => {
     }
   }
 
-  const index = summary.mentivue_index ?? 0;
-  const indexPrev = summary.mentivue_index_prev ?? 0;
-  const indexDelta = summary.mentivue_index !== null && summary.mentivue_index_prev !== null
-    ? summary.mentivue_index - summary.mentivue_index_prev
-    : null;
+  const _index = summary.mentivue_index ?? 0;
+  const _indexPrev = summary.mentivue_index_prev ?? 0;
+  const indexDelta =
+    summary.mentivue_index !== null && summary.mentivue_index_prev !== null
+      ? summary.mentivue_index - summary.mentivue_index_prev
+      : null;
   const indexValues = sparkline.map((s) => s.mentivue_index);
 
   const sov = summary.current_sov_pct ?? 0;
@@ -108,7 +130,7 @@ dash.get('/app/dashboard', async (c) => {
 
   const avgPos = summary.avg_position;
   const sentiment = summary.avg_sentiment_score ?? 0;
-  const sentimentDelta = (() => {
+  const _sentimentDelta = (() => {
     if (summary.mentivue_index_prev === null || summary.mentivue_index === null) return null;
     // Roughly proxy sentiment delta from the index components; not perfect but indicative
     return null;
@@ -149,7 +171,9 @@ dash.get('/app/dashboard', async (c) => {
                 viz={<Sparkline values={indexValues} color={C.signal} fill />}
                 delta={
                   indexDelta === null ? (
-                    <span style={`color:${C.inkSoft};font-family:${C.fontMono};font-size:11.5px`}>—</span>
+                    <span style={`color:${C.inkSoft};font-family:${C.fontMono};font-size:11.5px`}>
+                      —
+                    </span>
                   ) : (
                     <Delta
                       value={`${indexDelta >= 0 ? '+' : ''}${indexDelta.toFixed(1)}`}
@@ -167,7 +191,9 @@ dash.get('/app/dashboard', async (c) => {
                 viz={<SoVBars rows={topBrands} />}
                 delta={
                   sovDelta === null ? (
-                    <span style={`color:${C.inkSoft};font-family:${C.fontMono};font-size:11.5px`}>—</span>
+                    <span style={`color:${C.inkSoft};font-family:${C.fontMono};font-size:11.5px`}>
+                      —
+                    </span>
                   ) : (
                     <Delta
                       value={`${sovDelta >= 0 ? '+' : ''}${sovDelta.toFixed(1)} pp`}
@@ -195,11 +221,15 @@ dash.get('/app/dashboard', async (c) => {
                         );
                       })}
                     </div>
-                    <Num size={10} color={C.inkSoft}>Z ~5 značiek v odpovedi</Num>
+                    <Num size={10} color={C.inkSoft}>
+                      Z ~5 značiek v odpovedi
+                    </Num>
                   </div>
                 }
                 delta={
-                  <span style={`color:${C.inkSoft};font-family:${C.fontMono};font-size:11.5px`}>1 = prvé miesto</span>
+                  <span style={`color:${C.inkSoft};font-family:${C.fontMono};font-size:11.5px`}>
+                    1 = prvé miesto
+                  </span>
                 }
                 deltaLabel="nižšie = lepšie"
                 noRight
@@ -216,14 +246,31 @@ dash.get('/app/dashboard', async (c) => {
                       size={56}
                     />
                     <div style="display:flex;flex-direction:column;gap:4px">
-                      <Num size={10} color={C.positive}>● {summary.positive_pct !== null ? `${summary.positive_pct.toFixed(0)} % positive` : '—'}</Num>
-                      <Num size={10} color={C.inkSoft}>● {summary.total_mentions > 0 ? `${((summary.neutral_mentions / summary.total_mentions) * 100).toFixed(0)} % neutrálne` : '—'}</Num>
-                      <Num size={10} color={C.negative}>● {summary.total_mentions > 0 ? `${((summary.negative_mentions / summary.total_mentions) * 100).toFixed(0)} % negative` : '—'}</Num>
+                      <Num size={10} color={C.positive}>
+                        ●{' '}
+                        {summary.positive_pct !== null
+                          ? `${summary.positive_pct.toFixed(0)} % positive`
+                          : '—'}
+                      </Num>
+                      <Num size={10} color={C.inkSoft}>
+                        ●{' '}
+                        {summary.total_mentions > 0
+                          ? `${((summary.neutral_mentions / summary.total_mentions) * 100).toFixed(0)} % neutrálne`
+                          : '—'}
+                      </Num>
+                      <Num size={10} color={C.negative}>
+                        ●{' '}
+                        {summary.total_mentions > 0
+                          ? `${((summary.negative_mentions / summary.total_mentions) * 100).toFixed(0)} % negative`
+                          : '—'}
+                      </Num>
                     </div>
                   </div>
                 }
                 delta={
-                  <span style={`color:${C.inkSoft};font-family:${C.fontMono};font-size:11.5px`}>{summary.total_mentions} zmienok</span>
+                  <span style={`color:${C.inkSoft};font-family:${C.fontMono};font-size:11.5px`}>
+                    {summary.total_mentions} zmienok
+                  </span>
                 }
                 deltaLabel="−1 ÷ +1"
               />
@@ -233,7 +280,9 @@ dash.get('/app/dashboard', async (c) => {
             <Section title="AI enginy" subtitle="Posledných 30 dní · klik na engine pre detail">
               <div style="display:grid;grid-template-columns:repeat(4, 1fr);gap:12px">
                 {llmRows.length === 0 ? (
-                  <div style={`grid-column:1/-1;color:${C.inkSoft};font-size:13px;padding:16px`}>Žiadne provider dáta.</div>
+                  <div style={`grid-column:1/-1;color:${C.inkSoft};font-size:13px;padding:16px`}>
+                    Žiadne provider dáta.
+                  </div>
                 ) : (
                   llmRows.map((row) => <LLMCard row={row} />)
                 )}
@@ -242,10 +291,19 @@ dash.get('/app/dashboard', async (c) => {
 
             {/* SoV Trend Chart */}
             <Section
-              title={<>90-denný <em style={`font-style:italic;color:${C.signal};font-weight:400`}>Share of Voice</em></>}
+              title={
+                <>
+                  90-denný{' '}
+                  <em style={`font-style:italic;color:${C.signal};font-weight:400`}>
+                    Share of Voice
+                  </em>
+                </>
+              }
               subtitle="Vaša značka vs top 3 konkurenti · týždenný cadence"
             >
-              <div style={`border:1px solid ${C.ink};background:${C.paperPure};padding:24px 24px 8px`}>
+              <div
+                style={`border:1px solid ${C.ink};background:${C.paperPure};padding:24px 24px 8px`}
+              >
                 <SoVTrendChart data={trendCells} klientSlug={brand.slug} />
               </div>
             </Section>
@@ -258,7 +316,9 @@ dash.get('/app/dashboard', async (c) => {
                 </div>
               </Section>
               <Section title="Citation sources" subtitle="Top 10 domén citovaných v odpovediach">
-                <div style={`border:1px solid ${C.ink};background:${C.paperPure};padding:4px 22px 16px`}>
+                <div
+                  style={`border:1px solid ${C.ink};background:${C.paperPure};padding:4px 22px 16px`}
+                >
                   <CitationList rows={citations} />
                 </div>
               </Section>
@@ -269,41 +329,56 @@ dash.get('/app/dashboard', async (c) => {
               title="Anomálie tento týždeň"
               subtitle={
                 anomalyCount > 0 ? (
-                  <span style={`color:${C.signal};font-family:${C.fontMono};font-size:12px;letter-spacing:0.14em;text-transform:uppercase`}>
-                    {anomalyCount} {anomalyCount === 1 ? 'vyžaduje vašu pozornosť' : 'vyžadujú vašu pozornosť'}
+                  <span
+                    style={`color:${C.signal};font-family:${C.fontMono};font-size:12px;letter-spacing:0.14em;text-transform:uppercase`}
+                  >
+                    {anomalyCount}{' '}
+                    {anomalyCount === 1 ? 'vyžaduje vašu pozornosť' : 'vyžadujú vašu pozornosť'}
                   </span>
                 ) : (
-                  <span style={`color:${C.inkSoft};font-family:${C.fontMono};font-size:12px`}>Stabilný týždeň</span>
+                  <span style={`color:${C.inkSoft};font-family:${C.fontMono};font-size:12px`}>
+                    Stabilný týždeň
+                  </span>
                 )
               }
             >
               <div id="anomalies" style="display:flex;flex-direction:column;gap:12px">
                 {anomalies.length === 0 ? (
-                  <div style={`border:1px solid ${C.bone};padding:24px;color:${C.inkSoft};font-size:13px;background:${C.paperPure}`}>
+                  <div
+                    style={`border:1px solid ${C.bone};padding:24px;color:${C.inkSoft};font-size:13px;background:${C.paperPure}`}
+                  >
                     Žiadne signifikantné odchýlky vs predošlý týždeň.
                   </div>
                 ) : (
-                  anomalies.slice(0, 5).map((a) => (
-                    <AnomalyCard
-                      severity={a.severity}
-                      title={anomalyTitle(a)}
-                      context={a.context}
-                      tags={anomalyTags(a)}
-                      detectedAt={a.detected_at}
-                    />
-                  ))
+                  anomalies
+                    .slice(0, 5)
+                    .map((a) => (
+                      <AnomalyCard
+                        severity={a.severity}
+                        title={anomalyTitle(a)}
+                        context={a.context}
+                        tags={anomalyTags(a)}
+                        detectedAt={a.detected_at}
+                      />
+                    ))
                 )}
               </div>
             </Section>
           </div>
 
           {/* RIGHT RAIL */}
-          <aside style={`background:${C.paperPure};border:1px solid ${C.ink};align-self:flex-start;position:sticky;top:24px;display:flex;flex-direction:column`}>
+          <aside
+            style={`background:${C.paperPure};border:1px solid ${C.ink};align-self:flex-start;position:sticky;top:24px;display:flex;flex-direction:column`}
+          >
             <div style="padding:20px 20px 14px">
-              <MonoLabel size={10} tracking="0.18em">Pripravujeme pre vás</MonoLabel>
+              <MonoLabel size={10} tracking="0.18em">
+                Pripravujeme pre vás
+              </MonoLabel>
             </div>
             {upcoming.length === 0 ? (
-              <div style={`padding:24px 20px;color:${C.inkSoft};font-size:13px;border-top:1px solid ${C.bone}`}>
+              <div
+                style={`padding:24px 20px;color:${C.inkSoft};font-size:13px;border-top:1px solid ${C.bone}`}
+              >
                 Žiadne nadchádzajúce reporty.
               </div>
             ) : (
@@ -312,16 +387,24 @@ dash.get('/app/dashboard', async (c) => {
               ))
             )}
             <div style={`padding:18px 20px;border-top:1px solid ${C.bone};background:${C.bone}`}>
-              <MonoLabel size={9} tracking="0.22em">Index · {quarterLabel()} · live</MonoLabel>
+              <MonoLabel size={9} tracking="0.22em">
+                Index · {quarterLabel()} · live
+              </MonoLabel>
               <div style="margin-top:10px;display:flex;align-items:baseline;gap:8px">
-                <span style={`font-family:${C.fontDisplay};font-size:32px;font-weight:400;color:${C.ink};letter-spacing:-0.025em`}>
+                <span
+                  style={`font-family:${C.fontDisplay};font-size:32px;font-weight:400;color:${C.ink};letter-spacing:-0.025em`}
+                >
                   {topBrands.findIndex((b) => b.is_klient) >= 0
                     ? `#${topBrands.findIndex((b) => b.is_klient) + 1}`
                     : '—'}
                 </span>
-                <Num size={11} color={C.inkSoft}>z {topBrands.length} značiek</Num>
+                <Num size={11} color={C.inkSoft}>
+                  z {topBrands.length} značiek
+                </Num>
               </div>
-              <Num size={10} color={C.inkSoft}>Aktualizácia · PO 09:00 SEČ</Num>
+              <Num size={10} color={C.inkSoft}>
+                Aktualizácia · PO 09:00 SEČ
+              </Num>
             </div>
           </aside>
         </main>

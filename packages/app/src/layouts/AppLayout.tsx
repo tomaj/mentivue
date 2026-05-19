@@ -1,10 +1,10 @@
 // Authenticated app shell: sidebar + topbar + main content area.
 
 import type { FC, PropsWithChildren } from 'hono/jsx';
-import { APP_BASE_CSS } from '../styles.ts';
+import { type NavKey, Sidebar, TopBar } from '../components/Chrome.tsx';
 import { C } from '../components/primitives.tsx';
-import { Sidebar, TopBar, type NavKey } from '../components/Chrome.tsx';
 import type { SessionKlient } from '../lib/session.ts';
+import { APP_BASE_CSS } from '../styles.ts';
 
 type Props = PropsWithChildren<{
   klient: SessionKlient;
@@ -16,7 +16,16 @@ type Props = PropsWithChildren<{
   anomalyCount?: number;
 }>;
 
-export const AppLayout: FC<Props> = ({ klient, active, title, crumbs, brandName, brandPeriod, anomalyCount, children }) => {
+export const AppLayout: FC<Props> = ({
+  klient,
+  active,
+  title,
+  crumbs,
+  brandName,
+  brandPeriod,
+  anomalyCount,
+  children,
+}) => {
   return (
     <html lang="sk">
       <head>
@@ -32,7 +41,9 @@ export const AppLayout: FC<Props> = ({ klient, active, title, crumbs, brandName,
         <style dangerouslySetInnerHTML={{ __html: APP_BASE_CSS }} />
         <script src="https://unpkg.com/htmx.org@1.9.12" defer />
       </head>
-      <body style={`background:${C.paper};color:${C.ink};margin:0;font-family:${C.fontBody};font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased`}>
+      <body
+        style={`background:${C.paper};color:${C.ink};margin:0;font-family:${C.fontBody};font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased`}
+      >
         <div style="display:grid;grid-template-columns:240px 1fr;min-height:100vh">
           <Sidebar
             active={active}

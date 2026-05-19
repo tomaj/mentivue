@@ -11,12 +11,12 @@ import { Worker } from 'bullmq';
 import { analyzeResponse } from './agents/analyzer.ts';
 import { runCollection } from './jobs/collect.ts';
 import {
-  QUEUE_NAMES,
+  type AnalysisJobData,
   analysisQueue,
+  type CollectionJobData,
   closeQueues,
   connection,
-  type AnalysisJobData,
-  type CollectionJobData,
+  QUEUE_NAMES,
 } from './queues.ts';
 
 console.log('⚙️  Mentivue workers starting…');
@@ -71,10 +71,9 @@ const analysisWorker = new Worker<AnalysisJobData>(
     console.log(`[analyze] ▸ ${job.id}  response=${job.data.rawResponseId.slice(0, 8)}`);
     const result = await analyzeResponse(job.data.rawResponseId);
     console.log(
-      `[analyze] ✓ ${job.id}  ${result.mentionsInserted} mentions  ` +
-        `q=${result.qualityScore.toFixed(1)}  refused=${result.refused ? 'Y' : 'N'}  ` +
-        `$${result.analysisCostUsd.toFixed(6)}  ${Date.now() - start}ms` +
-        (result.untrackedBrands.length > 0 ? `  untracked: ${result.untrackedBrands.join(', ')}` : ''),
+      `[analyze] ✓ ${job.id}  ${result.mentionsInserted} mentions  q=${result.qualityScore.toFixed(1)}  refused=${result.refused ? 'Y' : 'N'}  $${result.analysisCostUsd.toFixed(6)}  ${Date.now() - start}ms${
+        result.untrackedBrands.length > 0 ? `  untracked: ${result.untrackedBrands.join(', ')}` : ''
+      }`,
     );
     return result;
   },
@@ -84,7 +83,10 @@ const analysisWorker = new Worker<AnalysisJobData>(
 // ----------------------------------------------------------------------------
 // Error logging
 // ----------------------------------------------------------------------------
-for (const [name, worker] of Object.entries({ collection: collectionWorker, analysis: analysisWorker })) {
+for (const [name, worker] of Object.entries({
+  collection: collectionWorker,
+  analysis: analysisWorker,
+})) {
   worker.on('failed', (job, err) => {
     console.error(`[${name}] ✗ ${job?.id ?? '?'}  ${err.message}`);
   });

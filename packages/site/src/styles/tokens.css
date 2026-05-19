@@ -2,23 +2,23 @@
 
 :root {
   /* Color */
-  --ink: #0E1116;
-  --ink-soft: #1F2429;
-  --paper: #F7F4ED;
-  --paper-pure: #FFFFFF;
-  --bone: #EBE5D7;
-  --bone-deep: #DDD5C2;
-  --depth: #1B3A4B;
-  --signal: #FF5B3A;
-  --signal-soft: #FFE8E0;
-  --positive: #2D6A4F;
-  --negative: #C73E1D;
-  --neutral: #6B7280;
+  --ink: #0e1116;
+  --ink-soft: #1f2429;
+  --paper: #f7f4ed;
+  --paper-pure: #ffffff;
+  --bone: #ebe5d7;
+  --bone-deep: #ddd5c2;
+  --depth: #1b3a4b;
+  --signal: #ff5b3a;
+  --signal-soft: #ffe8e0;
+  --positive: #2d6a4f;
+  --negative: #c73e1d;
+  --neutral: #6b7280;
 
   /* Type */
-  --font-display: 'Fraunces', Georgia, serif;
-  --font-body: 'Inter Tight', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Inter Tight", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
   /* Layout */
   --container: 1280px;

@@ -1,14 +1,17 @@
-import { Hono } from 'hono';
-import { and, desc, eq } from 'drizzle-orm';
+import { randomBytes } from 'node:crypto';
+import { zValidator } from '@hono/zod-validator';
+import { env } from '@mentivue/shared/config';
 import { brands, db, klients, signupRequests } from '@mentivue/shared/db';
-import { AppLayout } from '../layouts/AppLayout.tsx';
+import { desc, eq } from 'drizzle-orm';
+import { Hono } from 'hono';
 import { C, MonoLabel, Num } from '../components/primitives.tsx';
 import { Sparkline } from '../components/Widgets.tsx';
+import { AppLayout } from '../layouts/AppLayout.tsx';
 import { hashPassword, issueMagicLinkToken } from '../lib/auth.ts';
 import { adminCostHistory, adminHealthToday } from '../lib/dashboard-queries.ts';
-import { magicLinkEmail, sendEmail } from '../lib/email.ts';
+import { passwordResetEmail, sendEmail, signupApprovedEmail } from '../lib/email.ts';
 import { fmtDate, fmtDateTime, fmtDecimal, fmtInt, fmtUsd, tierLabel } from '../lib/fmt.ts';
-import { env } from '@mentivue/shared/config';
+import { uuidParam } from '../lib/schemas.ts';
 
 const admin = new Hono();
 
@@ -45,8 +48,12 @@ admin.get('/admin/klients', async (c) => {
       brandName="Mentivue"
     >
       <div style={`padding:24px 28px 22px;border-bottom:1px solid ${C.bone}`}>
-        <MonoLabel size={10} tracking="0.18em">Admin</MonoLabel>
-        <h1 style={`font-family:${C.fontDisplay};font-weight:400;font-size:32px;letter-spacing:-0.025em;line-height:1.05;margin:8px 0 0;color:${C.ink}`}>
+        <MonoLabel size={10} tracking="0.18em">
+          Admin
+        </MonoLabel>
+        <h1
+          style={`font-family:${C.fontDisplay};font-weight:400;font-size:32px;letter-spacing:-0.025em;line-height:1.05;margin:8px 0 0;color:${C.ink}`}
+        >
           Klienti <em style={`font-style:italic;color:${C.signal}`}>· {rows.length}</em>
         </h1>
       </div>
@@ -54,30 +61,62 @@ admin.get('/admin/klients', async (c) => {
       <main style="padding:28px;display:grid;gap:24px">
         {created && <div class="alert ok">Klient vytvorený: {created}</div>}
         {updated && <div class="alert ok">Klient aktualizovaný.</div>}
-        {approved && <div class="alert ok">Žiadosť schválená a magic link odoslaný: {approved}</div>}
+        {approved && (
+          <div class="alert ok">Žiadosť schválená a magic link odoslaný: {approved}</div>
+        )}
         {rejected && <div class="alert ok">Žiadosť zamietnutá: {rejected}</div>}
         {err === 'email_exists' && <div class="alert err">Email je už registrovaný.</div>}
         {err === 'invalid_brand' && <div class="alert err">Neexistujúca značka.</div>}
 
         {pendingSignups.length > 0 && (
           <section>
-            <MonoLabel size={10} tracking="0.18em" color={C.signal}>Žiadosti o prístup · {pendingSignups.length} pending</MonoLabel>
-            <h2 style={`font-family:${C.fontDisplay};font-size:22px;font-weight:400;letter-spacing:-0.018em;margin:8px 0 14px`}>Na schválenie</h2>
+            <MonoLabel size={10} tracking="0.18em" color={C.signal}>
+              Žiadosti o prístup · {pendingSignups.length} pending
+            </MonoLabel>
+            <h2
+              style={`font-family:${C.fontDisplay};font-size:22px;font-weight:400;letter-spacing:-0.018em;margin:8px 0 14px`}
+            >
+              Na schválenie
+            </h2>
             <div style="display:flex;flex-direction:column;gap:10px">
               {pendingSignups.map((req) => (
-                <div style={`border:1px solid ${C.bone};border-left:3px solid ${C.signal};background:${C.paperPure};padding:18px 20px;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) auto;gap:18px;align-items:center`}>
+                <div
+                  style={`border:1px solid ${C.bone};border-left:3px solid ${C.signal};background:${C.paperPure};padding:18px 20px;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) auto;gap:18px;align-items:center`}
+                >
                   <div>
-                    <div style={`font-family:${C.fontDisplay};font-size:17px;font-weight:500;letter-spacing:-0.012em`}>{req.name}</div>
-                    <div style={`color:${C.inkSoft};font-size:13px;margin-top:2px`}>{req.email}</div>
-                    {req.role && <Num size={10} color={C.inkSoft}>{req.role}</Num>}
+                    <div
+                      style={`font-family:${C.fontDisplay};font-size:17px;font-weight:500;letter-spacing:-0.012em`}
+                    >
+                      {req.name}
+                    </div>
+                    <div style={`color:${C.inkSoft};font-size:13px;margin-top:2px`}>
+                      {req.email}
+                    </div>
+                    {req.role && (
+                      <Num size={10} color={C.inkSoft}>
+                        {req.role}
+                      </Num>
+                    )}
                   </div>
                   <div style={`font-size:13.5px;color:${C.ink}`}>
-                    <div><strong>{req.company ?? '—'}</strong></div>
-                    {req.brandSlug && <div style={`color:${C.inkSoft};font-size:12px;margin-top:2px`}>značka: {req.brandSlug}</div>}
-                    <Num size={10} color={C.inkSoft}>žiadosť · {fmtDate(req.createdAt)}</Num>
+                    <div>
+                      <strong>{req.company ?? '—'}</strong>
+                    </div>
+                    {req.brandSlug && (
+                      <div style={`color:${C.inkSoft};font-size:12px;margin-top:2px`}>
+                        značka: {req.brandSlug}
+                      </div>
+                    )}
+                    <Num size={10} color={C.inkSoft}>
+                      žiadosť · {fmtDate(req.createdAt)}
+                    </Num>
                   </div>
                   <div style="display:flex;gap:8px">
-                    <form method="post" action={`/admin/signups/${req.id}/approve`} style="margin:0">
+                    <form
+                      method="post"
+                      action={`/admin/signups/${req.id}/approve`}
+                      style="margin:0"
+                    >
                       <button
                         type="submit"
                         style={`background:${C.ink};color:${C.paper};border:1px solid ${C.ink};padding:10px 14px;font-size:12.5px;font-weight:500`}
@@ -101,8 +140,14 @@ admin.get('/admin/klients', async (c) => {
         )}
 
         <section style={`border:1px solid ${C.ink};background:${C.paperPure};padding:24px`}>
-          <MonoLabel size={10} tracking="0.18em">Nový klient</MonoLabel>
-          <h2 style={`font-family:${C.fontDisplay};font-size:22px;font-weight:400;letter-spacing:-0.018em;margin:8px 0 18px`}>Vytvoriť účet</h2>
+          <MonoLabel size={10} tracking="0.18em">
+            Nový klient
+          </MonoLabel>
+          <h2
+            style={`font-family:${C.fontDisplay};font-size:22px;font-weight:400;letter-spacing:-0.018em;margin:8px 0 18px`}
+          >
+            Vytvoriť účet
+          </h2>
           <form method="post" action="/admin/klients" class="form-stack">
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
               <div>
@@ -130,7 +175,9 @@ admin.get('/admin/klients', async (c) => {
                 <select id="tier" name="tier">
                   <option value="">— žiadny —</option>
                   <option value="watch">Watch</option>
-                  <option value="pro" selected>Pro</option>
+                  <option value="pro" selected>
+                    Pro
+                  </option>
                   <option value="enterprise">Enterprise</option>
                 </select>
               </div>
@@ -154,8 +201,14 @@ admin.get('/admin/klients', async (c) => {
         </section>
 
         <section>
-          <MonoLabel size={10} tracking="0.18em">Existujúci klienti</MonoLabel>
-          <h2 style={`font-family:${C.fontDisplay};font-size:22px;font-weight:400;letter-spacing:-0.018em;margin:8px 0 14px`}>Účty</h2>
+          <MonoLabel size={10} tracking="0.18em">
+            Existujúci klienti
+          </MonoLabel>
+          <h2
+            style={`font-family:${C.fontDisplay};font-size:22px;font-weight:400;letter-spacing:-0.018em;margin:8px 0 14px`}
+          >
+            Účty
+          </h2>
           <table class="editorial">
             <thead>
               <tr>
@@ -165,40 +218,68 @@ admin.get('/admin/klients', async (c) => {
                 <th>Plán</th>
                 <th>Status</th>
                 <th class="num">Posl. prihl.</th>
-                <th></th>
+                <th />
               </tr>
             </thead>
             <tbody>
               {rows.map((k) => (
                 <tr>
                   <td>
-                    <strong style={`font-family:${C.fontDisplay};font-size:15px;letter-spacing:-0.012em`}>{k.email}</strong>
+                    <strong
+                      style={`font-family:${C.fontDisplay};font-size:15px;letter-spacing:-0.012em`}
+                    >
+                      {k.email}
+                    </strong>
                     {k.isAdmin && (
-                      <span style={`margin-left:6px;font-family:${C.fontMono};font-size:9px;letter-spacing:0.14em;color:${C.signal};border:1px solid ${C.signal};padding:2px 6px;text-transform:uppercase`}>Admin</span>
+                      <span
+                        style={`margin-left:6px;font-family:${C.fontMono};font-size:9px;letter-spacing:0.14em;color:${C.signal};border:1px solid ${C.signal};padding:2px 6px;text-transform:uppercase`}
+                      >
+                        Admin
+                      </span>
                     )}
                   </td>
                   <td>
                     {k.name ?? <span style={`color:${C.inkSoft}`}>—</span>}
-                    {k.company && <div style={`color:${C.inkSoft};font-size:12px`}>{k.company}</div>}
+                    {k.company && (
+                      <div style={`color:${C.inkSoft};font-size:12px`}>{k.company}</div>
+                    )}
                   </td>
                   <td>{k.brand?.name ?? <span style={`color:${C.inkSoft}`}>—</span>}</td>
                   <td>
                     {k.tier ? (
-                      <span style={`font-family:${C.fontMono};font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:${C.signal};border:1px solid ${C.signal};padding:2px 8px`}>{tierLabel(k.tier)}</span>
+                      <span
+                        style={`font-family:${C.fontMono};font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:${C.signal};border:1px solid ${C.signal};padding:2px 8px`}
+                      >
+                        {tierLabel(k.tier)}
+                      </span>
                     ) : (
                       <span style={`color:${C.inkSoft}`}>—</span>
                     )}
                   </td>
                   <td>
                     {k.status === 'active' ? (
-                      <span style={`font-family:${C.fontMono};font-size:9px;letter-spacing:0.14em;color:${C.positive};border:1px solid ${C.positive};padding:2px 8px;text-transform:uppercase`}>Active</span>
+                      <span
+                        style={`font-family:${C.fontMono};font-size:9px;letter-spacing:0.14em;color:${C.positive};border:1px solid ${C.positive};padding:2px 8px;text-transform:uppercase`}
+                      >
+                        Active
+                      </span>
                     ) : (
-                      <span style={`font-family:${C.fontMono};font-size:9px;letter-spacing:0.14em;color:${C.inkSoft};border:1px solid ${C.bone};padding:2px 8px;text-transform:uppercase`}>{k.status}</span>
+                      <span
+                        style={`font-family:${C.fontMono};font-size:9px;letter-spacing:0.14em;color:${C.inkSoft};border:1px solid ${C.bone};padding:2px 8px;text-transform:uppercase`}
+                      >
+                        {k.status}
+                      </span>
                     )}
                   </td>
-                  <td class="num"><Num size={12}>{k.lastLoginAt ? fmtDateTime(k.lastLoginAt) : '—'}</Num></td>
+                  <td class="num">
+                    <Num size={12}>{k.lastLoginAt ? fmtDateTime(k.lastLoginAt) : '—'}</Num>
+                  </td>
                   <td>
-                    <form method="post" action={`/admin/klients/${k.id}/reset`} style="display:inline">
+                    <form
+                      method="post"
+                      action={`/admin/klients/${k.id}/reset`}
+                      style="display:inline"
+                    >
                       <button
                         type="submit"
                         style={`background:transparent;border:1px solid ${C.bone};font-family:${C.fontBody};font-size:11.5px;color:${C.inkSoft};padding:6px 10px`}
@@ -222,7 +303,9 @@ admin.get('/admin/klients', async (c) => {
 // ============================================================================
 admin.post('/admin/klients', async (c) => {
   const body = await c.req.parseBody();
-  const email = String(body.email ?? '').trim().toLowerCase();
+  const email = String(body.email ?? '')
+    .trim()
+    .toLowerCase();
   const password = String(body.password ?? '');
   const name = String(body.name ?? '').trim() || null;
   const company = String(body.company ?? '').trim() || null;
@@ -259,7 +342,7 @@ admin.post('/admin/klients', async (c) => {
 // ============================================================================
 // POST /admin/signups/:id/approve — convert request to klient + email magic link
 // ============================================================================
-admin.post('/admin/signups/:id/approve', async (c) => {
+admin.post('/admin/signups/:id/approve', zValidator('param', uuidParam), async (c) => {
   const id = c.req.param('id');
   const adminKlient = c.get('klient');
   const req = await db.query.signupRequests.findFirst({ where: eq(signupRequests.id, id) });
@@ -273,45 +356,61 @@ admin.post('/admin/signups/:id/approve', async (c) => {
     if (brand) brandId = brand.id;
   }
 
-  // Dedupe: if email already in klients, just link it
-  const existing = await db.query.klients.findFirst({ where: eq(klients.email, req.email) });
+  // Atomicity: klient upsert + request status flip happen together, so a
+  // partial failure can't leave a klient row with a still-pending request.
   let klientId: string;
-  if (existing) {
-    klientId = existing.id;
-  } else {
-    const [inserted] = await db
-      .insert(klients)
-      .values({
-        email: req.email,
-        name: req.name,
-        company: req.company,
-        brandId,
-        tier: 'pro',
-        status: 'active',
-        emailVerifiedAt: new Date(),
-      })
-      .returning({ id: klients.id });
-    if (!inserted) return c.redirect('/admin/klients?error=insert_failed');
-    klientId = inserted.id;
+  try {
+    klientId = await db.transaction(async (tx) => {
+      const existing = await tx.query.klients.findFirst({ where: eq(klients.email, req.email) });
+      let kId: string;
+      if (existing) {
+        kId = existing.id;
+      } else {
+        const [inserted] = await tx
+          .insert(klients)
+          .values({
+            email: req.email,
+            name: req.name,
+            company: req.company,
+            brandId,
+            tier: 'pro',
+            status: 'active',
+            emailVerifiedAt: new Date(),
+          })
+          .returning({ id: klients.id });
+        if (!inserted) throw new Error('klient_insert_failed');
+        kId = inserted.id;
+      }
+      await tx
+        .update(signupRequests)
+        .set({ status: 'approved', decidedAt: new Date(), decidedBy: adminKlient.id })
+        .where(eq(signupRequests.id, id));
+      return kId;
+    });
+  } catch (err) {
+    console.error('Admin approve failed:', err);
+    return c.redirect('/admin/klients?error=insert_failed');
   }
 
-  // Mark request decided
-  await db
-    .update(signupRequests)
-    .set({ status: 'approved', decidedAt: new Date(), decidedBy: adminKlient.id })
-    .where(eq(signupRequests.id, id));
-
-  // Send magic link so the klient can log in (no password yet)
+  // Email + token are outside the tx — slow/external; magic link can be re-issued if needed.
+  const approvedBrand = brandId
+    ? await db.query.brands.findFirst({ where: eq(brands.id, brandId) })
+    : null;
   const { token } = await issueMagicLinkToken(klientId);
   const url = `${env.APP_URL}/magic/verify?token=${token}&next=/app/dashboard`;
-  const tmpl = magicLinkEmail(url);
+  const tmpl = signupApprovedEmail({
+    recipientName: req.name,
+    recipientEmail: req.email,
+    brandName: approvedBrand?.name ?? null,
+    magicUrl: url,
+  });
   const result = await sendEmail({ to: req.email, ...tmpl });
   if (!result.ok) console.error('Approval magic link email failed:', result.error);
 
   return c.redirect(`/admin/klients?approved=${encodeURIComponent(req.email)}`);
 });
 
-admin.post('/admin/signups/:id/reject', async (c) => {
+admin.post('/admin/signups/:id/reject', zValidator('param', uuidParam), async (c) => {
   const id = c.req.param('id');
   const adminKlient = c.get('klient');
   const req = await db.query.signupRequests.findFirst({ where: eq(signupRequests.id, id) });
@@ -326,16 +425,25 @@ admin.post('/admin/signups/:id/reject', async (c) => {
 // ============================================================================
 // POST /admin/klients/:id/reset — rotate password
 // ============================================================================
-admin.post('/admin/klients/:id/reset', async (c) => {
+admin.post('/admin/klients/:id/reset', zValidator('param', uuidParam), async (c) => {
   const id = c.req.param('id');
-  const tempPassword = Math.random().toString(36).slice(2, 12);
+  const target = await db.query.klients.findFirst({ where: eq(klients.id, id) });
+  if (!target) return c.redirect('/admin/klients?error=klient_missing');
+
+  const tempPassword = randomBytes(12).toString('base64url');
   const hash = await hashPassword(tempPassword);
   await db.update(klients).set({ passwordHash: hash }).where(eq(klients.id, id));
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log(`🔐 Password reset for klient ${id}`);
-  console.log(`   Temporary password: ${tempPassword}`);
-  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  return c.redirect('/admin/klients?updated=1');
+
+  const tmpl = passwordResetEmail({
+    recipientName: target.name,
+    recipientEmail: target.email,
+    tempPassword,
+    loginUrl: `${env.APP_URL}/login?tab=pw`,
+  });
+  const result = await sendEmail({ to: target.email, ...tmpl });
+  if (!result.ok) console.error('Password reset email failed:', result.error);
+
+  return c.redirect(`/admin/klients?updated=${encodeURIComponent(target.email)}`);
 });
 
 // ============================================================================
@@ -365,49 +473,101 @@ admin.get('/admin/health', async (c) => {
       brandName="Mentivue"
     >
       <div style={`padding:24px 28px 22px;border-bottom:1px solid ${C.bone}`}>
-        <MonoLabel size={10} tracking="0.18em">Admin</MonoLabel>
-        <h1 style={`font-family:${C.fontDisplay};font-weight:400;font-size:32px;letter-spacing:-0.025em;line-height:1.05;margin:8px 0 0;color:${C.ink}`}>
+        <MonoLabel size={10} tracking="0.18em">
+          Admin
+        </MonoLabel>
+        <h1
+          style={`font-family:${C.fontDisplay};font-weight:400;font-size:32px;letter-spacing:-0.025em;line-height:1.05;margin:8px 0 0;color:${C.ink}`}
+        >
           System Health
         </h1>
-        <div style={`color:${C.inkSoft};font-size:13px;margin-top:6px`}>LLM volania, náklady, chybovosť — dnešok a 7-dňový trend.</div>
+        <div style={`color:${C.inkSoft};font-size:13px;margin-top:6px`}>
+          LLM volania, náklady, chybovosť — dnešok a 7-dňový trend.
+        </div>
       </div>
 
       <main style="padding:28px;display:flex;flex-direction:column;gap:32px">
         <div style="display:grid;grid-template-columns:repeat(4, 1fr);gap:0">
-          <div style={`border:1px solid ${C.ink};border-right:none;background:${C.paperPure};padding:20px 22px;min-height:120px`}>
-            <MonoLabel size={10} tracking="0.18em">Dnes · volania</MonoLabel>
-            <div style={`font-family:${C.fontDisplay};font-size:36px;font-weight:400;letter-spacing:-0.025em;margin-top:8px;font-variant-numeric:tabular-nums`}>{fmtInt(todayTotal.calls)}</div>
+          <div
+            style={`border:1px solid ${C.ink};border-right:none;background:${C.paperPure};padding:20px 22px;min-height:120px`}
+          >
+            <MonoLabel size={10} tracking="0.18em">
+              Dnes · volania
+            </MonoLabel>
+            <div
+              style={`font-family:${C.fontDisplay};font-size:36px;font-weight:400;letter-spacing:-0.025em;margin-top:8px;font-variant-numeric:tabular-nums`}
+            >
+              {fmtInt(todayTotal.calls)}
+            </div>
           </div>
-          <div style={`border:1px solid ${C.ink};border-right:none;background:${C.paperPure};padding:20px 22px`}>
-            <MonoLabel size={10} tracking="0.18em">Dnes · chyby</MonoLabel>
-            <div style={`font-family:${C.fontDisplay};font-size:36px;font-weight:400;letter-spacing:-0.025em;margin-top:8px;color:${todayTotal.errors > 0 ? C.negative : C.ink};font-variant-numeric:tabular-nums`}>{fmtInt(todayTotal.errors)}</div>
-            <Num size={11} color={C.inkSoft}>{todayTotal.calls > 0 ? `${fmtDecimal((todayTotal.errors / todayTotal.calls) * 100, 1)} % error rate` : '—'}</Num>
+          <div
+            style={`border:1px solid ${C.ink};border-right:none;background:${C.paperPure};padding:20px 22px`}
+          >
+            <MonoLabel size={10} tracking="0.18em">
+              Dnes · chyby
+            </MonoLabel>
+            <div
+              style={`font-family:${C.fontDisplay};font-size:36px;font-weight:400;letter-spacing:-0.025em;margin-top:8px;color:${todayTotal.errors > 0 ? C.negative : C.ink};font-variant-numeric:tabular-nums`}
+            >
+              {fmtInt(todayTotal.errors)}
+            </div>
+            <Num size={11} color={C.inkSoft}>
+              {todayTotal.calls > 0
+                ? `${fmtDecimal((todayTotal.errors / todayTotal.calls) * 100, 1)} % error rate`
+                : '—'}
+            </Num>
           </div>
-          <div style={`border:1px solid ${C.ink};border-right:none;background:${C.paperPure};padding:20px 22px`}>
-            <MonoLabel size={10} tracking="0.18em">Dnes · náklady</MonoLabel>
-            <div style={`font-family:${C.fontDisplay};font-size:36px;font-weight:400;letter-spacing:-0.025em;margin-top:8px;font-variant-numeric:tabular-nums`}>{fmtUsd(todayTotal.cost)}</div>
+          <div
+            style={`border:1px solid ${C.ink};border-right:none;background:${C.paperPure};padding:20px 22px`}
+          >
+            <MonoLabel size={10} tracking="0.18em">
+              Dnes · náklady
+            </MonoLabel>
+            <div
+              style={`font-family:${C.fontDisplay};font-size:36px;font-weight:400;letter-spacing:-0.025em;margin-top:8px;font-variant-numeric:tabular-nums`}
+            >
+              {fmtUsd(todayTotal.cost)}
+            </div>
           </div>
           <div style={`border:1px solid ${C.ink};background:${C.paperPure};padding:20px 22px`}>
-            <MonoLabel size={10} tracking="0.18em">7d · náklady</MonoLabel>
-            <div style={`font-family:${C.fontDisplay};font-size:36px;font-weight:400;letter-spacing:-0.025em;margin-top:8px;font-variant-numeric:tabular-nums`}>{fmtUsd(history.reduce((s, h) => s + h.total_cost_usd, 0))}</div>
+            <MonoLabel size={10} tracking="0.18em">
+              7d · náklady
+            </MonoLabel>
+            <div
+              style={`font-family:${C.fontDisplay};font-size:36px;font-weight:400;letter-spacing:-0.025em;margin-top:8px;font-variant-numeric:tabular-nums`}
+            >
+              {fmtUsd(history.reduce((s, h) => s + h.total_cost_usd, 0))}
+            </div>
           </div>
         </div>
 
         <section>
-          <MonoLabel size={10} tracking="0.18em">7-dňový trend nákladov</MonoLabel>
-          <div style={`border:1px solid ${C.ink};background:${C.paperPure};padding:20px;margin-top:12px`}>
+          <MonoLabel size={10} tracking="0.18em">
+            7-dňový trend nákladov
+          </MonoLabel>
+          <div
+            style={`border:1px solid ${C.ink};background:${C.paperPure};padding:20px;margin-top:12px`}
+          >
             <Sparkline values={costValues} color={C.signal} fill height={80} />
             <div style="margin-top:8px;display:flex;justify-content:space-between">
-              <Num size={10} color={C.inkSoft}>{history[0]?.day ?? '—'}</Num>
-              <Num size={10} color={C.inkSoft}>{history[history.length - 1]?.day ?? '—'}</Num>
+              <Num size={10} color={C.inkSoft}>
+                {history[0]?.day ?? '—'}
+              </Num>
+              <Num size={10} color={C.inkSoft}>
+                {history[history.length - 1]?.day ?? '—'}
+              </Num>
             </div>
           </div>
         </section>
 
         <section>
-          <MonoLabel size={10} tracking="0.18em">Dnes podľa providera</MonoLabel>
+          <MonoLabel size={10} tracking="0.18em">
+            Dnes podľa providera
+          </MonoLabel>
           {today.length === 0 ? (
-            <div style={`border:1px dashed ${C.bone};padding:32px;color:${C.inkSoft};font-size:13px;background:${C.paperPure};margin-top:12px`}>
+            <div
+              style={`border:1px dashed ${C.bone};padding:32px;color:${C.inkSoft};font-size:13px;background:${C.paperPure};margin-top:12px`}
+            >
               Dnes ešte žiadne LLM volania.
             </div>
           ) : (
@@ -424,17 +584,25 @@ admin.get('/admin/health', async (c) => {
               <tbody>
                 {today.map((row) => (
                   <tr>
-                    <td><Num size={13}>{row.provider}</Num></td>
+                    <td>
+                      <Num size={13}>{row.provider}</Num>
+                    </td>
                     <td class="num">{fmtInt(row.total_calls)}</td>
                     <td class="num">
                       {row.errors > 0 ? (
-                        <span style={`font-family:${C.fontMono};color:${C.negative};border:1px solid ${C.negative};padding:2px 8px`}>{row.errors}</span>
+                        <span
+                          style={`font-family:${C.fontMono};color:${C.negative};border:1px solid ${C.negative};padding:2px 8px`}
+                        >
+                          {row.errors}
+                        </span>
                       ) : (
                         '0'
                       )}
                     </td>
                     <td class="num">{fmtUsd(row.total_cost_usd)}</td>
-                    <td class="num">{row.avg_latency_ms !== null ? `${fmtInt(row.avg_latency_ms)} ms` : '—'}</td>
+                    <td class="num">
+                      {row.avg_latency_ms !== null ? `${fmtInt(row.avg_latency_ms)} ms` : '—'}
+                    </td>
                   </tr>
                 ))}
               </tbody>

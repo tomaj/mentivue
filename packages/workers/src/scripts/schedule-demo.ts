@@ -5,16 +5,18 @@
 // Usage:
 //   pnpm --filter @mentivue/workers schedule:demo [provider]
 
-import { and, eq } from 'drizzle-orm';
+import type { ProviderName } from '@mentivue/shared';
 import { db, prompts } from '@mentivue/shared/db';
 import { ALL_CLIENTS } from '@mentivue/shared/llm';
+import { and, eq } from 'drizzle-orm';
 import { closeQueues, collectionQueue } from '../queues.ts';
-import type { ProviderName } from '@mentivue/shared';
 
 const requested = (process.argv[2] ?? 'openai') as ProviderName;
 const candidate = ALL_CLIENTS.find((c) => c.provider === requested);
 if (!candidate) {
-  console.error(`✗ Unknown provider "${requested}". Options: anthropic, openai, perplexity, gemini`);
+  console.error(
+    `✗ Unknown provider "${requested}". Options: anthropic, openai, perplexity, gemini`,
+  );
   process.exit(1);
 }
 if (!candidate.isAvailable()) {

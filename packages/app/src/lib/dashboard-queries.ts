@@ -1,8 +1,8 @@
 // Read queries for the customer dashboard. Each function powers one widget on
 // the prototype. All queries scope to klient's brand (passed in) + last N days.
 
-import { sql, type SQL } from 'drizzle-orm';
 import { db } from '@mentivue/shared/db';
+import { type SQL, sql } from 'drizzle-orm';
 
 // ============================================================================
 // 1. MENTIVUE INDEX SUMMARY — composite score + 30d sparkline + delta
@@ -634,7 +634,8 @@ export async function klientAnomalies(klientBrandId: string): Promise<Anomaly[]>
   // Sort: red first, then by absolute delta magnitude
   const sevOrder = { red: 0, amber: 1, green: 2 } as const;
   anomalies.sort((a, b) => {
-    if (sevOrder[a.severity] !== sevOrder[b.severity]) return sevOrder[a.severity] - sevOrder[b.severity];
+    if (sevOrder[a.severity] !== sevOrder[b.severity])
+      return sevOrder[a.severity] - sevOrder[b.severity];
     return Math.abs(b.delta) - Math.abs(a.delta);
   });
 
@@ -671,9 +672,16 @@ export async function upcomingItems(klientId: string): Promise<UpcomingItem[]> {
   }>) {
     const date = new Date(r.period_end);
     const title = r.metadata?.title ?? r.type;
-    const dateLabel = new Intl.DateTimeFormat('sk-SK', { day: 'numeric', month: 'long' }).format(date);
+    const dateLabel = new Intl.DateTimeFormat('sk-SK', { day: 'numeric', month: 'long' }).format(
+      date,
+    );
     if (r.status === 'generating') {
-      items.push({ kind: 'coming', title, date: `${dateLabel} · pripravujeme`, action: 'Pozrieť osnovu' });
+      items.push({
+        kind: 'coming',
+        title,
+        date: `${dateLabel} · pripravujeme`,
+        action: 'Pozrieť osnovu',
+      });
     } else {
       items.push({ kind: 'wip', title, date: `${dateLabel} · v príprave` });
     }
@@ -682,7 +690,9 @@ export async function upcomingItems(klientId: string): Promise<UpcomingItem[]> {
   // Hardcoded strategy call (production: calendar table)
   const nextCall = new Date();
   nextCall.setDate(nextCall.getDate() + 21);
-  const callDateLabel = new Intl.DateTimeFormat('sk-SK', { day: 'numeric', month: 'long' }).format(nextCall);
+  const callDateLabel = new Intl.DateTimeFormat('sk-SK', { day: 'numeric', month: 'long' }).format(
+    nextCall,
+  );
   items.splice(1, 0, {
     kind: 'reserve',
     title: 'Strategický call s Tomášom',

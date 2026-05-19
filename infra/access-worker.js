@@ -18,7 +18,7 @@
 export default {
   async fetch(request, env) {
     const auth = request.headers.get('authorization');
-    const expected = 'Basic ' + btoa(`${env.USER}:${env.PASS}`);
+    const expected = `Basic ${btoa(`${env.USER}:${env.PASS}`)}`;
 
     if (auth !== expected) {
       return new Response('Authentication required.', {

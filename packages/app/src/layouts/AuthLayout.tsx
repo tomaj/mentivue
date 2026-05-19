@@ -1,6 +1,6 @@
 import type { FC, PropsWithChildren } from 'hono/jsx';
-import { APP_BASE_CSS } from '../styles.ts';
 import { C } from '../components/primitives.tsx';
+import { APP_BASE_CSS } from '../styles.ts';
 
 type Props = PropsWithChildren<{ title?: string }>;
 
@@ -21,10 +21,10 @@ export const AuthLayout: FC<Props> = ({ title, children }) => {
         />
         <style dangerouslySetInnerHTML={{ __html: APP_BASE_CSS }} />
       </head>
-      <body style={`background:${C.paper};color:${C.ink};margin:0;font-family:${C.fontBody};-webkit-font-smoothing:antialiased`}>
-        <div style="min-height:100vh;display:grid;grid-template-columns:1.2fr 1fr">
-          {children}
-        </div>
+      <body
+        style={`background:${C.paper};color:${C.ink};margin:0;font-family:${C.fontBody};-webkit-font-smoothing:antialiased`}
+      >
+        <div style="min-height:100vh;display:grid;grid-template-columns:1.2fr 1fr">{children}</div>
       </body>
     </html>
   );

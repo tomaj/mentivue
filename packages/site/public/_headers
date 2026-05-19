@@ -1,0 +1,58 @@
+# Cloudflare Pages _headers file
+# Applied to every response served by the Pages deployment. Same-line format:
+#   /path
+#     Header-Name: value
+#
+# Reference: https://developers.cloudflare.com/pages/configuration/headers/
+
+/*
+  # HSTS — force HTTPS for 1 year, include subdomains, opt-in to preload list
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+  # Stop MIME sniffing
+  X-Content-Type-Options: nosniff
+
+  # Block being framed by other sites (clickjacking)
+  X-Frame-Options: SAMEORIGIN
+
+  # Modern frame-ancestors replacement (also enforced via CSP below)
+  # X-Frame-Options is for legacy clients; CSP frame-ancestors is canonical.
+
+  # Conservative referrer policy
+  Referrer-Policy: strict-origin-when-cross-origin
+
+  # No client-side feature usage beyond defaults
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+
+  # Cross-origin isolation (safe for a static marketing site)
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-site
+
+  # Content-Security-Policy
+  # - 'unsafe-inline' for styles is required because Astro emits inline <style>
+  #   blocks from .astro components.
+  # - JSON-LD via set:html is application/ld+json, not script — but browsers
+  #   still apply script-src to <script type="application/ld+json">, so we
+  #   include 'unsafe-inline' just for that case. There are NO executable
+  #   inline scripts in this site.
+  # - Google Fonts: googleapis.com (stylesheets) + gstatic.com (font files).
+  # - Images: 'self' + data: URIs (logo) + https: (OG card hot-linking).
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; frame-ancestors 'self'; form-action 'self' https://app.mentivue.sk; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://app.mentivue.sk; object-src 'none'; upgrade-insecure-requests
+
+# Long-cache fingerprinted Astro assets (Astro emits hashed filenames in _astro/)
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Brand assets — moderately cached, not fingerprinted
+/og-default.png
+  Cache-Control: public, max-age=604800
+/mentivue-logo.svg
+  Cache-Control: public, max-age=604800
+
+# Robots + crawl maps — short cache so they propagate quickly
+/robots.txt
+  Cache-Control: public, max-age=3600
+/llms.txt
+  Cache-Control: public, max-age=3600
+/sitemap-index.xml
+  Cache-Control: public, max-age=3600

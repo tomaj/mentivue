@@ -114,12 +114,8 @@
           "name": "brand_mentions_raw_response_id_raw_responses_id_fk",
           "tableFrom": "brand_mentions",
           "tableTo": "raw_responses",
-          "columnsFrom": [
-            "raw_response_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["raw_response_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -127,12 +123,8 @@
           "name": "brand_mentions_brand_id_brands_id_fk",
           "tableFrom": "brand_mentions",
           "tableTo": "brands",
-          "columnsFrom": [
-            "brand_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["brand_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -234,12 +226,8 @@
           "name": "brands_vertical_id_verticals_id_fk",
           "tableFrom": "brands",
           "tableTo": "verticals",
-          "columnsFrom": [
-            "vertical_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["vertical_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -349,12 +337,8 @@
           "name": "hallucination_flags_llm_call_id_llm_calls_id_fk",
           "tableFrom": "hallucination_flags",
           "tableTo": "llm_calls",
-          "columnsFrom": [
-            "llm_call_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["llm_call_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -362,12 +346,8 @@
           "name": "hallucination_flags_brand_id_brands_id_fk",
           "tableFrom": "hallucination_flags",
           "tableTo": "brands",
-          "columnsFrom": [
-            "brand_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["brand_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -477,12 +457,8 @@
           "name": "klients_brand_id_brands_id_fk",
           "tableFrom": "klients",
           "tableTo": "brands",
-          "columnsFrom": [
-            "brand_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["brand_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -492,9 +468,7 @@
         "klients_email_unique": {
           "name": "klients_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
@@ -666,12 +640,8 @@
           "name": "llm_calls_prompt_id_prompts_id_fk",
           "tableFrom": "llm_calls",
           "tableTo": "prompts",
-          "columnsFrom": [
-            "prompt_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["prompt_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -762,12 +732,8 @@
           "name": "magic_link_tokens_klient_id_klients_id_fk",
           "tableFrom": "magic_link_tokens",
           "tableTo": "klients",
-          "columnsFrom": [
-            "klient_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["klient_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -905,12 +871,8 @@
           "name": "prompts_vertical_id_verticals_id_fk",
           "tableFrom": "prompts",
           "tableTo": "verticals",
-          "columnsFrom": [
-            "vertical_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["vertical_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -986,12 +948,8 @@
           "name": "raw_responses_llm_call_id_llm_calls_id_fk",
           "tableFrom": "raw_responses",
           "tableTo": "llm_calls",
-          "columnsFrom": [
-            "llm_call_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["llm_call_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1104,12 +1062,8 @@
           "name": "reports_klient_id_klients_id_fk",
           "tableFrom": "reports",
           "tableTo": "klients",
-          "columnsFrom": [
-            "klient_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["klient_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -1117,12 +1071,8 @@
           "name": "reports_brand_id_brands_id_fk",
           "tableFrom": "reports",
           "tableTo": "brands",
-          "columnsFrom": [
-            "brand_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["brand_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -1130,12 +1080,8 @@
           "name": "reports_vertical_id_verticals_id_fk",
           "tableFrom": "reports",
           "tableTo": "verticals",
-          "columnsFrom": [
-            "vertical_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["vertical_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1236,12 +1182,8 @@
           "name": "response_quality_llm_call_id_llm_calls_id_fk",
           "tableFrom": "response_quality",
           "tableTo": "llm_calls",
-          "columnsFrom": [
-            "llm_call_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["llm_call_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1338,12 +1280,8 @@
           "name": "sessions_klient_id_klients_id_fk",
           "tableFrom": "sessions",
           "tableTo": "klients",
-          "columnsFrom": [
-            "klient_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["klient_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1471,12 +1409,8 @@
           "name": "signup_requests_decided_by_klients_id_fk",
           "tableFrom": "signup_requests",
           "tableTo": "klients",
-          "columnsFrom": [
-            "decided_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["decided_by"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1557,9 +1491,7 @@
         "verticals_slug_unique": {
           "name": "verticals_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},

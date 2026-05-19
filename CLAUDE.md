@@ -8,10 +8,12 @@ Sells PDF reports (€2 990 Audit, €299 Industry) and subscriptions (€490-4 
 ## Read these first
 
 Before any task, read relevant docs in `docs/`:
+
 - `PRD.md` - product strategy, decisions, scope
 - `METRICS.md` - per-metric formulas and SQL
 - `ANALYSIS.md` - data pipeline architecture
 - `AUTOMATION.md` - 12 AI agents specifications
+- `PROMPT_CADENCE.md` - daily/weekly/monthly tier strategy
 - `VALIDATION.md` - quality control methods (M1-M22)
 - `READINESS_AUDIT.md` - what's ready, what's missing
 - `MONOREPO.md` - this folder structure rationale
@@ -19,6 +21,7 @@ Before any task, read relevant docs in `docs/`:
 ## Where things live
 
 ### Adding a new metric
+
 1. Schema → `packages/shared/src/db/schema.ts`
 2. Migration → `pnpm db:generate`
 3. Query → `packages/shared/src/db/queries.ts`
@@ -26,15 +29,25 @@ Before any task, read relevant docs in `docs/`:
 5. Display → `packages/app/src/components/` or `packages/site/src/components/`
 
 ### Adding a new vertical (e.g. banking)
+
 1. Prompts → `prompts/sk-banking.yaml`
 2. Seed → `packages/shared/src/db/seed.ts` (extend)
 3. Update queries to filter by `vertical_id`
 4. Add brand cards → `packages/site/src/pages/brand/[slug].astro`
 
 ### Adding a new agent
+
 1. Definition → `packages/workers/src/agents/[name].ts`
 2. Register in worker → `packages/workers/src/index.ts`
 3. Schedule cron → BullMQ repeat option
+
+### Adding a new scheduled job (cron/cadence)
+
+1. Determine tier → check `docs/PROMPT_CADENCE.md` for tier definitions
+2. Add BullMQ repeat config → `packages/workers/src/scheduler.ts`
+3. Implement job handler → `packages/workers/src/jobs/[name].ts`
+4. Update cost tracking → ensure agent reports to cost-monitor
+5. Test locally with `bun run dev:workers`
 
 ## Tech stack rules
 
@@ -51,52 +64,63 @@ Before any task, read relevant docs in `docs/`:
 ## Import patterns
 
 ### From shared package
+
 ```typescript
-import { db, brands } from '@mentivue/shared/db';
-import { env } from '@mentivue/shared/config';
-import { callClaude } from '@mentivue/shared/llm';
-import { formatNumber } from '@mentivue/shared/utils';
-import type { Tier } from '@mentivue/shared/types';
+import { db, brands } from "@mentivue/shared/db";
+import { env } from "@mentivue/shared/config";
+import { callClaude } from "@mentivue/shared/llm";
+import { formatNumber } from "@mentivue/shared/utils";
+import type { Tier } from "@mentivue/shared/types";
 ```
 
 ### Within same package
+
 Use relative imports:
+
 ```typescript
-import { someHelper } from './lib/helper.ts';
+import { someHelper } from "./lib/helper.ts";
 ```
 
 ## Code patterns
 
 ### LLM calls
+
 Always use shared clients:
+
 ```typescript
-import { callClaude } from '@mentivue/shared/llm';
-const result = await callClaude({ 
-  prompt: 'Analyze this...',
-  model: 'claude-haiku-4-5-20251001' 
+import { callClaude } from "@mentivue/shared/llm";
+const result = await callClaude({
+  prompt: "Analyze this...",
+  model: "claude-haiku-4-5-20251001",
 });
 ```
 
 ### DB queries
+
 Always use Drizzle:
+
 ```typescript
-import { db, brands } from '@mentivue/shared/db';
-import { eq } from 'drizzle-orm';
+import { db, brands } from "@mentivue/shared/db";
+import { eq } from "drizzle-orm";
 
 const brand = await db.select().from(brands).where(eq(brands.slug, slug));
 ```
 
 ### Slovak number formatting
+
 Always use helper:
+
 ```typescript
-import { formatNumber } from '@mentivue/shared/utils';
+import { formatNumber } from "@mentivue/shared/utils";
 formatNumber(1176); // "1 176" (SK with non-breaking space)
 ```
 
 ### Env access
+
 Never `process.env.X` directly. Always:
+
 ```typescript
-import { env } from '@mentivue/shared/config';
+import { env } from "@mentivue/shared/config";
 const apiKey = env.ANTHROPIC_API_KEY;
 ```
 
@@ -123,6 +147,7 @@ const apiKey = env.ANTHROPIC_API_KEY;
 ## When unsure - ask Tomas first
 
 Before:
+
 - Adding new dependencies
 - Major refactoring
 - Changing public APIs
@@ -133,6 +158,7 @@ Before:
 ## Current focus
 
 Week 1-4 build per `AUTOMATION.md` priorities:
+
 1. Foundation (DB, hosting, billing infra)
 2. Report Writer + Pulse Writer agents
 3. Anomaly Watcher

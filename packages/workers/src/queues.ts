@@ -1,7 +1,7 @@
+import type { ProviderName } from '@mentivue/shared';
+import { getEnv } from '@mentivue/shared/config';
 import { Queue } from 'bullmq';
 import { Redis } from 'ioredis';
-import { getEnv } from '@mentivue/shared/config';
-import type { ProviderName } from '@mentivue/shared';
 
 const env = getEnv();
 

@@ -4,8 +4,8 @@
 // Usage:
 //   pnpm --filter @mentivue/workers analyze:pending
 
-import { sql } from 'drizzle-orm';
 import { db } from '@mentivue/shared/db';
+import { sql } from 'drizzle-orm';
 import { analyzeResponse } from '../agents/analyzer.ts';
 
 const pending = await db.execute<{ id: string }>(sql`
@@ -41,7 +41,7 @@ for (const row of rows) {
     const r = await analyzeResponse(row.id);
     totalCost += r.analysisCostUsd;
     totalMentions += r.mentionsInserted;
-    r.untrackedBrands.forEach((b) => allUntracked.add(b));
+    for (const b of r.untrackedBrands) allUntracked.add(b);
     console.log(
       `✓ ${row.id.slice(0, 8)}  ` +
         `${String(r.mentionsInserted).padStart(2)} mentions  ` +

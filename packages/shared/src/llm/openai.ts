@@ -1,7 +1,9 @@
 import OpenAI from 'openai';
 import { getEnv } from '../config/env.ts';
+import { traceLLMCall } from './langfuse.ts';
 import { calculateCost, pricingKey } from './pricing.ts';
 import type { Citation, LLMCallOptions, LLMCallResult, LLMClient } from './types.ts';
+import { isValidKey, safeDomain, withRetry } from './utils.ts';
 
 const DEFAULT_MODEL = 'gpt-5-mini';
 
@@ -26,6 +28,10 @@ export const openaiClient: LLMClient = {
 };
 
 export async function callOpenAI(opts: LLMCallOptions): Promise<LLMCallResult> {
+  return traceLLMCall('openai', DEFAULT_MODEL, opts, () => callOpenAIImpl(opts));
+}
+
+async function callOpenAIImpl(opts: LLMCallOptions): Promise<LLMCallResult> {
   const model = DEFAULT_MODEL;
   const start = Date.now();
 
@@ -47,23 +53,30 @@ export async function callOpenAI(opts: LLMCallOptions): Promise<LLMCallResult> {
     params.tools = [{ type: 'web_search' }];
   }
 
-  // biome-ignore lint/suspicious/noExplicitAny: Responses API typing varies by SDK version
-  const response = (await (client() as any).responses.create(params)) as {
-    output_text?: string;
-    output?: Array<{
-      type: string;
-      content?: Array<{
-        type: string;
-        text?: string;
-        annotations?: Array<{ type: string; url?: string; title?: string }>;
-      }>;
-    }>;
-    usage?: {
-      input_tokens?: number;
-      output_tokens?: number;
-      input_tokens_details?: { cached_tokens?: number };
-    };
-  };
+  const response = await withRetry(
+    (signal) =>
+      // biome-ignore lint/suspicious/noExplicitAny: Responses API typing varies by SDK version
+      (client() as any).responses.create(params, { signal }) as Promise<{
+        output_text?: string;
+        output?: Array<{
+          type: string;
+          content?: Array<{
+            type: string;
+            text?: string;
+            annotations?: Array<{ type: string; url?: string; title?: string }>;
+          }>;
+        }>;
+        usage?: {
+          input_tokens?: number;
+          output_tokens?: number;
+          input_tokens_details?: { cached_tokens?: number };
+        };
+      }>,
+    {
+      onRetry: (attempt, err) =>
+        console.warn(`OpenAI retry ${attempt}/3:`, err instanceof Error ? err.message : err),
+    },
+  );
 
   const latencyMs = Date.now() - start;
 
@@ -115,16 +128,4 @@ export async function callOpenAI(opts: LLMCallOptions): Promise<LLMCallResult> {
     citations,
     rawResponse: response,
   };
-}
-
-function safeDomain(url: string): string | undefined {
-  try {
-    return new URL(url).hostname.replace(/^www\./, '');
-  } catch {
-    return undefined;
-  }
-}
-
-function isValidKey(value: string | undefined): boolean {
-  return Boolean(value && !value.endsWith('...') && value.length > 10);
 }

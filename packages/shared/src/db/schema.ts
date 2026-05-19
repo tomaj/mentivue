@@ -308,11 +308,25 @@ export const reports = pgTable(
     periodEnd: timestamp('period_end', { withTimezone: true }).notNull(),
     storageUrl: text('storage_url'),
     metadata: jsonb('metadata'),
-    status: text('status').notNull().default('pending'), // pending | generating | ready | failed
+    // State machine: pending → generating → needs_review → ready → delivered
+    //                                     ↓ (admin reject)
+    //                                   failed
+    status: text('status').notNull().default('pending'),
+    approvedAt: timestamp('approved_at', { withTimezone: true }),
+    approvedBy: uuid('approved_by').references(() => klients.id, { onDelete: 'set null' }),
+    deliveredAt: timestamp('delivered_at', { withTimezone: true }),
+    rejectionNotes: text('rejection_notes'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => ({
     klientTypeIdx: index('reports_klient_type_idx').on(table.klientId, table.type),
+    statusIdx: index('reports_status_idx').on(table.status),
+    // One scheduled report per (klient, type, periodEnd) to make the scheduler idempotent
+    klientPeriodUq: uniqueIndex('reports_klient_type_period_uq').on(
+      table.klientId,
+      table.type,
+      table.periodEnd,
+    ),
   }),
 );
 

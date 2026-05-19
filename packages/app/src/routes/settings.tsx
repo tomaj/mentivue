@@ -1,12 +1,24 @@
-import { Hono } from 'hono';
-import { eq } from 'drizzle-orm';
 import { brands, db, klients } from '@mentivue/shared/db';
-import { AppLayout } from '../layouts/AppLayout.tsx';
+import { eq } from 'drizzle-orm';
+import { Hono } from 'hono';
 import { C, MonoLabel, Num } from '../components/primitives.tsx';
+import { AppLayout } from '../layouts/AppLayout.tsx';
 import { hashPassword, verifyPassword } from '../lib/auth.ts';
 import { fmtDateTime, tierLabel } from '../lib/fmt.ts';
+import { rateLimit } from '../lib/rate-limit.ts';
 
 const s = new Hono();
+
+// Password change: throttle per session id (cookie) — 5 attempts per 15 min.
+s.use(
+  '/app/settings/password',
+  rateLimit({
+    bucket: 'pw',
+    max: 5,
+    windowSec: 900,
+    keyOf: (c) => c.req.header('cookie')?.match(/mentivue_session=([^;]+)/)?.[1] ?? 'anon',
+  }),
+);
 
 function quarterLabel(d = new Date()): string {
   return `Q${Math.floor(d.getMonth() / 3) + 1} ${d.getFullYear()}`;
@@ -31,47 +43,106 @@ s.get('/app/settings', async (c) => {
       brandName={brand?.name ?? '—'}
     >
       <div style={`padding:24px 28px 22px;border-bottom:1px solid ${C.bone}`}>
-        <MonoLabel size={10} tracking="0.18em">Účet</MonoLabel>
-        <h1 style={`font-family:${C.fontDisplay};font-weight:400;font-size:32px;letter-spacing:-0.025em;line-height:1.05;margin:8px 0 0;color:${C.ink}`}>
+        <MonoLabel size={10} tracking="0.18em">
+          Účet
+        </MonoLabel>
+        <h1
+          style={`font-family:${C.fontDisplay};font-weight:400;font-size:32px;letter-spacing:-0.025em;line-height:1.05;margin:8px 0 0;color:${C.ink}`}
+        >
           Nastavenia účtu
         </h1>
       </div>
 
       <main style="padding:28px;display:grid;gap:24px;grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
-        {success && <div class="alert ok" style="grid-column:1/-1">Uložené.</div>}
-        {error === 'wrong_current' && <div class="alert err" style="grid-column:1/-1">Súčasné heslo nesedí.</div>}
-        {error === 'too_short' && <div class="alert err" style="grid-column:1/-1">Nové heslo musí mať aspoň 8 znakov.</div>}
+        {success && (
+          <div class="alert ok" style="grid-column:1/-1">
+            Uložené.
+          </div>
+        )}
+        {error === 'password_error' && (
+          <div class="alert err" style="grid-column:1/-1">
+            Heslo sa nepodarilo zmeniť. Skontrolujte súčasné heslo a že nové má aspoň 8 znakov.
+          </div>
+        )}
 
         <section style={`border:1px solid ${C.ink};background:${C.paperPure};padding:24px`}>
-          <MonoLabel size={10} tracking="0.18em">Účet</MonoLabel>
-          <h2 style={`font-family:${C.fontDisplay};font-size:22px;font-weight:400;letter-spacing:-0.018em;margin:8px 0 18px`}>Detaily</h2>
+          <MonoLabel size={10} tracking="0.18em">
+            Účet
+          </MonoLabel>
+          <h2
+            style={`font-family:${C.fontDisplay};font-size:22px;font-weight:400;letter-spacing:-0.018em;margin:8px 0 18px`}
+          >
+            Detaily
+          </h2>
           <dl style="display:grid;grid-template-columns:auto 1fr;gap:10px 18px;font-size:14px">
-            <dt style={`color:${C.inkSoft};font-family:${C.fontMono};font-size:10px;letter-spacing:0.14em;text-transform:uppercase`}>Email</dt>
+            <dt
+              style={`color:${C.inkSoft};font-family:${C.fontMono};font-size:10px;letter-spacing:0.14em;text-transform:uppercase`}
+            >
+              Email
+            </dt>
             <dd>{fresh.email}</dd>
-            <dt style={`color:${C.inkSoft};font-family:${C.fontMono};font-size:10px;letter-spacing:0.14em;text-transform:uppercase`}>Meno</dt>
+            <dt
+              style={`color:${C.inkSoft};font-family:${C.fontMono};font-size:10px;letter-spacing:0.14em;text-transform:uppercase`}
+            >
+              Meno
+            </dt>
             <dd>{fresh.name ?? <span style={`color:${C.inkSoft}`}>—</span>}</dd>
-            <dt style={`color:${C.inkSoft};font-family:${C.fontMono};font-size:10px;letter-spacing:0.14em;text-transform:uppercase`}>Spoločnosť</dt>
+            <dt
+              style={`color:${C.inkSoft};font-family:${C.fontMono};font-size:10px;letter-spacing:0.14em;text-transform:uppercase`}
+            >
+              Spoločnosť
+            </dt>
             <dd>{fresh.company ?? <span style={`color:${C.inkSoft}`}>—</span>}</dd>
-            <dt style={`color:${C.inkSoft};font-family:${C.fontMono};font-size:10px;letter-spacing:0.14em;text-transform:uppercase`}>Značka</dt>
+            <dt
+              style={`color:${C.inkSoft};font-family:${C.fontMono};font-size:10px;letter-spacing:0.14em;text-transform:uppercase`}
+            >
+              Značka
+            </dt>
             <dd>{brand?.name ?? <span style={`color:${C.inkSoft}`}>—</span>}</dd>
-            <dt style={`color:${C.inkSoft};font-family:${C.fontMono};font-size:10px;letter-spacing:0.14em;text-transform:uppercase`}>Plán</dt>
+            <dt
+              style={`color:${C.inkSoft};font-family:${C.fontMono};font-size:10px;letter-spacing:0.14em;text-transform:uppercase`}
+            >
+              Plán
+            </dt>
             <dd>
               {fresh.tier ? (
-                <span style={`font-family:${C.fontMono};font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:${C.signal};border:1px solid ${C.signal};padding:3px 8px`}>{tierLabel(fresh.tier)}</span>
+                <span
+                  style={`font-family:${C.fontMono};font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:${C.signal};border:1px solid ${C.signal};padding:3px 8px`}
+                >
+                  {tierLabel(fresh.tier)}
+                </span>
               ) : (
                 <span style={`color:${C.inkSoft}`}>—</span>
               )}
             </dd>
-            <dt style={`color:${C.inkSoft};font-family:${C.fontMono};font-size:10px;letter-spacing:0.14em;text-transform:uppercase`}>Posl. prihlásenie</dt>
-            <dd><Num size={13}>{fmtDateTime(fresh.lastLoginAt)}</Num></dd>
-            <dt style={`color:${C.inkSoft};font-family:${C.fontMono};font-size:10px;letter-spacing:0.14em;text-transform:uppercase`}>Účet od</dt>
-            <dd><Num size={13}>{fmtDateTime(fresh.createdAt)}</Num></dd>
+            <dt
+              style={`color:${C.inkSoft};font-family:${C.fontMono};font-size:10px;letter-spacing:0.14em;text-transform:uppercase`}
+            >
+              Posl. prihlásenie
+            </dt>
+            <dd>
+              <Num size={13}>{fmtDateTime(fresh.lastLoginAt)}</Num>
+            </dd>
+            <dt
+              style={`color:${C.inkSoft};font-family:${C.fontMono};font-size:10px;letter-spacing:0.14em;text-transform:uppercase`}
+            >
+              Účet od
+            </dt>
+            <dd>
+              <Num size={13}>{fmtDateTime(fresh.createdAt)}</Num>
+            </dd>
           </dl>
         </section>
 
         <section style={`border:1px solid ${C.ink};background:${C.paperPure};padding:24px`}>
-          <MonoLabel size={10} tracking="0.18em">Bezpečnosť</MonoLabel>
-          <h2 style={`font-family:${C.fontDisplay};font-size:22px;font-weight:400;letter-spacing:-0.018em;margin:8px 0 18px`}>Zmena hesla</h2>
+          <MonoLabel size={10} tracking="0.18em">
+            Bezpečnosť
+          </MonoLabel>
+          <h2
+            style={`font-family:${C.fontDisplay};font-size:22px;font-weight:400;letter-spacing:-0.018em;margin:8px 0 18px`}
+          >
+            Zmena hesla
+          </h2>
           <form method="post" action="/app/settings/password" class="form-stack">
             <div>
               <label for="current_password">Súčasné heslo</label>
@@ -103,21 +174,44 @@ s.get('/app/settings', async (c) => {
           </form>
         </section>
 
-        <section id="billing" style={`grid-column:1/-1;border:1px solid ${C.bone};background:${C.paperPure};padding:24px`}>
-          <MonoLabel size={10} tracking="0.18em">Predplatné</MonoLabel>
-          <h2 style={`font-family:${C.fontDisplay};font-size:22px;font-weight:400;letter-spacing:-0.018em;margin:8px 0 12px`}>Fakturácia</h2>
+        <section
+          id="billing"
+          style={`grid-column:1/-1;border:1px solid ${C.bone};background:${C.paperPure};padding:24px`}
+        >
+          <MonoLabel size={10} tracking="0.18em">
+            Predplatné
+          </MonoLabel>
+          <h2
+            style={`font-family:${C.fontDisplay};font-size:22px;font-weight:400;letter-spacing:-0.018em;margin:8px 0 12px`}
+          >
+            Fakturácia
+          </h2>
           <p style={`color:${C.inkSoft};font-size:14px;line-height:1.5`}>
-            Stripe portál (úprava predplatného, fakturácia, výpoveď) bude dostupný po napojení Stripe v ďalšom kroku.
+            Stripe portál (úprava predplatného, fakturácia, výpoveď) bude dostupný po napojení
+            Stripe v ďalšom kroku.
           </p>
           {fresh.stripeCustomerId && (
-            <p style={`margin-top:8px;font-family:${C.fontMono};color:${C.inkSoft};font-size:12px`}>customer_id: {fresh.stripeCustomerId}</p>
+            <p style={`margin-top:8px;font-family:${C.fontMono};color:${C.inkSoft};font-size:12px`}>
+              customer_id: {fresh.stripeCustomerId}
+            </p>
           )}
         </section>
 
-        <section id="team" style={`grid-column:1/-1;border:1px solid ${C.bone};background:${C.paperPure};padding:24px`}>
-          <MonoLabel size={10} tracking="0.18em">Tím</MonoLabel>
-          <h2 style={`font-family:${C.fontDisplay};font-size:22px;font-weight:400;letter-spacing:-0.018em;margin:8px 0 12px`}>Členovia</h2>
-          <p style={`color:${C.inkSoft};font-size:14px`}>Viacero členov tímu pribudne s Enterprise plánom.</p>
+        <section
+          id="team"
+          style={`grid-column:1/-1;border:1px solid ${C.bone};background:${C.paperPure};padding:24px`}
+        >
+          <MonoLabel size={10} tracking="0.18em">
+            Tím
+          </MonoLabel>
+          <h2
+            style={`font-family:${C.fontDisplay};font-size:22px;font-weight:400;letter-spacing:-0.018em;margin:8px 0 12px`}
+          >
+            Členovia
+          </h2>
+          <p style={`color:${C.inkSoft};font-size:14px`}>
+            Viacero členov tímu pribudne s Enterprise plánom.
+          </p>
         </section>
       </main>
     </AppLayout>,
@@ -130,13 +224,14 @@ s.post('/app/settings/password', async (c) => {
   const current = String(body.current_password ?? '');
   const next = String(body.new_password ?? '');
 
-  if (next.length < 8) return c.redirect('/app/settings?error=too_short');
+  // Single generic error: don't leak which check failed (length vs wrong-password).
+  if (next.length < 8) return c.redirect('/app/settings?error=password_error');
 
   const fresh = await db.query.klients.findFirst({ where: eq(klients.id, klient.id) });
-  if (!fresh || !fresh.passwordHash) return c.redirect('/app/settings?error=wrong_current');
+  if (!fresh || !fresh.passwordHash) return c.redirect('/app/settings?error=password_error');
 
   const ok = await verifyPassword(current, fresh.passwordHash);
-  if (!ok) return c.redirect('/app/settings?error=wrong_current');
+  if (!ok) return c.redirect('/app/settings?error=password_error');
 
   const newHash = await hashPassword(next);
   await db.update(klients).set({ passwordHash: newHash }).where(eq(klients.id, klient.id));

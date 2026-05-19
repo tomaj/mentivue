@@ -6,16 +6,10 @@
 //   - quality scoring (relevance/specificity/citations/language)
 // Persists brand_mentions + response_quality + analysis llm_calls row.
 
-import { and, eq, sql } from 'drizzle-orm';
-import {
-  brandMentions,
-  brands,
-  db,
-  llmCalls,
-  rawResponses,
-  responseQuality,
-} from '@mentivue/shared/db';
+import { brandMentions, db, llmCalls, rawResponses, responseQuality } from '@mentivue/shared/db';
 import { callClaude } from '@mentivue/shared/llm';
+import { eq, sql } from 'drizzle-orm';
+import { getTrackedBrands } from './tracked-brands-cache.ts';
 
 interface AnalysisJson {
   brands_mentioned: Array<{
@@ -64,9 +58,7 @@ export async function analyzeResponse(rawResponseId: string): Promise<AnalysisRe
   const promptRecord = raw.llmCall.prompt;
   const verticalId = promptRecord.verticalId;
 
-  const trackedBrands = await db.query.brands.findMany({
-    where: and(eq(brands.verticalId, verticalId), eq(brands.isActive, true)),
-  });
+  const trackedBrands = await getTrackedBrands(verticalId);
 
   const brandLines = trackedBrands
     .map((b) => `- ${b.slug}: ${[b.name, ...(b.aliases ?? [])].join(', ')}`)

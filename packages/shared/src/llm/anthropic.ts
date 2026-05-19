@@ -1,7 +1,9 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { getEnv } from '../config/env.ts';
+import { traceLLMCall } from './langfuse.ts';
 import { calculateCost, pricingKey } from './pricing.ts';
 import type { Citation, LLMCallOptions, LLMCallResult, LLMClient } from './types.ts';
+import { isValidKey, safeDomain, withRetry } from './utils.ts';
 
 const DEFAULT_MODEL = 'claude-haiku-4-5-20251001';
 
@@ -26,6 +28,10 @@ export const anthropicClient: LLMClient = {
 };
 
 export async function callClaude(opts: LLMCallOptions): Promise<LLMCallResult> {
+  return traceLLMCall('anthropic', DEFAULT_MODEL, opts, () => callClaudeImpl(opts));
+}
+
+async function callClaudeImpl(opts: LLMCallOptions): Promise<LLMCallResult> {
   const model = DEFAULT_MODEL;
   const start = Date.now();
 
@@ -47,12 +53,13 @@ export async function callClaude(opts: LLMCallOptions): Promise<LLMCallResult> {
   };
 
   if (opts.enableSearch) {
-    params.tools = [
-      { type: 'web_search_20250305', name: 'web_search', max_uses: 5 } as never,
-    ];
+    params.tools = [{ type: 'web_search_20250305', name: 'web_search', max_uses: 5 } as never];
   }
 
-  const response = await client().messages.create(params);
+  const response = await withRetry((signal) => client().messages.create(params, { signal }), {
+    onRetry: (attempt, err) =>
+      console.warn(`Anthropic retry ${attempt}/3:`, err instanceof Error ? err.message : err),
+  });
   const latencyMs = Date.now() - start;
 
   const text = response.content
@@ -75,8 +82,9 @@ export async function callClaude(opts: LLMCallOptions): Promise<LLMCallResult> {
   const citations: Citation[] = [];
   for (const block of response.content) {
     if (block.type !== 'text') continue;
-    const blockCitations = (block as unknown as { citations?: Array<{ url?: string; title?: string }> })
-      .citations;
+    const blockCitations = (
+      block as unknown as { citations?: Array<{ url?: string; title?: string }> }
+    ).citations;
     if (!blockCitations) continue;
     for (const c of blockCitations) {
       if (c.url) {
@@ -109,16 +117,4 @@ export async function callClaude(opts: LLMCallOptions): Promise<LLMCallResult> {
     citations,
     rawResponse: response,
   };
-}
-
-function safeDomain(url: string): string | undefined {
-  try {
-    return new URL(url).hostname.replace(/^www\./, '');
-  } catch {
-    return undefined;
-  }
-}
-
-function isValidKey(value: string | undefined): boolean {
-  return Boolean(value && !value.endsWith('...') && value.length > 10);
 }

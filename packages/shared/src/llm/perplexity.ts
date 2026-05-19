@@ -1,6 +1,8 @@
 import { getEnv } from '../config/env.ts';
+import { traceLLMCall } from './langfuse.ts';
 import { calculateCost, pricingKey } from './pricing.ts';
 import type { Citation, LLMCallOptions, LLMCallResult, LLMClient } from './types.ts';
+import { isValidKey, safeDomain, withRetry } from './utils.ts';
 
 const DEFAULT_MODEL = 'sonar';
 const API_URL = 'https://api.perplexity.ai/chat/completions';
@@ -27,6 +29,10 @@ export const perplexityClient: LLMClient = {
 };
 
 export async function callPerplexity(opts: LLMCallOptions): Promise<LLMCallResult> {
+  return traceLLMCall('perplexity', DEFAULT_MODEL, opts, () => callPerplexityImpl(opts));
+}
+
+async function callPerplexityImpl(opts: LLMCallOptions): Promise<LLMCallResult> {
   const env = getEnv();
   if (!env.PERPLEXITY_API_KEY) {
     throw new Error('PERPLEXITY_API_KEY missing — set it in .env before calling Perplexity.');
@@ -42,28 +48,40 @@ export async function callPerplexity(opts: LLMCallOptions): Promise<LLMCallResul
       ]
     : [{ role: 'user', content: opts.prompt }];
 
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${env.PERPLEXITY_API_KEY}`,
-      'Content-Type': 'application/json',
+  const response = await withRetry<PerplexityResponse>(
+    async (signal) => {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${env.PERPLEXITY_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model,
+          messages,
+          max_tokens: opts.maxTokens ?? 1024,
+          temperature: opts.temperature ?? 0.7,
+        }),
+        signal,
+      });
+      if (!res.ok) {
+        const errBody = await res.text();
+        // Attach status so withRetry's default fatal-policy can decide retry vs throw.
+        const err = new Error(`Perplexity ${res.status}: ${errBody}`) as Error & {
+          status?: number;
+        };
+        err.status = res.status;
+        throw err;
+      }
+      return (await res.json()) as PerplexityResponse;
     },
-    body: JSON.stringify({
-      model,
-      messages,
-      max_tokens: opts.maxTokens ?? 1024,
-      temperature: opts.temperature ?? 0.7,
-    }),
-  });
+    {
+      onRetry: (attempt, err) =>
+        console.warn(`Perplexity retry ${attempt}/3:`, err instanceof Error ? err.message : err),
+    },
+  );
 
   const latencyMs = Date.now() - start;
-
-  if (!res.ok) {
-    const errBody = await res.text();
-    throw new Error(`Perplexity ${res.status}: ${errBody}`);
-  }
-
-  const response = (await res.json()) as PerplexityResponse;
   const text = response.choices[0]?.message?.content ?? '';
 
   // Sonar returns citations as an array of URLs in v1 and richer search_results in v2.
@@ -102,16 +120,4 @@ export async function callPerplexity(opts: LLMCallOptions): Promise<LLMCallResul
     citations,
     rawResponse: response,
   };
-}
-
-function safeDomain(url: string): string | undefined {
-  try {
-    return new URL(url).hostname.replace(/^www\./, '');
-  } catch {
-    return undefined;
-  }
-}
-
-function isValidKey(value: string | undefined): boolean {
-  return Boolean(value && !value.endsWith('...') && value.length > 10);
 }

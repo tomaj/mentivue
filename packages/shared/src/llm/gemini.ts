@@ -1,7 +1,9 @@
 import { GoogleGenAI } from '@google/genai';
 import { getEnv } from '../config/env.ts';
+import { traceLLMCall } from './langfuse.ts';
 import { calculateCost, pricingKey } from './pricing.ts';
 import type { Citation, LLMCallOptions, LLMCallResult, LLMClient } from './types.ts';
+import { isValidKey, safeDomain, withRetry } from './utils.ts';
 
 const DEFAULT_MODEL = 'gemini-2.5-flash';
 
@@ -26,6 +28,10 @@ export const geminiClient: LLMClient = {
 };
 
 export async function callGemini(opts: LLMCallOptions): Promise<LLMCallResult> {
+  return traceLLMCall('gemini', DEFAULT_MODEL, opts, () => callGeminiImpl(opts));
+}
+
+async function callGeminiImpl(opts: LLMCallOptions): Promise<LLMCallResult> {
   const model = DEFAULT_MODEL;
   const start = Date.now();
 
@@ -36,11 +42,28 @@ export async function callGemini(opts: LLMCallOptions): Promise<LLMCallResult> {
   if (opts.system) config.systemInstruction = opts.system;
   if (opts.enableSearch) config.tools = [{ googleSearch: {} }];
 
-  const response = await client().models.generateContent({
-    model,
-    contents: opts.prompt,
-    config,
-  });
+  // Gemini SDK does not surface AbortSignal in its public types yet — the
+  // withRetry timer still aborts via Promise.race below by racing the call
+  // against a timeout-rejected promise.
+  const response = await withRetry(
+    (signal) =>
+      Promise.race([
+        client().models.generateContent({ model, contents: opts.prompt, config }),
+        new Promise<never>((_, reject) => {
+          signal.addEventListener(
+            'abort',
+            () => reject(new Error('Gemini call aborted (timeout)')),
+            {
+              once: true,
+            },
+          );
+        }),
+      ]),
+    {
+      onRetry: (attempt, err) =>
+        console.warn(`Gemini retry ${attempt}/3:`, err instanceof Error ? err.message : err),
+    },
+  );
   const latencyMs = Date.now() - start;
 
   const text = response.text ?? '';
@@ -93,18 +116,6 @@ export async function callGemini(opts: LLMCallOptions): Promise<LLMCallResult> {
     citations,
     rawResponse: response,
   };
-}
-
-function safeDomain(url: string): string | undefined {
-  try {
-    return new URL(url).hostname.replace(/^www\./, '');
-  } catch {
-    return undefined;
-  }
-}
-
-function isValidKey(value: string | undefined): boolean {
-  return Boolean(value && !value.endsWith('...') && value.length > 10);
 }
 
 const GROUNDING_HOST = 'vertexaisearch.cloud.google.com';

@@ -1,8 +1,14 @@
 /* Mentivue base styles — reset, body, common atoms.
    Imported once via BaseLayout. Page-specific CSS layers on top. */
 
-* { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
 
 body {
   background: var(--paper);
@@ -17,7 +23,7 @@ body {
 
 /* Fine-grain paper noise overlay applied to every page */
 body::before {
-  content: '';
+  content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
@@ -27,11 +33,24 @@ body::before {
   mix-blend-mode: multiply;
 }
 
-a { color: inherit; text-decoration: none; }
-button { font: inherit; cursor: pointer; }
-::selection { background: var(--signal); color: var(--paper); }
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button {
+  font: inherit;
+  cursor: pointer;
+}
+::selection {
+  background: var(--signal);
+  color: var(--paper);
+}
 
-img, svg { max-width: 100%; display: block; }
+img,
+svg {
+  max-width: 100%;
+  display: block;
+}
 
 /* ─────────── Reusable atoms ─────────── */
 .container {
@@ -75,8 +94,15 @@ img, svg { max-width: 100%; display: block; }
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%      { opacity: 0.35; transform: scale(0.75); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.75);
+  }
 }
 
 .btn {
@@ -91,24 +117,40 @@ img, svg { max-width: 100%; display: block; }
   border: 1px solid var(--ink);
   background: var(--ink);
   color: var(--paper);
-  transition: background 200ms var(--ease), color 200ms var(--ease), transform 200ms var(--ease);
+  transition:
+    background 200ms var(--ease),
+    color 200ms var(--ease),
+    transform 200ms var(--ease);
   cursor: pointer;
   white-space: nowrap;
 }
 
-.btn:hover { background: var(--depth); border-color: var(--depth); }
-.btn .arrow { transition: transform 200ms var(--ease); }
-.btn:hover .arrow { transform: translateX(3px); }
+.btn:hover {
+  background: var(--depth);
+  border-color: var(--depth);
+}
+.btn .arrow {
+  transition: transform 200ms var(--ease);
+}
+.btn:hover .arrow {
+  transform: translateX(3px);
+}
 
 .btn--ghost {
   background: transparent;
   color: var(--ink);
 }
-.btn--ghost:hover { background: var(--ink); color: var(--paper); }
+.btn--ghost:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
 
 .btn--light {
   background: var(--paper);
   color: var(--ink);
   border-color: var(--paper);
 }
-.btn--light:hover { background: var(--bone); border-color: var(--bone); }
+.btn--light:hover {
+  background: var(--bone);
+  border-color: var(--bone);
+}

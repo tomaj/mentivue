@@ -24,6 +24,15 @@ const envSchema = z.object({
   RESEND_API_KEY: optionalString,
   EMAIL_FROM: z.string().email().default('hello@mentivue.sk'),
 
+  SMTP_HOST: optionalString,
+  SMTP_PORT: z.coerce.number().default(1025),
+  // z.coerce.boolean() treats "false" as truthy (any non-empty string); parse explicitly
+  SMTP_SECURE: z
+    .preprocess((v) => v === 'true' || v === '1' || v === true, z.boolean())
+    .default(false),
+  SMTP_USER: optionalString,
+  SMTP_PASS: optionalString,
+
   STRIPE_SECRET_KEY: optionalString,
   STRIPE_WEBHOOK_SECRET: optionalString,
   STRIPE_PUBLISHABLE_KEY: optionalString,
@@ -39,6 +48,15 @@ const envSchema = z.object({
 
   DAILY_LLM_COST_LIMIT_USD: z.coerce.number().default(15),
   MONTHLY_LLM_COST_LIMIT_USD: z.coerce.number().default(500),
+
+  // Langfuse — LLM observability. All three optional; tracing only activates
+  // when public + secret keys are both set (see llm/langfuse.ts).
+  LANGFUSE_PUBLIC_KEY: optionalString,
+  LANGFUSE_SECRET_KEY: optionalString,
+  LANGFUSE_HOST: z.string().url().default('https://cloud.langfuse.com'),
+
+  // Sentry DSN — optional. When unset, initSentry() is a no-op.
+  SENTRY_DSN: optionalString,
 });
 
 export type Env = z.infer<typeof envSchema>;

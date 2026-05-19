@@ -29,7 +29,11 @@ export function fmtUsd(n: number | null | undefined): string {
 export function fmtDate(d: Date | string | null | undefined): string {
   if (!d) return '—';
   const date = typeof d === 'string' ? new Date(d) : d;
-  return new Intl.DateTimeFormat(SK_LOCALE, { day: '2-digit', month: '2-digit', year: 'numeric' }).format(date);
+  return new Intl.DateTimeFormat(SK_LOCALE, {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  }).format(date);
 }
 
 export function fmtDateTime(d: Date | string | null | undefined): string {

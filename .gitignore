@@ -39,3 +39,7 @@ coverage/
 *.sqlite
 *.db
 *.db-journal
+
+# Generated reports (HTML, generated on demand)
+packages/app/storage/reports/*.html
+

@@ -6,9 +6,9 @@
 //   pnpm --filter @mentivue/workers smoke:all [N]
 //   N = how many prompts (default: 3)
 
-import { and, eq } from 'drizzle-orm';
 import { db, prompts } from '@mentivue/shared/db';
 import { getAvailableClients } from '@mentivue/shared/llm';
+import { and, eq } from 'drizzle-orm';
 import { closeQueues, collectionQueue } from '../queues.ts';
 
 const N = Number.parseInt(process.argv[2] ?? '3', 10);
@@ -30,7 +30,7 @@ if (promptList.length === 0) {
 }
 
 const totalJobs = promptList.length * clients.length;
-console.log(`▸ Smoke test`);
+console.log('▸ Smoke test');
 console.log(`  prompts:    ${promptList.length}`);
 console.log(`  providers:  ${clients.map((c) => c.provider).join(', ')}`);
 console.log(`  total jobs: ${totalJobs} collection + ${totalJobs} analysis (auto-chained)`);

@@ -1,1 +1,1 @@
-export { env, getEnv, type Env } from './env.ts';
+export { type Env, env, getEnv } from './env.ts';

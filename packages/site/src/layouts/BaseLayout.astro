@@ -41,10 +41,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? SITE.origin).toSt
 const ogImageAbs = absoluteUrl(ogImage);
 
 // Build JSON-LD: always include Organization + WebSite, then any per-page blobs.
-const jsonLdBlobs: Record<string, unknown>[] = [
-  organizationJsonLd(),
-  websiteJsonLd(),
-];
+const jsonLdBlobs: Record<string, unknown>[] = [organizationJsonLd(), websiteJsonLd()];
 if (jsonLd) {
   if (Array.isArray(jsonLd)) jsonLdBlobs.push(...jsonLd);
   else jsonLdBlobs.push(jsonLd);

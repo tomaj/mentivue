@@ -1,6 +1,6 @@
-import { eq } from 'drizzle-orm';
 import { db, llmCalls, prompts, rawResponses } from '@mentivue/shared/db';
 import { ALL_CLIENTS } from '@mentivue/shared/llm';
+import { eq } from 'drizzle-orm';
 import type { CollectionJobData } from '../queues.ts';
 
 export interface CollectionResult {

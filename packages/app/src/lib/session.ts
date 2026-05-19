@@ -2,11 +2,11 @@
 // Sliding expiration: lastSeenAt bumped on every authed request; absolute expiry = 30 days.
 
 import { randomBytes } from 'node:crypto';
-import { eq, lt } from 'drizzle-orm';
+import { env } from '@mentivue/shared/config';
 import { db, klients, sessions } from '@mentivue/shared/db';
+import { eq, lt } from 'drizzle-orm';
 import type { Context, MiddlewareHandler } from 'hono';
 import { deleteCookie, getCookie, setCookie } from 'hono/cookie';
-import { env } from '@mentivue/shared/config';
 
 const COOKIE_NAME = 'mentivue_session';
 const SESSION_TTL_DAYS = 30;
@@ -108,6 +108,9 @@ export const requireAdmin: MiddlewareHandler = async (c, next) => {
 
 // Optional housekeeping: delete expired sessions. Call on boot.
 export async function purgeExpiredSessions(): Promise<number> {
-  const res = await db.delete(sessions).where(lt(sessions.expiresAt, new Date())).returning({ id: sessions.id });
+  const res = await db
+    .delete(sessions)
+    .where(lt(sessions.expiresAt, new Date()))
+    .returning({ id: sessions.id });
   return res.length;
 }

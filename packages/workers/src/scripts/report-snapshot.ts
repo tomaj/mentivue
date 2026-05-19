@@ -5,11 +5,11 @@ import {
   costSummary,
   positionRankings,
   providerQuality,
+  type QueryFilters,
   sentimentSummary,
   shareOfVoice,
   topCitationDomains,
   untrackedBrands,
-  type QueryFilters,
 } from '@mentivue/shared/db/queries';
 
 const filters: QueryFilters = { verticalSlug: 'sk-electronics' };

@@ -9,7 +9,7 @@
 // All counts only include status='success' collection calls; analysis
 // calls are excluded by call_type='collection' filter.
 
-import { sql, type SQL } from 'drizzle-orm';
+import { type SQL, sql } from 'drizzle-orm';
 import { db } from './index.ts';
 
 export interface QueryFilters {
@@ -21,9 +21,7 @@ export interface QueryFilters {
 function buildFilter(f: QueryFilters): SQL {
   const clauses: SQL[] = [sql`lc.status = 'success'`, sql`lc.call_type = 'collection'`];
   if (f.verticalSlug) {
-    clauses.push(
-      sql`p.vertical_id = (SELECT id FROM verticals WHERE slug = ${f.verticalSlug})`,
-    );
+    clauses.push(sql`p.vertical_id = (SELECT id FROM verticals WHERE slug = ${f.verticalSlug})`);
   }
   if (f.provider) clauses.push(sql`lc.provider = ${f.provider}`);
   if (f.sinceDays !== undefined) {
@@ -35,7 +33,7 @@ function buildFilter(f: QueryFilters): SQL {
 // ============================================================================
 // SHARE OF VOICE — % of collection responses in which each brand is mentioned
 // ============================================================================
-export interface SovRow {
+export type SovRow = {
   provider: string;
   brand_slug: string;
   brand_name: string;
@@ -44,7 +42,7 @@ export interface SovRow {
   sov_pct: number;
   avg_position: number | null;
   avg_sentiment_score: number | null;
-}
+};
 
 export async function shareOfVoice(filters: QueryFilters = {}): Promise<SovRow[]> {
   const where = buildFilter(filters);
@@ -87,7 +85,7 @@ export async function shareOfVoice(filters: QueryFilters = {}): Promise<SovRow[]
 // ============================================================================
 // SENTIMENT SUMMARY per brand (across all providers)
 // ============================================================================
-export interface SentimentRow {
+export type SentimentRow = {
   brand_slug: string;
   brand_name: string;
   total_mentions: number;
@@ -96,7 +94,7 @@ export interface SentimentRow {
   neutral_count: number;
   negative_count: number;
   positive_pct: number;
-}
+};
 
 export async function sentimentSummary(filters: QueryFilters = {}): Promise<SentimentRow[]> {
   const where = buildFilter(filters);
@@ -129,12 +127,12 @@ export async function sentimentSummary(filters: QueryFilters = {}): Promise<Sent
 // ============================================================================
 // TOP CITATION DOMAINS — what AI search cites
 // ============================================================================
-export interface CitationRow {
+export type CitationRow = {
   domain: string;
   citation_count: number;
   unique_responses: number;
   citation_share_pct: number;
-}
+};
 
 export async function topCitationDomains(
   filters: QueryFilters = {},
@@ -168,7 +166,7 @@ export async function topCitationDomains(
 // ============================================================================
 // PROVIDER QUALITY — refusal rate, avg quality, cost
 // ============================================================================
-export interface ProviderQualityRow {
+export type ProviderQualityRow = {
   provider: string;
   total_calls: number;
   avg_quality_score: number | null;
@@ -177,7 +175,7 @@ export interface ProviderQualityRow {
   avg_input_tokens: number;
   avg_output_tokens: number;
   avg_latency_ms: number;
-}
+};
 
 export async function providerQuality(filters: QueryFilters = {}): Promise<ProviderQualityRow[]> {
   const where = buildFilter(filters);
@@ -207,13 +205,13 @@ export async function providerQuality(filters: QueryFilters = {}): Promise<Provi
 // ============================================================================
 // POSITION RANKINGS — weighted by mention position (1/position)
 // ============================================================================
-export interface PositionRow {
+export type PositionRow = {
   brand_slug: string;
   brand_name: string;
   mention_count: number;
   avg_position: number;
   position_score: number;
-}
+};
 
 export async function positionRankings(filters: QueryFilters = {}): Promise<PositionRow[]> {
   const where = buildFilter(filters);
@@ -239,10 +237,10 @@ export async function positionRankings(filters: QueryFilters = {}): Promise<Posi
 // ============================================================================
 // UNTRACKED BRANDS — what AI cites that we don't track
 // ============================================================================
-export interface UntrackedRow {
+export type UntrackedRow = {
   brand: string;
   occurrences: number;
-}
+};
 
 export async function untrackedBrands(
   filters: QueryFilters = {},
@@ -266,13 +264,13 @@ export async function untrackedBrands(
 // ============================================================================
 // COST SUMMARY — daily/total spend split by call_type
 // ============================================================================
-export interface CostSummaryRow {
+export type CostSummaryRow = {
   call_type: string;
   provider: string;
   total_calls: number;
   total_cost_usd: number;
   avg_cost_per_call: number;
-}
+};
 
 export async function costSummary(sinceDays?: number): Promise<CostSummaryRow[]> {
   const dateClause = sinceDays

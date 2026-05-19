@@ -2,9 +2,9 @@
 // Translated from packages/site → dashboard-components.jsx prototype.
 
 import type { FC } from 'hono/jsx';
-import { C, LogoLockup, MonoLabel, Num, PulseDot } from './primitives.tsx';
-import type { SessionKlient } from '../lib/session.ts';
 import { fmtRelative } from '../lib/fmt.ts';
+import type { SessionKlient } from '../lib/session.ts';
+import { C, LogoLockup, MonoLabel, Num, PulseDot } from './primitives.tsx';
 
 export type NavKey =
   | 'dashboard'
@@ -19,6 +19,8 @@ export type NavKey =
   | 'billing'
   | 'team'
   | 'admin_klients'
+  | 'admin_approvals'
+  | 'admin_scheduler'
   | 'admin_health';
 
 type NavItem = { key: NavKey; label: string; href: string; badge?: string };
@@ -29,32 +31,37 @@ function getNavSections(isAdmin: boolean, anomalyCount: number): NavSection[] {
     {
       label: 'Prehľad',
       items: [
-        { key: 'dashboard',  label: 'Dashboard',      href: '/app/dashboard' },
-        { key: 'index_live', label: 'Index Live',     href: '/app/dashboard', badge: 'live' },
+        { key: 'dashboard', label: 'Dashboard', href: '/app/dashboard' },
+        { key: 'index_live', label: 'Index Live', href: '/app/dashboard', badge: 'live' },
       ],
     },
     {
       label: 'Reporty',
       items: [
         { key: 'actions', label: 'Action Reports', href: '/app/reports?type=action' },
-        { key: 'audits',  label: 'Audity',         href: '/app/reports?type=audit' },
-        { key: 'pulse',   label: 'Pulse archív',   href: '/app/reports?type=pulse' },
+        { key: 'audits', label: 'Audity', href: '/app/reports?type=audit' },
+        { key: 'pulse', label: 'Pulse archív', href: '/app/reports?type=pulse' },
       ],
     },
     {
       label: 'Analýza',
       items: [
-        { key: 'competition', label: 'Konkurencia',     href: '/app/dashboard' },
-        { key: 'anomalies',   label: 'Anomálie',        href: '/app/dashboard#anomalies', badge: anomalyCount > 0 ? String(anomalyCount) : undefined },
-        { key: 'prompts',     label: 'Vlastné prompty', href: '/app/dashboard' },
+        { key: 'competition', label: 'Konkurencia', href: '/app/dashboard' },
+        {
+          key: 'anomalies',
+          label: 'Anomálie',
+          href: '/app/dashboard#anomalies',
+          badge: anomalyCount > 0 ? String(anomalyCount) : undefined,
+        },
+        { key: 'prompts', label: 'Vlastné prompty', href: '/app/dashboard' },
       ],
     },
     {
       label: 'Účet',
       items: [
         { key: 'settings', label: 'Nastavenia', href: '/app/settings' },
-        { key: 'billing',  label: 'Fakturácia', href: '/app/settings#billing' },
-        { key: 'team',     label: 'Tím',        href: '/app/settings#team' },
+        { key: 'billing', label: 'Fakturácia', href: '/app/settings#billing' },
+        { key: 'team', label: 'Tím', href: '/app/settings#team' },
       ],
     },
   ];
@@ -63,7 +70,9 @@ function getNavSections(isAdmin: boolean, anomalyCount: number): NavSection[] {
       label: 'Admin',
       items: [
         { key: 'admin_klients', label: 'Klienti', href: '/admin/klients' },
-        { key: 'admin_health',  label: 'Health',  href: '/admin/health' },
+        { key: 'admin_approvals', label: 'Approvals', href: '/admin/approvals' },
+        { key: 'admin_scheduler', label: 'Scheduler', href: '/admin/scheduler' },
+        { key: 'admin_health', label: 'Health', href: '/admin/health' },
       ],
     });
   }
@@ -90,7 +99,9 @@ export const Sidebar: FC<{
 }> = ({ active, klient, brandName, brandPeriod, anomalyCount = 0 }) => {
   const sections = getNavSections(klient.isAdmin, anomalyCount);
   return (
-    <aside style={`width:240px;flex:none;background:${C.paper};border-right:1px solid ${C.bone};display:flex;flex-direction:column;position:sticky;top:0;height:100vh;max-height:100vh`}>
+    <aside
+      style={`width:240px;flex:none;background:${C.paper};border-right:1px solid ${C.bone};display:flex;flex-direction:column;position:sticky;top:0;height:100vh;max-height:100vh`}
+    >
       <div style={`padding:20px 20px 16px;border-bottom:1px solid ${C.bone}`}>
         <a href="/app/dashboard" style="text-decoration:none">
           <LogoLockup size={24} />
@@ -98,10 +109,18 @@ export const Sidebar: FC<{
       </div>
 
       {/* Brand selector */}
-      <div style={`padding:14px 16px;margin:14px 14px 8px;border:1px solid ${C.ink};background:${C.paperPure};display:flex;justify-content:space-between;align-items:center;gap:8px;cursor:default`}>
+      <div
+        style={`padding:14px 16px;margin:14px 14px 8px;border:1px solid ${C.ink};background:${C.paperPure};display:flex;justify-content:space-between;align-items:center;gap:8px;cursor:default`}
+      >
         <div style="display:flex;flex-direction:column;gap:4px">
-          <span style={`font-family:${C.fontDisplay};font-size:17px;font-weight:500;letter-spacing:-0.02em;color:${C.ink};line-height:1`}>{brandName}</span>
-          <Num size={10} color={C.inkSoft}>{brandPeriod ?? 'Q2 2026'}</Num>
+          <span
+            style={`font-family:${C.fontDisplay};font-size:17px;font-weight:500;letter-spacing:-0.02em;color:${C.ink};line-height:1`}
+          >
+            {brandName}
+          </span>
+          <Num size={10} color={C.inkSoft}>
+            {brandPeriod ?? 'Q2 2026'}
+          </Num>
         </div>
         <span style={`color:${C.signal};font-size:12px`}>▼</span>
       </div>
@@ -110,7 +129,9 @@ export const Sidebar: FC<{
         {sections.map((sec) => (
           <div style="margin-top:18px">
             <div style="padding:6px 12px 8px">
-              <MonoLabel size={9} tracking="0.22em">{sec.label}</MonoLabel>
+              <MonoLabel size={9} tracking="0.22em">
+                {sec.label}
+              </MonoLabel>
             </div>
             <div style="display:flex;flex-direction:column">
               {sec.items.map((it) => {
@@ -124,10 +145,14 @@ export const Sidebar: FC<{
                     {it.badge === 'live' ? (
                       <span style="display:inline-flex;align-items:center;gap:6px">
                         <PulseDot size={6} />
-                        <Num size={9} color={C.signal}>LIVE</Num>
+                        <Num size={9} color={C.signal}>
+                          LIVE
+                        </Num>
                       </span>
                     ) : it.badge ? (
-                      <Num size={10} color={C.signal}>{it.badge}</Num>
+                      <Num size={10} color={C.signal}>
+                        {it.badge}
+                      </Num>
                     ) : null}
                   </a>
                 );
@@ -138,12 +163,20 @@ export const Sidebar: FC<{
       </nav>
 
       {/* Advisor card */}
-      <div style={`margin:12px;padding:14px;border:1px solid ${C.bone};background:${C.paperPure};display:flex;flex-direction:column;gap:12px`}>
+      <div
+        style={`margin:12px;padding:14px;border:1px solid ${C.bone};background:${C.paperPure};display:flex;flex-direction:column;gap:12px`}
+      >
         <div style="display:flex;align-items:center;gap:10px">
-          <span style={`width:32px;height:32px;border-radius:50%;background:${C.ink};color:${C.paper};display:inline-flex;align-items:center;justify-content:center;font-family:${C.fontDisplay};font-size:14px;font-weight:500;letter-spacing:-0.01em;flex:none`}>TM</span>
+          <span
+            style={`width:32px;height:32px;border-radius:50%;background:${C.ink};color:${C.paper};display:inline-flex;align-items:center;justify-content:center;font-family:${C.fontDisplay};font-size:14px;font-weight:500;letter-spacing:-0.01em;flex:none`}
+          >
+            TM
+          </span>
           <div style="display:flex;flex-direction:column;gap:2px;min-width:0">
             <span style={`font-size:13px;font-weight:500;color:${C.ink}`}>Tomáš Majer</span>
-            <MonoLabel size={9} tracking="0.16em">Strategic Advisor</MonoLabel>
+            <MonoLabel size={9} tracking="0.16em">
+              Strategic Advisor
+            </MonoLabel>
           </div>
         </div>
         <a
@@ -160,11 +193,17 @@ export const Sidebar: FC<{
 // ────────── TopBar ──────────
 export const TopBar: FC<{ crumbs: string[]; klient: SessionKlient }> = ({ crumbs, klient }) => {
   return (
-    <header style={`height:60px;padding:0 28px;border-bottom:1px solid ${C.bone};background:${C.paper};display:flex;align-items:center;justify-content:space-between;flex:none`}>
+    <header
+      style={`height:60px;padding:0 28px;border-bottom:1px solid ${C.bone};background:${C.paper};display:flex;align-items:center;justify-content:space-between;flex:none`}
+    >
       <nav style="display:flex;align-items:center;gap:10px">
         {crumbs.map((crumb, i) => (
           <>
-            {i > 0 && <span style={`color:rgba(14,17,22,0.3);font-family:${C.fontMono};font-size:12px`}>/</span>}
+            {i > 0 && (
+              <span style={`color:rgba(14,17,22,0.3);font-family:${C.fontMono};font-size:12px`}>
+                /
+              </span>
+            )}
             <span
               style={`font-family:${i === crumbs.length - 1 ? C.fontDisplay : C.fontBody};font-size:${i === crumbs.length - 1 ? 17 : 13.5}px;color:${i === crumbs.length - 1 ? C.ink : C.inkSoft};font-weight:${i === crumbs.length - 1 ? 500 : 400};letter-spacing:${i === crumbs.length - 1 ? '-0.015em' : 'normal'}`}
             >
@@ -177,7 +216,9 @@ export const TopBar: FC<{ crumbs: string[]; klient: SessionKlient }> = ({ crumbs
         <TopBarPill>Posledných 30 dní</TopBarPill>
         <TopBarPill>Export</TopBarPill>
         <div style={`width:1px;height:22px;background:${C.bone};margin:0 6px`} />
-        <span style={`width:30px;height:30px;border-radius:50%;background:${C.ink};color:${C.paper};display:inline-flex;align-items:center;justify-content:center;font-family:${C.fontDisplay};font-size:13px;font-weight:500`}>
+        <span
+          style={`width:30px;height:30px;border-radius:50%;background:${C.ink};color:${C.paper};display:inline-flex;align-items:center;justify-content:center;font-family:${C.fontDisplay};font-size:13px;font-weight:500`}
+        >
           {initials(klient.name, klient.email)}
         </span>
         <form method="post" action="/logout" style="margin:0">
@@ -216,21 +257,29 @@ export const WelcomeStrip: FC<{
     anomalyCount === 0
       ? 'Tento týždeň všetko stabilné.'
       : anomalyCount === 1
-      ? '1 anomália tento týždeň.'
-      : `${anomalyCount} anomálie tento týždeň.`;
+        ? '1 anomália tento týždeň.'
+        : `${anomalyCount} anomálie tento týždeň.`;
   return (
-    <div style={`padding:24px 28px 22px;border-bottom:1px solid ${C.bone};display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap`}>
+    <div
+      style={`padding:24px 28px 22px;border-bottom:1px solid ${C.bone};display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap`}
+    >
       <div>
-        <h1 style={`font-family:${C.fontDisplay};font-weight:400;font-size:32px;letter-spacing:-0.025em;line-height:1.05;margin:0;color:${C.ink}`}>
+        <h1
+          style={`font-family:${C.fontDisplay};font-weight:400;font-size:32px;letter-spacing:-0.025em;line-height:1.05;margin:0;color:${C.ink}`}
+        >
           {greeting}, {firstName}.<br />
           <em style={`font-style:italic;font-weight:400;color:${C.signal}`}>{tagline}</em>
         </h1>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
-        <MonoLabel size={10} tracking="0.16em">{brandName} · posledná aktualizácia</MonoLabel>
+        <MonoLabel size={10} tracking="0.16em">
+          {brandName} · posledná aktualizácia
+        </MonoLabel>
         <div style="display:inline-flex;align-items:center;gap:10px">
           <PulseDot size={7} color={C.positive} />
-          <Num size={13} color={C.ink}>{lastUpdate ? fmtRelative(lastUpdate) : '—'}</Num>
+          <Num size={13} color={C.ink}>
+            {lastUpdate ? fmtRelative(lastUpdate) : '—'}
+          </Num>
         </div>
       </div>
     </div>

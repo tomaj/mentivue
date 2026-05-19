@@ -1,0 +1,28 @@
+# Lefthook — git hooks runner (Bun/pnpm-friendly, no Husky).
+# Install: pnpm install (postinstall handles `lefthook install`).
+# Manual install: pnpm dlx lefthook install
+
+pre-commit:
+  parallel: true
+  commands:
+    biome:
+      glob: '*.{ts,tsx,js,jsx,json,jsonc,astro}'
+      run: pnpm exec biome check --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
+      stage_fixed: true
+
+pre-push:
+  parallel: true
+  commands:
+    typecheck:
+      run: pnpm typecheck
+    lint:
+      run: pnpm lint
+
+commit-msg:
+  commands:
+    commitlint:
+      # Conventional Commits regex — matches `type(scope): subject`.
+      # Allowed types: feat, fix, chore, docs, refactor, test, ci, build, perf, style, revert.
+      run: |
+        head -n 1 {1} | grep -qE '^(feat|fix|chore|docs|refactor|test|ci|build|perf|style|revert)(\([a-z0-9,\-_/]+\))?!?: .+' \
+          || { echo "✗ Commit message must follow Conventional Commits (feat|fix|chore|... [(scope)]: subject)"; exit 1; }

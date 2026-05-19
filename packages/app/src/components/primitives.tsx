@@ -25,7 +25,13 @@ export const C = {
 export const LogoMark: FC<{ size?: number; onPaper?: boolean }> = ({ size = 28, onPaper }) => {
   const stroke = onPaper ? C.paper : C.ink;
   return (
-    <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true" style="display:block;flex:none">
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 48 48"
+      aria-hidden="true"
+      style="display:block;flex:none"
+    >
       <circle cx="24" cy="24" r="22" fill="none" stroke={stroke} stroke-width="2" />
       <path d="M 6 24 Q 24 6 42 24 Q 24 42 6 24 Z" fill="none" stroke={stroke} stroke-width="2" />
       <circle cx="24" cy="24" r="5" fill={C.signal} />
@@ -38,7 +44,9 @@ export const LogoLockup: FC<{ size?: number; color?: string }> = ({ size = 26, c
   return (
     <div style="display:flex;align-items:center;gap:10px">
       <LogoMark size={size} onPaper={c === C.paper} />
-      <span style={`font-family:${C.fontDisplay};font-size:${Math.round(size * 0.86)}px;font-weight:500;letter-spacing:-0.025em;color:${c};line-height:1`}>
+      <span
+        style={`font-family:${C.fontDisplay};font-size:${Math.round(size * 0.86)}px;font-weight:500;letter-spacing:-0.025em;color:${c};line-height:1`}
+      >
         mentivue
       </span>
     </div>
@@ -57,15 +65,14 @@ export const PulseDot: FC<{ size?: number; color?: string }> = ({ size = 8, colo
 };
 
 // ────────── Mono label ──────────
-export const MonoLabel: FC<PropsWithChildren<{ size?: number; tracking?: string; color?: string }>> = ({
-  children,
-  size = 11,
-  tracking = '0.14em',
-  color,
-}) => {
+export const MonoLabel: FC<
+  PropsWithChildren<{ size?: number; tracking?: string; color?: string }>
+> = ({ children, size = 11, tracking = '0.14em', color }) => {
   const c = color ?? C.inkSoft;
   return (
-    <span style={`font-family:${C.fontMono};font-size:${size}px;font-weight:500;letter-spacing:${tracking};text-transform:uppercase;color:${c}`}>
+    <span
+      style={`font-family:${C.fontMono};font-size:${size}px;font-weight:500;letter-spacing:${tracking};text-transform:uppercase;color:${c}`}
+    >
       {children}
     </span>
   );
@@ -80,7 +87,9 @@ export const Num: FC<PropsWithChildren<{ size?: number; weight?: number; color?:
 }) => {
   const c = color ?? 'inherit';
   return (
-    <span style={`font-family:${C.fontMono};font-variant-numeric:tabular-nums;color:${c};font-size:${size}px;font-weight:${weight}`}>
+    <span
+      style={`font-family:${C.fontMono};font-variant-numeric:tabular-nums;color:${c};font-size:${size}px;font-weight:${weight}`}
+    >
       {children}
     </span>
   );
@@ -101,12 +110,29 @@ export const Button: FC<
 > = ({ children, variant = 'ink', size = 'md', full, type = 'button', href, style }) => {
   const padding = size === 'lg' ? '18px 24px' : size === 'sm' ? '8px 14px' : '14px 22px';
   const fontSize = size === 'lg' ? 15 : size === 'sm' ? 12.5 : 14;
-  let bg = C.ink, fg = C.paper, border = C.ink;
-  if (variant === 'signal') { bg = C.signal; border = C.signal; }
-  else if (variant === 'ghost') { bg = 'transparent'; fg = C.ink; border = C.ink; }
+  let bg = C.ink;
+  let fg = C.paper;
+  let border = C.ink;
+  if (variant === 'signal') {
+    bg = C.signal;
+    border = C.signal;
+  } else if (variant === 'ghost') {
+    bg = 'transparent';
+    fg = C.ink;
+    border = C.ink;
+  }
   const inline = `display:inline-flex;align-items:center;justify-content:center;gap:10px;font-family:${C.fontBody};font-size:${fontSize}px;font-weight:500;letter-spacing:0.005em;padding:${padding};border:1px solid ${border};background:${bg};color:${fg};text-decoration:none;cursor:pointer;white-space:nowrap;${full ? 'width:100%;' : ''}transition:opacity 0.18s ease;${style ?? ''}`;
-  if (href) return <a href={href} style={inline}>{children}</a>;
-  return <button type={type} style={inline}>{children}</button>;
+  if (href)
+    return (
+      <a href={href} style={inline}>
+        {children}
+      </a>
+    );
+  return (
+    <button type={type} style={inline}>
+      {children}
+    </button>
+  );
 };
 
 // ────────── Delta pill (▲ +2.1) ──────────
@@ -120,9 +146,14 @@ export const Delta: FC<{
   const color = direction === 'flat' ? C.inkSoft : isGood ? C.positive : C.negative;
   const arrow = direction === 'up' ? '▲' : direction === 'down' ? '▼' : '—';
   return (
-    <span style={`display:inline-flex;align-items:center;gap:6px;font-family:${C.fontMono};font-size:11.5px;color:${color}`}>
+    <span
+      style={`display:inline-flex;align-items:center;gap:6px;font-family:${C.fontMono};font-size:11.5px;color:${color}`}
+    >
       {arrow}
-      <span>{value}{suffix}</span>
+      <span>
+        {value}
+        {suffix}
+      </span>
     </span>
   );
 };
